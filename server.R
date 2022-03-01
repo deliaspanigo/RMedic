@@ -158,7 +158,7 @@ function(input, output, session) {
   
   
  
-  # 3 - Tablas ----------------------------------------------
+  # 6 - Sobrevida ----------------------------------------------
   {
     ###
     
@@ -175,33 +175,7 @@ function(input, output, session) {
   }
   ###########################################################
   
-  # menuSOBREVIDA <- reactive({
-  #   
-  #   # Si no hay orden de salir a la cancha... Nadie sale...
-  #   if(is.null(RMedic_general())) return(NULL)
-  #   if(!RMedic_general()) return(NULL)
-  #   
-  #   # Si no hay status de BaseSalida(), nos vamos...
-  #   if(is.null(status_BaseSalida())) return(NULL)
-  #   if(!status_BaseSalida()) return(NULL)
-  #   
-  #   
-  #   tabs <- list()
-  #   
-  #   
-  #   tabs[[1]] <-  tabPanel(
-  #     title = "Sobrevida", 
-  #     icon = icon("user-md"), 
-  #     value = 6,
-  #     h3("Menú para Sobrevida")
-  #     
-  #   ) # End TabPanel
-  #   
-  #   
-  #   
-  #   tabs
-  #   
-  # })
+ 
   
   observe(output[["RMedicSoft"]] <- renderUI({
     
