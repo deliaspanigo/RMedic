@@ -19,49 +19,66 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
   ns <- session$ns
   
   
-  UserSelection <- callModule(module = BatallaNavalSERVER, 
+  UserSelection <- callModule(module = BatallaNavalSERVER3, 
                               id =  "sobrevida01",
                               base = base,
                               zocalo_CIE = zocalo_CIE,
                               verbatim = FALSE)
   
   
-  MiniBase <- callModule(module = MiniBaseSERVER, id =  "sobrevida02",
+  batalla_naval <- UserSelection$batalla_naval
+  casoRMedic <- reactive({
+    
+    if(is.null(batalla_naval())) return(NULL)
+    if(is.null(batalla_naval()[[4]])) return(NULL)
+    if(length(batalla_naval()[[4]]) == 0) return(NULL)
+    if(batalla_naval()[[4]] == '') return(NULL)
+    casoRMedic <- batalla_naval()[[4]]
+    #casoRMedic <- as.numeric(as.character(as.vector(batalla_naval()[[4]])))
+    casoRMedic
+    
+  })
+  caso <- 4
+  # Control ejecucion 01
+  control_ejecucion <- reactive({
+    
+    ejecucion <- FALSE
+    if(is.null(casoRMedic())) return(ejecucion)
+    if(is.null(caso)) return(ejecucion)
+    
+    if(casoRMedic() == caso) {
+      
+      if(batalla_naval()[[6]]) ejecucion <- TRUE else ejecucion <- FALSE 
+      
+    } else ejecucion <- FALSE
+    
+    
+    return(ejecucion)
+    
+  })
+  
+  
+  decimales <- UserSelection$decimales
+  
+  minibase <- callModule(module = MiniBaseSERVER, 
+                         id =  "sobrevida02",
                          base = base,
                          batalla_naval = UserSelection$batalla_naval,
                          verbatim = FALSE)
   
   
   
-  callModule(module = Tablas1Q_SERVER, id =  "sobrevida03",
-             minibase = MiniBase,
-             batalla_naval = UserSelection$batalla_naval,
-             decimales = UserSelection$decimales)
+  
+  callModule(module = KM_Grafico_SobrevidaGeneral_SERVER,
+             id =  "sobrevida03",
+             minibase = minibase,
+             decimales = decimales,
+             control_ejecucion = control_ejecucion)
+  
+
   
   
-  callModule(module = Tablas1C_SERVER, id =  "sobrevida04",
-             minibase = MiniBase,
-             batalla_naval = UserSelection$batalla_naval,
-             decimales = UserSelection$decimales)
-  
-  
-  callModule(module = Tablas2Q_SERVER, id =  "sobrevida05",
-             minibase = MiniBase,
-             batalla_naval = UserSelection$batalla_naval,
-             decimales = UserSelection$decimales)
-  
-  
-  callModule(module = Tablas2C_SERVER, id =  "sobrevida06",
-             minibase = MiniBase,
-             batalla_naval = UserSelection$batalla_naval,
-             decimales = UserSelection$decimales)
-  
-  
-  callModule(module = TablasQC_SERVER, id =  "sobrevida07",
-             minibase = MiniBase,
-             batalla_naval = UserSelection$batalla_naval,
-             decimales = UserSelection$decimales)
-  
+ 
   
   
   
@@ -89,11 +106,15 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
                h3("Menú para Sobrevida"),
                BatallaNavalUI(ns("sobrevida01")),
                MiniBaseUI(ns("sobrevida02")),
-               Tablas1Q_UI(ns("sobrevida03")),
-               Tablas1C_UI(ns("sobrevida04")),
-               Tablas2Q_UI(ns("sobrevida05")),
-               Tablas2C_UI(ns("sobrevida06")),
-               TablasQC_UI(ns("sobrevida07"))
+               div(
+                 tabsetPanel(
+                   tabPanel("Sobrevida General", KM_Grafico_SobrevidaGeneral_UI(ns("sobrevida03"))),
+                   tabPanel("Sobrevida por Grupos")
+                 )
+               )
+                    
+               
+              
         ),
         column(1)
       )
