@@ -158,35 +158,50 @@ function(input, output, session) {
   
   
  
-
+  # 3 - Tablas ----------------------------------------------
+  {
+    ###
+    
+    menuSOBREVIDA <- callModule(module = ModuleSobrevidaSERVER, 
+                             id =  "menuSOBREVIDA",
+                             base = Modulo01$BaseSalida,
+                             RMedic_general = RMedic_general,
+                             status_BaseSalida = status_BaseSalida,
+                             zocalo_CIE = zocalo_CIE)
+    
+    
+    
+    ###
+  }
+  ###########################################################
   
-  menuSOBREVIDA <- reactive({
-    
-    # Si no hay orden de salir a la cancha... Nadie sale...
-    if(is.null(RMedic_general())) return(NULL)
-    if(!RMedic_general()) return(NULL)
-    
-    # Si no hay status de BaseSalida(), nos vamos...
-    if(is.null(status_BaseSalida())) return(NULL)
-    if(!status_BaseSalida()) return(NULL)
-    
-    
-    tabs <- list()
-    
-    
-    tabs[[1]] <-  tabPanel(
-      title = "Sobrevida", 
-      icon = icon("user-md"), 
-      value = 6,
-      h3("Menú para Sobrevida")
-      
-    ) # End TabPanel
-    
-    
-    
-    tabs
-    
-  })
+  # menuSOBREVIDA <- reactive({
+  #   
+  #   # Si no hay orden de salir a la cancha... Nadie sale...
+  #   if(is.null(RMedic_general())) return(NULL)
+  #   if(!RMedic_general()) return(NULL)
+  #   
+  #   # Si no hay status de BaseSalida(), nos vamos...
+  #   if(is.null(status_BaseSalida())) return(NULL)
+  #   if(!status_BaseSalida()) return(NULL)
+  #   
+  #   
+  #   tabs <- list()
+  #   
+  #   
+  #   tabs[[1]] <-  tabPanel(
+  #     title = "Sobrevida", 
+  #     icon = icon("user-md"), 
+  #     value = 6,
+  #     h3("Menú para Sobrevida")
+  #     
+  #   ) # End TabPanel
+  #   
+  #   
+  #   
+  #   tabs
+  #   
+  # })
   
   observe(output[["RMedicSoft"]] <- renderUI({
     
