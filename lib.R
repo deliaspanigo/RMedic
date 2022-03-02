@@ -3254,3 +3254,95 @@ graficos_qc <- function(minibase = NULL,
   
 }
 
+######################
+
+
+KM_Tabla_General <- function(base = NULL, alfa = 0.05){
+  
+  library(xtable)
+  library(survival)
+  confianza <- 1-alfa
+  
+  
+  minibase <- na.omit(base)
+  
+  # Separamos los elementos
+  #  orden  <-  minibase[,1]
+  tiempo <- minibase[,1]
+  status <- minibase[,2]
+  #  grupo  <-  minibase[,4]
+  
+  # Sobrevida General con R
+  SGen <- survfit(Surv(tiempo, status) ~ 1, conf.type="log", conf.int = confianza,
+                  type="kaplan-meier", error="greenwood")
+  
+  
+  
+  
+  # Guardamos la poca informacion que nos da
+  TABLA <- summary(SGen)
+  # TABLA
+  
+  surv_mediana <- TABLA[["surv"]]
+  orden_mediana <- c(1:length(surv_mediana))
+  
+  # Armamos algunos elementos
+  TABLA1 <- data.frame(cbind(orden_mediana, TABLA[["surv"]], TABLA[["time"]]))
+  colnames(TABLA1) <- c("Orden Mediana", "Proporcion de Sobrevida", "Tiempo")
+  
+  TABLA2 <- data.frame(cbind(orden_mediana, TABLA[["lower"]], TABLA[["time"]]))
+  TABLA3 <- data.frame(cbind(orden_mediana, TABLA[["upper"]], TABLA[["time"]]))
+  
+  
+  # Encontramos la mediana
+  TABLA1 <- na.omit(TABLA1)
+  mediana_KM <- NA
+  if(ncol(TABLA1) > 1)   if (nrow(TABLA1) > 0) if (min(TABLA1[,2]) <= 0.5) {
+    
+    dt <- TABLA1[,2] <= 0.5
+    TABLA1 <- TABLA1[dt,]
+    mediana_KM <- TABLA1[1,3]
+  }
+  #  mediana_KM
+  
+  
+  
+  # Encontramos el low de la mediana
+  TABLA2 <- na.omit(TABLA2)
+  mediana_low <- NA
+  if(ncol(TABLA2) > 1)   if (nrow(TABLA2) > 0) if (min(TABLA2[,2]) <= 0.5) {
+    
+    dt <- TABLA2[,2] <= 0.5
+    TABLA2 <- TABLA2[dt,]
+    mediana_low <- TABLA2[1,3]
+  }
+  #  mediana_low
+  
+  
+  # Encontramos el upp de la mediana
+  TABLA3 <- na.omit(TABLA3)
+  mediana_upp <- NA
+  if(ncol(TABLA3) > 1)   if (nrow(TABLA3) > 0) if (min(TABLA3[,2]) <= 0.5) {
+    
+    dt <- TABLA3[,2] <= 0.5
+    TABLA3 <- TABLA3[dt,]
+    mediana_upp <- TABLA3[1,3]
+  }
+  #  mediana_upp
+  
+  # Armamos una tabla nueva con la informacion que recolectamos
+  nombres <- c("n", "Eventos", "Mediana", "Límite Inferior", "Límite Superior", 
+               "Alfa", "Confianza")
+  TABLA_KM <- c(nrow(minibase), sum(status), mediana_KM, mediana_low, mediana_upp,
+                alfa, confianza)
+  TABLA_KM <- as.character(TABLA_KM)
+  dim(TABLA_KM) <- c(1, length(TABLA_KM))
+  colnames(TABLA_KM) <- nombres
+  
+  # Return Exitoso...
+  # # # Sale la tabla y un objeto para graficar
+  the_exit <- list(TABLA_KM, SGen)
+  return(the_exit)
+  
+}
+

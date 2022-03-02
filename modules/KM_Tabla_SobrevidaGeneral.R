@@ -14,7 +14,8 @@ KM_Tabla_SobrevidaGeneral_UI <- function(id) {
 KM_Tabla_SobrevidaGeneral_SERVER <- function(input, output, session, 
                             minibase, 
                             batalla_naval,
-                            decimales) {
+                            decimales,
+                            alfa) {
   
   
   

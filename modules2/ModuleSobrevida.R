@@ -60,6 +60,8 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
   
   decimales <- UserSelection$decimales
   
+  alfa <- UserSelection$alfa
+  
   minibase <- callModule(module = MiniBaseSERVER, 
                          id =  "sobrevida02",
                          base = base,
@@ -73,6 +75,7 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
              id =  "sobrevida03",
              minibase = minibase,
              decimales = decimales,
+             alfa = alfa,
              control_ejecucion = control_ejecucion)
   
 
@@ -109,7 +112,12 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
                div(
                  tabsetPanel(
                    tabPanel("Sobrevida General", KM_Grafico_SobrevidaGeneral_UI(ns("sobrevida03"))),
-                   tabPanel("Sobrevida por Grupos")
+                   tabPanel("Sobrevida por Grupos",
+                            column(4,
+                                   selectInput(inputId = ns("var3"),
+                                               label = "Grupo (Variable 3): ",
+                                               choices = "")
+                            ),)
                  )
                )
                     

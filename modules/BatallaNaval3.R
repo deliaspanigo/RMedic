@@ -365,7 +365,7 @@ BatallaNavalSERVER3 <- function(input, output, session,
     if(is.null(base())) return(NULL)
     div(
       fluidRow(
-        column(4, 
+        column(3, 
                selectInput(inputId = ns("orden"), 
                            label = "Orden: ",
                            choices = c("Orden Original" = 1, 
@@ -374,13 +374,21 @@ BatallaNavalSERVER3 <- function(input, output, session,
                )
         ),
        
-        column(4,
+        column(3,
                numericInput(inputId = ns("decimales"),
                             label = "Decimales",
                             value = 2,
                             min = 0,
                             max = 10,
                             step = 1)
+        ),
+        column(3,
+               numericInput(inputId = ns("alfa"),
+                            label = "Alfa",
+                            value = 0.05,
+                            min = 0,
+                            max = 1,
+                            step = 0.01)
         )
       ),
       column(4,

@@ -17,6 +17,8 @@ library(coin)
 library(car)
 library(agricolae)
 library(gplots)
+library(xtable)
+library(survival)
 
 source("uiCode.R")
 

@@ -19,6 +19,7 @@ KM_Grafico_SobrevidaGeneral_UI <- function(id) {
 KM_Grafico_SobrevidaGeneral_SERVER <- function(input, output, session, 
                                     minibase, 
                                     decimales,
+                                    alfa,
                                     control_ejecucion) {
   
   
@@ -471,12 +472,23 @@ KM_Grafico_SobrevidaGeneral_SERVER <- function(input, output, session,
   
   
   
-  output$tablaKM <- renderTable({
+  output$tablaKM_General <- renderTable({
     
-    summary(minibase())
+    KM_Tabla_General(base = minibase(), alfa = 0.05)[[1]]
     
   })
   
+  
+  output$graficoKM_General <- renderPlot({
+    
+    objeto_KM <- KM_Tabla_General(base = minibase(), alfa = 0.05)[[2]]
+    
+    plot(objeto_KM, conf.int=FALSE, mark.time=TRUE, lty=c(1,3), col=c("blue"), 
+         xlab= "Tiempo", ylab= "Probabilidad de Sobrevida", 
+         main= "Sobrevida General")
+    
+    
+  })
   
   
   output$armado_grafico <- renderUI({
@@ -485,8 +497,11 @@ KM_Grafico_SobrevidaGeneral_SERVER <- function(input, output, session,
     if(!control_interno01()) return(NULL)
     
     div(
-      h2("Tabla Resumen Kaplan-Meier"),
-      tableOutput(ns("tablaKM")), br(), br(),
+      h2("Tabla Resumen de Sobrevida Genetal de Kaplan-Meier"),
+      tableOutput(ns("tablaKM_General")), br(), br(),
+      h2("Gráfico de Sobrevida General de Kaplan-Meier"),
+      plotOutput(ns("graficoKM_General")), br(), br(),
+      
       h2("Gráfico XY"),
       fluidRow(
         column(6,
