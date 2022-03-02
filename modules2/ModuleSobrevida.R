@@ -111,7 +111,8 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
                MiniBaseUI(ns("sobrevida02")),
                div(
                  tabsetPanel(
-                   tabPanel("Sobrevida General", KM_Grafico_SobrevidaGeneral_UI(ns("sobrevida03"))),
+                   tabPanel("Sobrevida General", 
+                            KM_Grafico_SobrevidaGeneral_UI(ns("sobrevida03"))),
                    tabPanel("Sobrevida por Grupos",
                             column(4,
                                    selectInput(inputId = ns("var3"),
