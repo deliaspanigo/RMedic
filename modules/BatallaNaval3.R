@@ -67,14 +67,14 @@ BatallaNavalSERVER3 <- function(input, output, session,
     freezeReactiveValue(input, "var1")
     updateSelectInput(session, 
                       inputId = "var1",
-                      label = "Variable 1: ",
+                      label = "Tiempo (Variable 1): ",
                       choices = c("Seleccione una... " = "", OpcionesColumnas())
     )
     
     freezeReactiveValue(input, "var2")
     updateSelectInput(session, 
                       inputId = "var2",
-                      label = "Variable 2: ",
+                      label = "Status (Variable 2): ",
                       choices = c("Seleccione una... " = "", OpcionesColumnas())
     )
   })
@@ -231,7 +231,7 @@ BatallaNavalSERVER3 <- function(input, output, session,
       
       if(sum(colnames(base()) == input$var1) == 0) return(NULL)
       
-      armado[[1]] <- paste0("<b>Variable 1: </b>", user_selection()[[1]][1], 
+      armado[[1]] <- paste0("<b>Tiempo (Variable 1): </b>", user_selection()[[1]][1], 
                             " - Columna ", MyLetter(Base = base(), the_col = user_selection()[[1]][1]),
                             " - ",  user_selection()$lenguaje_tipo[1])
       
@@ -243,7 +243,7 @@ BatallaNavalSERVER3 <- function(input, output, session,
       if(sum(colnames(base()) == input$var2) == 0) return(NULL)
       
       armado[[1]] <- paste0(armado[[1]], "<br/>",
-                            "<b>Variable 2: </b>", user_selection()[[1]][2], 
+                            "<b>Status (Variable 2): </b>", user_selection()[[1]][2], 
                             " - Columna ", MyLetter(Base = base(), the_col = user_selection()[[1]][2]),
                             " - ",  user_selection()$lenguaje_tipo[2])
       
@@ -288,7 +288,7 @@ BatallaNavalSERVER3 <- function(input, output, session,
     
     if(!batalla_naval()[[5]][1]) {
       armado <- paste0("<b><u>Advertencia:</u> ", 
-                       "La variable 1 '", input$var1, "' no puede
+                       "La variable 1 (Tiempo)'", input$var1, "' no puede
                         ser considerada numérica ya que posee letras y/o símbolos.
                         Esto imposibilita la generación de cualquier tipo de tablas, gráficos y test
                         estadísticos. Realice un CONTROL sobre esta variable.</b>", 
@@ -306,7 +306,7 @@ BatallaNavalSERVER3 <- function(input, output, session,
     
     if(!batalla_naval()[[5]][2]) {
       armado <- paste0("<b><u>Advertencia:</u> ", 
-                       "La variable 2 '", input$var2, "' no puede
+                       "La variable 2 (Status)'", input$var2, "' no puede
                         ser considerada numérica ya que posee letras y/o símbolos.
                         Esto imposibilita la generación de cualquier tipo de tablas, gráficos y test
                         estadísticos.
