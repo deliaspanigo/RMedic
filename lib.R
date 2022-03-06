@@ -3338,6 +3338,7 @@ KM_Tabla_General <- function(base = NULL, alfa = 0.05){
   TABLA_KM <- as.character(TABLA_KM)
   dim(TABLA_KM) <- c(1, length(TABLA_KM))
   colnames(TABLA_KM) <- nombres
+  TABLA_KM[1,is.na(TABLA_KM[1,])] <- "Sin estimación posible"
   
   # Return Exitoso...
   # # # Sale la tabla y un objeto para graficar

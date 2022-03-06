@@ -19,12 +19,16 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
   ns <- session$ns
   
   
+  # Sobrevida General
   UserSelection <- callModule(module = BatallaNavalSERVER3, 
                               id =  "sobrevida01",
                               base = base,
                               zocalo_CIE = zocalo_CIE,
                               verbatim = FALSE)
   
+  OpcionesColumnas <- UserSelection$OpcionesColumnas
+  
+  observe(cat("AVer1","\n", OpcionesColumnas(), "\n"))
   
   batalla_naval <- UserSelection$batalla_naval
   casoRMedic <- reactive({
@@ -71,7 +75,7 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
   
   
   
-  callModule(module = KM_Grafico_SobrevidaGeneral_SERVER,
+  callModule(module = KM_SobrevidaGeneral_SERVER,
              id =  "sobrevida03",
              minibase = minibase,
              decimales = decimales,
@@ -80,8 +84,13 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
   
 
   
+  #############################################################################
   
- 
+  # Sobrevida por grupos
+  
+  var_grupo <- callModule(module = BatallaNavalSERVER4, 
+                          id =  "sobrevidaGrupo01",
+                          OpcionesColumnas = OpcionesColumnas)
   
   
   
@@ -112,18 +121,15 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
                div(
                  tabsetPanel(
                    tabPanel("Sobrevida General", 
-                            KM_Grafico_SobrevidaGeneral_UI(ns("sobrevida03"))),
+                            KM_SobrevidaGeneral_UI(ns("sobrevida03"))),
                    tabPanel("Sobrevida por Grupos",
-                            column(4,
-                                   selectInput(inputId = ns("var3"),
-                                               label = "Grupo (Variable 3): ",
-                                               choices = "")
-                            ),)
+                            BatallaNavalUI4(ns("sobrevidaGrupo01"))
                  )
                )
                     
                
               
+        )
         ),
         column(1)
       )

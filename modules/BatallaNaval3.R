@@ -419,7 +419,8 @@ BatallaNavalSERVER3 <- function(input, output, session,
     list(
       batalla_naval = batalla_naval,
       decimales = decimales,
-      alfa = alfa
+      alfa = alfa,
+      OpcionesColumnas =   OpcionesColumnas
     )
   )
   

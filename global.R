@@ -29,6 +29,7 @@ source("modules/SideBarBase.R")
 source("modules/BatallaNaval.R")
 source("modules/BatallaNaval2.R")
 source("modules/BatallaNaval3.R")
+source("modules/BatallaNaval4.R")
 source("modules/MiniBase.R")
 
 source("modules/Tablas1Q.R")
@@ -128,7 +129,7 @@ source("modules/HoQC_10_TestNormalidadShapiroWilkParticionado.R")
 
 
 # KaplanMeier
-source("modules/KM_Grafico_SobrevidaGeneral.R")
+source("modules/KM_SobrevidaGeneral.R")
 
 
 source("modules2/ModuleBase.R")
