@@ -131,7 +131,7 @@ source("modules/HoQC_10_TestNormalidadShapiroWilkParticionado.R")
 
 # KaplanMeier
 source("modules/KM_SobrevidaGeneral.R")
-
+source("modules/KM_SobrevidaGrupos.R")
 
 source("modules2/ModuleBase.R")
 source("modules2/ModuleControl.R")

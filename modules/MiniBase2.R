@@ -1,12 +1,8 @@
-
-
-# Esto es exclusivo para Sobrevida por grupos
-
 ## Segmento del UI
 MiniBaseUI2 <- function(id) {
   ns <- NS(id)
   
-  div(tableOutput(ns("MiniBase")))
+  div(tableOutput(ns("MiniBase2")))
   
 }
 
@@ -14,41 +10,34 @@ MiniBaseUI2 <- function(id) {
 
 
 ## Segmento del server
-MiniBaseSERVER2 <- function(input, output, session, 
-                            base, 
-                            var_general,
-                            var_grupo) {
+MiniBaseSERVER2 <- function(input, output, session, base, 
+                           batalla_naval, var_grupo, verbatim) {
   
   
-  # Las 3 variables...
-  tres_variables <- reactive({ 
-    
-    if(is.null(var_general())) return(NULL)
-    if(is.null(var_general())) return(NULL)
-    
-    las_tres <- c(var_general(), var_grupo())
-    return(las_tres)
-  })
-    
-    
-  # Minibase para grupo
   minibase <- reactive({
     
-    if(is.null(tres_variables())) return(NULL)
-
+    if(is.null(base())) return(NULL)
+    if(is.null(batalla_naval())) return(NULL)
+    if(is.null(var_grupo())) return(NULL)
     
+    vars <- c(batalla_naval()[[1]], var_grupo())
 
     # The minibase
-    minibase <- na.omit(base()[tres_variables()])
+    minibase <- na.omit(base()[vars])
     minibase[,3] <- as.character(minibase[,3])
     
-
+    
     return(minibase)
   })
   
+  output$MiniBase2 <- renderTable({
+    
+   # if(is.null(verbatim)) return(NULL)
+  #  if(!verbatim) return(NULL)
+    
+    minibase()
+  })
   
-  
-
   # Modul Return!!!
   return(minibase)
   

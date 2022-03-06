@@ -91,15 +91,23 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
   # Sobrevida por grupos
   
   var_grupo <- callModule(module = BatallaNavalSERVER4,
-                          id =  "sobrevidaGrupo01",
+                          id =  "sobrevidagrupo01",
                           OpcionesColumnas = OpcionesColumnas)
-  # 
-  # 
-  # minibase_grupo <- callModule(module = MiniBaseSERVER2, 
-  #                        id =  "sobrevidaGrupo02",
-  #                        base = base,
-  #                        var_general = var_general,
-  #                        var_grupo = var_grupo)
+  
+  minibase2 <- callModule(module = MiniBaseSERVER2, 
+                         id =  "sobrevidagrupo02",
+                         base = base,
+                         batalla_naval = batalla_naval,
+                         var_grupo = var_grupo,
+                         verbatim = FALSE)
+  
+  
+  callModule(module = KM_SobrevidaGrupos_SERVER,
+             id =  "sobrevidagrupo03",
+             minibase = minibase2,
+             decimales = decimales,
+             alfa = alfa,
+             control_ejecucion = control_ejecucion)
   
   
   menuSOBREVIDA <- reactive({
@@ -131,7 +139,8 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
                    tabPanel("Sobrevida General", 
                             KM_SobrevidaGeneral_UI(ns("sobrevida03"))),
                    tabPanel("Sobrevida por Grupos",
-                            BatallaNavalUI4(ns("sobrevidaGrupo01"))
+                            BatallaNavalUI4(ns("sobrevidagrupo01")),
+                            KM_SobrevidaGrupos_UI(ns("sobrevidagrupo03"))
                  )
                )
                     

@@ -3,7 +3,7 @@ BatallaNavalUI4 <- function(id) {
   ns <- NS(id)
   
   
-  uiOutput(ns("ARMADO_BATALLON"))
+  uiOutput(ns("ARMADO_BATALLON2"))
   
 }
 
@@ -11,7 +11,8 @@ BatallaNavalUI4 <- function(id) {
 
 
 ## Segmento del server
-BatallaNavalSERVER4 <- function(input, output, session, 
+BatallaNavalSERVER4 <- function(input, output, session,
+                                batalla_naval,
                                 OpcionesColumnas) {
   
   ns <- session$ns
@@ -39,7 +40,7 @@ BatallaNavalSERVER4 <- function(input, output, session,
   
  
   
-  output$ARMADO_BATALLON <- renderUI({
+  output$ARMADO_BATALLON2 <- renderUI({
     
     if(is.null(OpcionesColumnas())) return(NULL)
     div(
@@ -69,11 +70,12 @@ BatallaNavalSERVER4 <- function(input, output, session,
     
     })
   
+ 
+  
+  
   # Final Return of the Modul!
   return(
-    list(
-      var_grupo =var_grupo
-    )
+    var_grupo
   )
   
   # return(
