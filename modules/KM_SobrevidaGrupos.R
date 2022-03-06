@@ -30,6 +30,7 @@ KM_SobrevidaGrupos_SERVER <- function(input, output, session,
   # Control interno 01
   control_interno01 <- reactive({
     
+    if(is.null(minibase())) return(FALSE)
     if(is.null(control_ejecucion())) return(FALSE)
     else return(control_ejecucion())
   })
@@ -37,11 +38,24 @@ KM_SobrevidaGrupos_SERVER <- function(input, output, session,
   
   
   
+  categorias <- reactive({
+    
+    if(!control_interno01()) return(NULL)
+    
+    categorias <- levels(as.factor(minibase()[,3]))
+    categorias
+    
+  })
   
   
   
-  
-  
+  cantidad <- reactive({
+    
+    if(!control_interno01()) return(NULL)
+    
+    cantidad <- length(categorias())
+    
+  })
   
   
   
@@ -66,8 +80,9 @@ KM_SobrevidaGrupos_SERVER <- function(input, output, session,
     if(!control_interno01()) return(NULL)
     
     label_armado <- "Color..."
-    cantidad_colores <- 1 
-    colores_internos <- "blue"
+    cantidad_colores <- cantidad()
+    colores_internos <- rainbow(cantidad_colores)
+    label_armado <- paste0("Color ", c(1:cantidad()), " - Categoria: ", categorias())
     
     lapply(1:cantidad_colores, function(i) {
       
@@ -89,7 +104,8 @@ KM_SobrevidaGrupos_SERVER <- function(input, output, session,
     if(!control_interno01()) return(NULL)
     
     # Solo un color en KM General
-    cantidad <- 1
+    
+    cantidad <- cantidad()
     
     # Creamos un vector vacio
     mis_colores <- rep(NA, cantidad)
@@ -129,8 +145,14 @@ KM_SobrevidaGrupos_SERVER <- function(input, output, session,
     if (is.null(objeto_KM)) return(NULL)
     if (is.null(colores_usuario_KM_Grupos())) return(NULL)
     
+    forma1 <- rep(1, cantidad())
+    forma2 <- rep(c(1,3,3), cantidad())
+    
+    forma_elegida <- forma1
+    if(input$agregado01) forma_elegida <- forma2
+    
     plot(objeto_KM, conf.int = input$agregado01, 
-         mark.time = TRUE, lty = c(1,3,3), 
+         mark.time = TRUE, lty = forma_elegida, 
          col = colores_usuario_KM_Grupos(), 
          xlab= "Tiempo", ylab= "Probabilidad de Sobrevida", 
          main= "Sobrevida General", yaxt = "n")
