@@ -66,6 +66,8 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
   
   alfa <- UserSelection$alfa
   
+ # var_general <- UserSelection$batalla_naval[[1]]
+  
   minibase <- callModule(module = MiniBaseSERVER, 
                          id =  "sobrevida02",
                          base = base,
@@ -88,10 +90,16 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
   
   # Sobrevida por grupos
   
-  var_grupo <- callModule(module = BatallaNavalSERVER4, 
+  var_grupo <- callModule(module = BatallaNavalSERVER4,
                           id =  "sobrevidaGrupo01",
                           OpcionesColumnas = OpcionesColumnas)
-  
+  # 
+  # 
+  # minibase_grupo <- callModule(module = MiniBaseSERVER2, 
+  #                        id =  "sobrevidaGrupo02",
+  #                        base = base,
+  #                        var_general = var_general,
+  #                        var_grupo = var_grupo)
   
   
   menuSOBREVIDA <- reactive({

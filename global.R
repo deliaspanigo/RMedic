@@ -31,6 +31,7 @@ source("modules/BatallaNaval2.R")
 source("modules/BatallaNaval3.R")
 source("modules/BatallaNaval4.R")
 source("modules/MiniBase.R")
+source("modules/MiniBase2.R")
 
 source("modules/Tablas1Q.R")
 source("modules/Tablas1C.R")
