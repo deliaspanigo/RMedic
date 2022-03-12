@@ -3331,7 +3331,7 @@ KM_Tabla_General <- function(base = NULL, alfa = 0.05){
   #  mediana_upp
   
   # Armamos una tabla nueva con la informacion que recolectamos
-  nombres <- c("n", "Eventos", "Mediana", "Límite Inferior", "Límite Superior", 
+  nombres <- c("n", "Eventos", "Mediana de Sobrevida (50%)", "Límite Inferior", "Límite Superior", 
                "Alfa", "Confianza")
   TABLA_KM <- c(nrow(minibase), sum(status), mediana_KM, mediana_low, mediana_upp,
                 alfa, confianza)
@@ -3386,7 +3386,7 @@ KM_Tabla_Grupos <- function(base = NULL, alfa = 0.05){
   
   # Sobrevida por grupo
   SGrupoPartes <- list()
-  nombres <- c("n", "Eventos", "Mediana", "Límite Inferior", "Límite Superior")
+  nombres <- c("n", "Eventos", "Mediana de Sobrevida (50%)", "Límite Inferior", "Límite Superior")
   TABLA_KMgg <- data.frame(matrix(NA, length(levels(grupo)), length(nombres)))
   colnames(TABLA_KMgg) <- nombres
   rownames(TABLA_KMgg) <- levels(grupo)
@@ -3472,3 +3472,302 @@ KM_Tabla_Grupos <- function(base = NULL, alfa = 0.05){
   return(the_exit)
   
 }
+
+
+########################################
+
+KM_TestLogRank <- function(base = NULL, alfa = 0.05){
+  
+  
+  # Separamos los elementos
+  minibase <- na.omit(base)
+  tiempo <- minibase[,1]
+  status <- minibase[,2]
+  grupo  <-  as.factor(minibase[,3])
+  
+  
+  .S <-survdiff(Surv(tiempo, status) ~ grupo, rho=0.0)
+  #  .S
+  niveles_grupo <- levels(grupo)
+  cantidad_niveles <- length(niveles_grupo)
+  
+  valor_chi <- .S[["chisq"]]
+  valor_chi <- round(valor_chi, 2)
+  gl <- length(levels(grupo)) - 1
+  #  gl
+  valor_p_interno <- pchisq(valor_chi, gl, ncp = 0, lower.tail = FALSE, log.p = FALSE)
+  valor_p_interno <- round2(valor_p_interno, 2)
+  
+  valor_p_externo <- valor_p_interno
+  if (valor_p_interno < 0.01) valor_p_externo <- c("<0.01")
+  
+  frase1 <- c("No Rechazo Ho")
+  if (valor_p_interno < alfa) frase1<- c("Rechazo Ho")
+  
+  frase2A_1 <- c("El valor p es mayor que el valor de alfa.<br/>", "\n",
+               "No se rechaza la Hipótesis Nula.<br/>", "\n",
+               "No existen diferencias estadísticamente significativas entre los grupos.<br/>", "\n",
+               "Los grupos son estadísticamente iguales.")
+  
+  frase2A_2 <- c("El valor p es mayor que el valor de alfa.<br/>", "\n",
+               "No se rechaza la Hipótesis Nula.<br/>", "\n",
+               "No existen diferencias estadísticamente significativas entre ambos grupos.<br/>", "\n",
+               "Ambos grupos son estadísticamente iguales.")
+  
+  
+  frase2B_1 <- c("El valor p es igual que el valor de alfa.<br/>", "\n",
+               "No se rechaza la Hipótesis Nula.<br/>", "\n",
+               "No existen diferencias estadísticamente significativas entre los grupos.<br/>", "\n",
+               "Los grupos son estadísticamente iguales.")
+  
+  frase2B_2 <- c("El valor p es igual que el valor de alfa.<br/>", "\n",
+                 "No se rechaza la Hipótesis Nula.<br/>", "\n",
+                 "No existen diferencias estadísticamente significativas entre ambos grupos.<br/>", "\n",
+                 "Ambos grupos son estadísticamente iguales.")
+  
+  
+  frase2C_1 <- c("El valor p es menor que el valor de alfa.<br/>", "\n",
+              "Se rechaza la Hipótesis Nula.<br/>", "\n",
+              "Existen diferencias estadísticamente significativas.<br/>", "\n",
+              "Al menos uno de los grupos son estadísticamente diferentes.<br/>", "\n",
+              "Al ser más 3 o más grupos, el test de LogRank solo tiene la capacidad de definir si 
+              al menos uno de los grupos es estadísticamente diferente pero no tiene la capacidad de indicar 
+              cual o cuale son los grupos estadísticamente diferentes. Rechazar la hipótesis nula no 
+              implica que necesariamente todos los grupos son estadísticamente diferentes.")
+              
+  
+  frase2C_2 <- c("El valor p es menor que el valor de alfa.<br/>", "\n",
+              "Se rechaza la Hipótesis Nula.<br/>", "\n",
+              "Existen diferencias estadísticamente significativas entre ambos grupos.<br/>", "\n",
+              "Los dos grupos son estadísticamente diferentes entre si.")
+  
+  frase2 <- ""
+  if(valor_p_interno > alfa && cantidad_niveles == 2) frase2 <- frase2A_2 else
+    if(valor_p_interno > alfa && cantidad_niveles > 2) frase2 <- frase2A_1 else 
+      if (valor_p_interno == alfa && cantidad_niveles == 2) frase2 <- frase2B_2 else 
+        if (valor_p_interno == alfa && cantidad_niveles > 2) frase2 <- frase2B_1 else
+          if (valor_p_interno < alfa && cantidad_niveles == 2) frase2 <- frase2C_2 else
+            if (valor_p_interno < alfa && cantidad_niveles > 2) frase2 <- frase2C_1
+  
+
+  
+  # Respuesta
+  if (valor_p_interno <= alfa) respuesta <- "Si" else respuesta <- "No"
+    
+  nombres <- c("Variable 1 (Tiempo)", "Variable 2 (Estatus)", "Variable 3 (Grupo)",
+               "n", "Test", "Estadístico (Chi)", "Grados de Libertad", "Valor p", "Alfa", "Decisión", 
+               "¿Al menos una de los grupos es diferente?")
+  
+  salida <- matrix(NA, 1, length(nombres))
+  colnames(salida) <- nombres
+  
+  salida[1,  1] <- colnames(base)[1]
+  salida[1,  2] <- colnames(base)[2]
+  salida[1,  3] <- colnames(base)[3]
+  salida[1,  4] <- nrow(minibase)
+  salida[1,  5] <- "Test de LogRank"
+  salida[1,  6] <- valor_chi
+  salida[1,  7] <- gl
+  salida[1,  8] <- valor_p_externo
+  salida[1,  9] <- alfa
+  salida[1, 10] <- frase1
+  salida[1, 11] <- respuesta
+
+
+  
+  # Salida del test  
+  KM <- list()
+  
+
+  KM$TablaLogRank <- salida
+  KM$Frase <- frase2
+  
+  KM
+  
+}
+
+
+###################################################
+
+control_KM1 <- function(base = NULL){
+
+  # Controlador general, empieza TRUE
+  controlador <- TRUE
+  frase <- ""
+  
+  # Minibase
+  minibase <- na.omit(base)
+  columna_tiempo <- paste0("'",colnames(minibase)[1],"'")
+  columna_status <- paste0("'",colnames(minibase)[2],"'")
+  
+  # La base debe contener al menos 2 columnas
+  if(ncol(base) < 2) {
+    
+    controlador <- FALSE
+    frase <- "La base debe contener al menos 2 columnas. Revise la base de datos."
+  } else  
+  
+  # La base debe contener al menos 1 fila
+  if(nrow(base) == 0){
+    controlador <- FALSE
+    frase <- "La base de datos debe contener al menos 1 fila. Revise la base de datos."
+    
+  } else 
+  
+  # La minibase debe contener dos columnas
+  if(ncol(minibase) < 2) {
+    
+    controlador <- FALSE
+    frase <- "La minibase debe contener al menos 2 columnas. Revise la base de datos."
+  }  else
+  
+  # Las dos variables seleccionadas deben ser diferentes  
+  if(colnames(minibase)[1] == colnames(minibase)[2]) {
+    
+    controlador <- FALSE
+    frase <- "Ha seleccionado dos veces la misma variable. Seleccione dos variables diferentes, una para 
+    'tiempo' y otra para 'status'."
+  }  else
+  
+  # La minibase debe tener al menos una fila
+  if(nrow(minibase) == 0){
+    controlador <- FALSE
+    frase <- "La minibase de datos debe contener al menos 1 fila. Tenga en cuenta que solo 
+    son utilizadas las filas que poseen simultáneamente un dato de 'tiempo' y un dato de 'status'.
+    Revise la base de datos."
+    
+  }
+  
+  # La columna de tiempos no puede tener valores negativos
+  if(sum(minibase[,1] < 0) != 0){
+    controlador <- FALSE
+    frase <- paste0("<b><u>Advertencia:</u> ", "La variable ", columna_tiempo, " asignada como 
+                        Tiempo (Variable 1)' solo puede contener medidas de tiempo igual a cero o positivas,
+                        o celdas vacías. Se han encontrado en la variable tiempos negativos. Si ha calculado 
+              los tiempos a partir de fechas, revise las fechas. Si no es posible verificar o corregir 
+              la información de tiempo, deje vacía la celda que presenta tiempos negativos en su base de datos.</b>",
+                    "<br/><br/><br/><br/>")
+                    
+
+    
+  } else
+  
+  # La columna de status presenta categorias distinta de cero y uno
+  if(length(unique(c(levels(as.factor(minibase[,2])), c("0", "1")))) != 2){
+      controlador <- FALSE
+      frase <-  paste0("<b><u>Advertencia:</u> ", "La variable ", columna_status, " asignada como 
+                        Status (Variable 2)' solo puede contener
+                        '0' y/o '1' como información. <br/>
+                        Se han detectado otras categorías en la variable seleccionada. <br/>
+                        Realice un control sobre esta variable y modifique la base de datos.</b>",
+                        "<br/><br/><br/><br/>")
+    
+    }
+  
+
+####################################
+  # Return Exitoso
+  return(list(controlador, frase))
+  
+  
+}
+
+
+####################################################
+
+
+control_KM2 <- function(base = NULL){
+  
+  # Controlador general, empieza TRUE
+  controlador <- TRUE
+  frase <- ""
+  
+  # Minibase
+  minibase <- na.omit(base)
+  columna_tiempo <- paste0("'",colnames(minibase)[1],"'")
+  columna_status <- paste0("'",colnames(minibase)[2],"'")
+  columna_grupo <- paste0("'",colnames(minibase)[3],"'")
+  
+  # La base debe contener al menos 2 columnas
+  if(ncol(base) < 3) {
+    
+    controlador <- FALSE
+    frase <- "La base debe contener al menos 3 columnas. Revise la base de datos."
+  } else  
+    
+    # La base debe contener al menos 1 fila
+    if(nrow(base) == 0){
+      controlador <- FALSE
+      frase <- "La base de datos debe contener al menos 1 fila. Revise la base de datos."
+      
+    } else 
+      
+      # La minibase debe contener dos columnas
+      if(ncol(minibase) < 3) {
+        
+        controlador <- FALSE
+        frase <- "La minibase debe contener al menos 3 columnas. Revise la base de datos."
+      }  else
+        
+        # Alguna de las variables esta repetida  
+        if(length(names(table(colnames(minibase)))) != 3) {
+          
+          controlador <- FALSE
+          frase <- "Tiempo, Status y Grupo deben ser 3 variables diferentes de la base de datos."
+        }  else
+          
+          # La minibase debe tener al menos una fila
+          if(nrow(minibase) == 0){
+            controlador <- FALSE
+            frase <- "La minibase de datos debe contener al menos 1 fila. Tenga en cuenta que solo 
+    son utilizadas las filas que poseen simultáneamente un dato de 'tiempo' y un dato de 'status'.
+    Revise la base de datos."
+            
+          }
+  
+  # La columna de tiempos no puede tener valores negativos
+  if(sum(minibase[,1] < 0) != 0){
+    controlador <- FALSE
+    frase <- paste0("<b><u>Advertencia:</u> ", "La variable ", columna_tiempo, " asignada como 
+                        Tiempo (Variable 1)' solo puede contener medidas de tiempo igual a cero o positivas,
+                        o celdas vacías. Se han encontrado en la variable tiempos negativos. Si ha calculado 
+              los tiempos a partir de fechas, revise las fechas. Si no es posible verificar o corregir 
+              la información de tiempo, deje vacía la celda que presenta tiempos negativos en su base de datos.</b>",
+                    "<br/><br/><br/><br/>")
+    
+    
+    
+  } else
+    
+    # La columna de status presenta categorias distinta de cero y uno
+    if(length(unique(c(levels(as.factor(minibase[,2])), c("0", "1")))) != 2){
+      controlador <- FALSE
+      frase <-  paste0("<b><u>Advertencia:</u> ", "La variable ", columna_status, " asignada como 
+                        Status (Variable 2)' solo puede contener
+                        '0' y/o '1' como información. <br/>
+                        Se han detectado otras categorías en la variable seleccionada. <br/>
+                        Realice un control sobre esta variable y modifique la base de datos.</b>",
+                       "<br/><br/><br/><br/>")
+      
+    } else
+  
+  
+  # La columna de grupo presenta al menos dos categorias
+  if(length(levels(as.factor(minibase[,3]))) < 2){
+    controlador <- FALSE
+    frase <-  paste0("<b><u>Advertencia:</u> ", "La variable ", columna_grupo, " asignada como 
+                        Grupo (Variable 3)' debe contener al menos 2 grupos para poder llevar a cabo 
+                        una comparación.<br/>
+                        Se ha detectado que la varaible grupo solo posee un grupo.<br/>
+                        Realice un control sobre esta variable y modifique la base de datos.</b>",
+                     "<br/><br/><br/><br/>")
+    
+  }
+  
+  ####################################
+  # Return Exitoso
+  return(list(controlador, frase))
+  
+  
+}
+

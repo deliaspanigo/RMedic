@@ -28,7 +28,7 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
   
   OpcionesColumnas <- UserSelection$OpcionesColumnas
   
-  observe(cat("AVer1","\n", OpcionesColumnas(), "\n"))
+ 
   
   batalla_naval <- UserSelection$batalla_naval
   casoRMedic <- reactive({
@@ -140,7 +140,8 @@ ModuleSobrevidaSERVER <-  function(input, output, session, base,
                             KM_SobrevidaGeneral_UI(ns("sobrevida03"))),
                    tabPanel("Sobrevida por Grupos",
                             BatallaNavalUI4(ns("sobrevidagrupo01")),
-                            KM_SobrevidaGrupos_UI(ns("sobrevidagrupo03"))
+                            KM_SobrevidaGrupos_UI(ns("sobrevidagrupo03")),
+                            br(), br(), br(), br(), br()
                  )
                )
                     

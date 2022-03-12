@@ -18,7 +18,7 @@ BatallaNavalSERVER4 <- function(input, output, session,
   ns <- session$ns
   
   
-  observe(cat("AVer2","\n", OpcionesColumnas(), "\n"))
+ # observe(cat("AVer2","\n", OpcionesColumnas(), "\n"))
   if(is.null(OpcionesColumnas)) return(NULL)
   
   # return(

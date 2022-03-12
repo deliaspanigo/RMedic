@@ -5,8 +5,12 @@ KM_SobrevidaGeneral_UI <- function(id) {
   
   ns <- NS(id)
   
-  uiOutput(ns("armado_grafico"))
-  
+  div(
+    br(),
+    fluidRow(span(htmlOutput(ns("texto_contorl_KM1")), style="color:red")),
+    uiOutput(ns("armado_grafico")),
+    br()
+  )
   
 }
 
@@ -27,71 +31,49 @@ KM_SobrevidaGeneral_SERVER <- function(input, output, session,
   # NameSpaceasing for the session
   ns <- session$ns
   
+ 
+  
+  control_internoKM1 <- reactive({
+    
+    if(is.null(control_ejecucion())) return(list(FALSE, ""))
+    
+    
+    # Return exitoso
+    if(!is.null(minibase())){
+      if(ncol(minibase()) > 0) {
+        if(nrow(minibase()) > 0) {
+      
+     
+          control_KM1(base = minibase())
+          
+        }
+      }
+    } 
+    
+    
+  })
+    
+  
   # Control interno 01
   control_interno01 <- reactive({
     
+
     if(is.null(control_ejecucion())) return(FALSE)
-    else return(control_ejecucion())
+    if(is.null(control_internoKM1())) return(FALSE) 
+
+    ambos <- c(control_ejecucion(), control_internoKM1()[[1]])
+    
+    if(sum(ambos) == 2) return(TRUE) else return(FALSE)
+
   })
   
-  
-  
-  
-  
-  
-
-  
  
-  
- 
-  
- 
-  
-  
-  
-  
-  
-  
 
   
   
-  # Salida de colores
-  output$MODcolor <- renderUI({
-    
-    # Control interno 01
-    if(!control_interno01()) return(NULL)
-    
-    label_armado <- "Color..."
-    colores_internos <- valores_iniciales()$color
-    cantidad <- length(colores_internos)
-    
-    lapply(1:cantidad, function(i) {
-      
-      nombre_input <- paste("col", i, sep="_")
-      div(
-        colourpicker::colourInput(inputId = ns(nombre_input),
-                                  label = label_armado[i], 
-                                  value = colores_internos[i]), br()
-      )
-      
-    })
-    
-  })
-  
-  
- 
-  
- 
-  
-  
-  
-  
-  
- 
-  
- 
   # Salida de colores
   output$MODcolor_KM_general <- renderUI({
+    
     
     # Control interno 01
     if(!control_interno01()) return(NULL)
@@ -141,7 +123,14 @@ KM_SobrevidaGeneral_SERVER <- function(input, output, session,
   })
   
   
-  output$tablaKM_General <- renderTable({
+  output$texto_contorl_KM1 <- renderText({
+    
+    control_internoKM1()[[2]]
+  })
+  
+  output$tablaKM_General <- renderTable(rownames = FALSE, align = "c",{
+    
+    if(!control_interno01()) return(NULL)
     
     KM_Tabla_General(base = minibase(), alfa = alfa())[[1]]
     
@@ -151,6 +140,8 @@ KM_SobrevidaGeneral_SERVER <- function(input, output, session,
   output$graficoKM_General <- renderPlot({
     
     # https://r-charts.com/es/r-base/ejes/
+    
+    if(!control_interno01()) return(NULL)
     
     objeto_KM <- KM_Tabla_General(base = minibase(), alfa = alfa())[[2]]
     
@@ -176,7 +167,7 @@ KM_SobrevidaGeneral_SERVER <- function(input, output, session,
     if(!control_interno01()) return(NULL)
     
     div(
-      h2("Tabla Resumen de Sobrevida Genetal de Kaplan-Meier"),
+      h2("Tabla Resumen de Sobrevida General de Kaplan-Meier"),
       tableOutput(ns("tablaKM_General")), br(), br(),
       
       fluidRow(
@@ -184,15 +175,19 @@ KM_SobrevidaGeneral_SERVER <- function(input, output, session,
         column(6,
                plotOutput(ns("graficoKM_General")), br(), br(),
         ),
-        column(4, 
-               # Color
-               uiOutput(ns("MODcolor_KM_general")),
+        column(4,
                br(),
-               
                #Intervalos
                checkboxInput(inputId = ns("agregado01"),
                              label = "Agregar intervalo de confianza",
-                             value = FALSE))
+                             value = FALSE), 
+               br(), br(),
+               
+               # Color
+               uiOutput(ns("MODcolor_KM_general"))
+               
+             
+               )
       )
       
      
