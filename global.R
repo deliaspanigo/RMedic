@@ -140,3 +140,5 @@ source("modules2/ModuleGraficos.R")
 source("modules2/ModuleHo.R")
 source("modules2/ModuleSobrevida.R")
 
+# Control
+source("modules/Control1Q.R")

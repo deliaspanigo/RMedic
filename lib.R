@@ -3771,3 +3771,98 @@ control_KM2 <- function(base = NULL){
   
 }
 
+
+#################################################################
+
+
+
+
+control_1q_RMedic <- function(base = NULL, columna = NULL){
+  
+  
+  # Minibase
+  minibase <- na.omit(base[columna])
+  minibase[,1] <- as.character(minibase[,1])
+  
+  ##############################################################################
+  
+  # Cantidad de celdas vacias
+  cantidad_na <- sum(is.na(base[,columna]))
+  filas_base <- nrow(base)
+  filas_minibase <- nrow(minibase)
+  
+  # Tabla para celdas vacias
+  columnas01 <- c("Total de filas", "Celdas con datos", "Celdas vacías")
+  tabla01 <- matrix(NA, 1, length(columnas01))  
+  tabla01[1,] <- c(filas_base, filas_minibase, cantidad_na)
+  colnames(tabla01) <- columnas01
+  
+  # Frases de celdas vacias
+  frase_armada01_A <- paste0("Todas las celdas de la columna seleccionada presentan datos.
+                              <br/>
+                              Al utilizar esta variable el 'n' será ", filas_base, ".")
+  
+  frase_armada01_B <- paste0("La columna presenta celdas vacías. Al utilizar la columna seleccionada 
+                              el 'n' será ", filas_minibase, ".")
+  
+  
+  # Frase elegida segun cantidad de celdas vacias
+  if(cantidad_na == 0) frase01 <- frase_armada01_A else frase01 <- frase_armada01_B
+  
+  ##############################################################################
+  
+  # Formato de la tabla02  
+  columnas02 <- c("Número de categoría", "Categorías de la variable", 
+                  "Frecuencia Absoluta", "Número de Orden en la base")
+  tabla_fa <- table(minibase)
+  numero_orden_cat <- c(1:length(tabla_fa))
+  
+  tabla02 <- matrix(NA, length(tabla_fa), length(columnas02))
+  colnames(tabla02) <- columnas02
+  
+  tabla02[,1] <- numero_orden_cat
+  tabla02[,2] <- names(tabla_fa)
+  tabla02[,3] <- tabla_fa
+  
+  mostrar <- 5
+  
+  for(k in 1:length(tabla_fa)) {
+    
+    orden <- c(1:nrow(base))    
+    esta_categoria <- names(tabla_fa)[k]
+    dt_categoria <- base[,columna] == esta_categoria
+    dt_categoria[is.na(dt_categoria)] <- FALSE
+    pos <- orden[dt_categoria]
+    
+    
+    if(length(pos) > mostrar) {
+      pos <- pos[1:mostrar]
+      texto <- paste0(pos, ", ")
+      texto[length(texto)] <- paste0(texto[length(texto)], " ...")
+      texto <- paste0(texto, collapse = "")
+      tabla02[k,4] <- texto
+    }  else
+      if(length(pos) <= mostrar) {
+        
+        armado <- c(rep(", ", (length(pos) - 2)), " y ", "")
+        
+        texto <- paste0(pos, armado)
+        texto <- paste0(texto, collapse = "")
+        tabla02[k,4] <- texto
+      }  
+  }
+  
+  ##############################################################################
+  
+  frase02 <- "Observe si todas las categorías son correctas para la variable seleccionada."
+  
+  ##############################################################################
+  # Return exitoso
+  salida <- list(tabla01, frase01, tabla02, frase02)
+  
+  return(salida)
+  
+  
+}
+
+################################################################################
