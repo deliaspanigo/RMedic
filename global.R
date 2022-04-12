@@ -142,3 +142,4 @@ source("modules2/ModuleSobrevida.R")
 
 # Control
 source("modules/Control1Q.R")
+source("modules/Control1C.R")

@@ -33,13 +33,13 @@ ModuleControlSERVER <-  function(input, output, session, base,
   
   
   
-  callModule(module = Tablas1Q_SERVER, id =  "control03",
+  callModule(module = Control1Q_SERVER, id =  "control03",
              minibase = MiniBase,
              batalla_naval = UserSelection$batalla_naval,
              decimales = UserSelection$decimales)
   
   
-  callModule(module = Tablas1C_SERVER, id =  "control04",
+  callModule(module = Control1C_SERVER, id =  "control04",
              minibase = MiniBase,
              batalla_naval = UserSelection$batalla_naval,
              decimales = UserSelection$decimales)
@@ -73,8 +73,8 @@ ModuleControlSERVER <-  function(input, output, session, base,
                h3("Menú para Control"),
                BatallaNavalUI(ns("control01")),
                MiniBaseUI(ns("control02")),
-               Tablas1Q_UI(ns("control03")),
-               Tablas1C_UI(ns("control04"))#,
+               Control1Q_UI(ns("control03")),
+               Control1C_UI(ns("control04"))#,
                # Tablas2Q_UI(ns("tablas05")),
                # Tablas2C_UI(ns("tablas06")),
                # TablasQC_UI(ns("tablas07"))
