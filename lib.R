@@ -3812,8 +3812,11 @@ control_1q_RMedic <- function(base = NULL, columna = NULL){
   ##############################################################################
   
   # Formato de la tabla02  
-  columnas02 <- c("Número de categoría", "Categorías de la variable", 
-                  "Frecuencia Absoluta", "Número de Orden en la base")
+  columnas02 <- c("Número de categoría", 
+                  paste0("Nombre de las categorías de '", colnames(minibase), "'"), 
+                  "Frecuencia Absoluta", 
+                  "Número de Orden en la base")
+  
   tabla_fa <- table(minibase)
   numero_orden_cat <- c(1:length(tabla_fa))
   
@@ -3838,7 +3841,7 @@ control_1q_RMedic <- function(base = NULL, columna = NULL){
     if(length(pos) > mostrar) {
       pos <- pos[1:mostrar]
       texto <- paste0(pos, ", ")
-      texto[length(texto)] <- paste0(texto[length(texto)], " ...")
+      texto[length(texto)] <- paste0(texto[length(texto)], " ... (Solo se detallan los primeros ", mostrar, " datos)")
       texto <- paste0(texto, collapse = "")
       tabla02[k,4] <- texto
     }  else
@@ -3858,8 +3861,10 @@ control_1q_RMedic <- function(base = NULL, columna = NULL){
   
   ##############################################################################
   # Return exitoso
-  salida <- list(tabla01, frase01, tabla02, frase02)
+#  salida <- list(tabla01, frase01, tabla02, frase02)
   
+  # Cambiamos el orden de la salida
+  salida <- list(tabla02, frase02, tabla01, frase01)
   return(salida)
   
   

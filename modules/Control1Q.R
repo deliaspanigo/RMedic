@@ -56,7 +56,7 @@ Tablas1Q_SERVER <- function(input, output, session,
   
   
   # Control 1Q - Tabla 01      
-  output$Tabla_Control01 <- renderTable(align= "c",{
+  output$Tabla_Control01 <- renderTable(rownames = FALSE, align= "c",{
     Reactive_control_1q_RMedic()[[1]]
   })
   
@@ -92,12 +92,13 @@ Tablas1Q_SERVER <- function(input, output, session,
       h2("RMedic - Control para 1 Variable Categórica"),
       br(),
       br(),
-      h3("Parte 1 de 2 - Celdas vacías"),
-      tableOutput(ns("Tabla_Control01")),
+      h3("Parte 1 de 2 - Categorías correctas"),
       htmlOutput(ns("Texto_Control01")),
       br(),
+      tableOutput(ns("Tabla_Control01")),
       br(),
-      h3("Parte 2 de 2 - Categorías correctas"),
+      br(),
+      h3("Parte 2 de 2 - Celdas vacías"),
       htmlOutput(ns("Texto_Control02")),
       br(),
       tableOutput(ns("Tabla_Control02"))
