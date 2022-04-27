@@ -12,7 +12,7 @@ Control1Q_UI <- function(id) {
 
 ## Segmento del server
 Control1Q_SERVER <- function(input, output, session, 
-                            minibase, 
+                            base, 
                             batalla_naval,
                             decimales) {
   
@@ -42,7 +42,7 @@ Control1Q_SERVER <- function(input, output, session,
     if(casoRMedic() != 1) return(NULL)
     
     
-    salida <-  control_1q_RMedic(base = minibase(), columna = 1)
+    salida <-  control_1q_RMedic(base = base(), columna = batalla_naval()[[1]])
     
     
     
@@ -91,7 +91,7 @@ Control1Q_SERVER <- function(input, output, session,
       h2("RMedic - Control para 1 Variable Categórica"),
       br(),
       br(),
-      h3("Parte 1 de 2 - Categorías correctas"),
+      h3("Parte 1 de 2 - Categorías"),
       htmlOutput(ns("Texto_Control01")),
       br(),
       tableOutput(ns("Tabla_Control01")),

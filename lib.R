@@ -4003,3 +4003,264 @@ control_1c_RMedic <- function(base = NULL, columna = NULL, decimales = 2){
 
 
 ################################################################################
+
+
+
+control_2q_RMedic <- function(base = NULL, columna = NULL){
+  
+  
+  # Minibase
+  minibase <- na.omit(base[columna])
+  minibase[,1] <- as.character(minibase[,1])
+  minibase[,2] <- as.character(minibase[,2])
+  
+  ##############################################################################
+  
+  # Cantidad de celdas vacias
+   
+  filas_base <- nrow(base)
+  filas_minibase <- nrow(minibase)
+  cantidad_na <- filas_base - filas_minibase
+  
+  # Tabla para celdas vacias
+  columnas01 <- c("Total de filas", "Filas con ambos datos", "Filas con una o ambas celdas vacías")
+  tabla01 <- matrix(NA, 1, length(columnas01))  
+  tabla01[1,] <- c(filas_base, filas_minibase, cantidad_na)
+  colnames(tabla01) <- columnas01
+  
+  # Frases de celdas vacias
+  frase_armada01_A <- paste0("Todas las celdas de ambas columnas seleccionadas presentan datos.
+                              <br/>
+                              Al utilizar ambas variables variable el 'n' será ", filas_base, ".")
+  
+  frase_armada01_B <- paste0("Solo conforman la muestra los pares de datos completos de ambas variables. 
+                              Al utilizar la columna seleccionada el 'n' será ", filas_minibase, ".")
+  
+  
+  # Frase elegida segun cantidad de celdas vacias
+  if(cantidad_na == 0) frase01 <- frase_armada01_A else frase01 <- frase_armada01_B
+  
+  ##############################################################################
+  
+  # Formato de la tabla02  
+  tabla_fa <- table(minibase)
+  tabla_fa <- as.data.frame(tabla_fa)
+  colnames(tabla_fa) <- c(paste0("Categorías de la variable1 '", colnames(minibase)[1], "'"),
+                          paste0("Categorías de la variable2 '", colnames(minibase)[2], "'"),
+                          paste0("Frecuencia de la combianción de categorías")
+  )
+  
+  tabla_fa[,1] <- as.character(tabla_fa[,1])
+  tabla_fa[,2] <- as.character(tabla_fa[,2])
+  
+  nuevo_orden <- order(tabla_fa[,1])
+  tabla_fa <- tabla_fa[nuevo_orden, ]
+  
+  
+  numero_orden_cat <- c(1:nrow(tabla_fa))
+  
+  columnas02 <- c("Número de combinación", colnames(tabla_fa), "Número de Orden en la base de datos")
+  tabla02 <- matrix(NA, nrow(tabla_fa), length(columnas02))
+  colnames(tabla02) <- columnas02
+  
+  tabla02[,1] <- numero_orden_cat
+  tabla02[,2] <- tabla_fa[,1]
+  tabla02[,3] <- tabla_fa[,2]
+  tabla02[,4] <- tabla_fa[,3]
+  
+  mostrar <- 5
+  
+  for(k in 1:nrow(tabla_fa)) {
+    
+    orden <- c(1:nrow(base))    
+    esta_categoria1 <- tabla_fa[k,1]
+    esta_categoria2 <- tabla_fa[k,2]
+    
+    dt_categoria1 <- base[,columna[1]] == esta_categoria1
+    dt_categoria1[is.na(dt_categoria1)] <- FALSE
+    
+    dt_categoria2 <- base[,columna[2]] == esta_categoria2
+    dt_categoria2[is.na(dt_categoria2)] <- FALSE
+    
+    dt_combinacion <- (as.numeric(dt_categoria1) + as.numeric(dt_categoria2)) == 2
+    
+    
+    pos <- orden[dt_combinacion]
+    
+    if(length(pos) == 0){
+      texto <- "No hay filas con esta combinación dentro de la base."
+      tabla02[k,5] <- texto
+    } else
+      if(length(pos) > mostrar) {
+        pos <- pos[1:mostrar]
+        texto <- paste0(pos, ", ")
+        texto[length(texto)] <- paste0(texto[length(texto)], " ... (Solo se detallan los primeros ", mostrar, " datos)")
+        texto <- paste0(texto, collapse = "")
+        tabla02[k,5] <- texto
+      }  else
+        if(length(pos) <= mostrar && length(pos) > 1) {
+          
+          armado <- c(rep(", ", (length(pos) - 2)), " y ", "")
+          
+          texto <- paste0(pos, armado)
+          texto <- paste0(texto, collapse = "")
+          tabla02[k,5] <- texto
+        }  else
+          if(length(pos) <= mostrar && length(pos) == 1) {
+            texto <- pos
+            tabla02[k,5] <- texto
+          }  
+  }
+  
+  ##############################################################################
+  
+  frase02 <- "Observe si todas las categorías de cada variable y la combinación de categorías son correctas."
+  
+  ##############################################################################
+  # Return exitoso
+  #  salida <- list(tabla01, frase01, tabla02, frase02)
+  
+  # Cambiamos el orden de la salida
+  salida <- list(tabla02, frase02, tabla01, frase01)
+  return(salida)
+  
+  
+}
+
+################################################################################
+
+
+
+control_2c_RMedic <- function(base = NULL, columna = NULL, decimales = 2){
+  
+  
+  # Minibase
+  minibase <- na.omit(base[columna])
+  
+  ##############################################################################
+  
+  # Cantidad de celdas vacias
+  filas_base <- nrow(base)
+  filas_minibase <- nrow(minibase)
+  cantidad_na <- filas_base - filas_minibase
+  
+  # Tabla para celdas vacias
+  columnas01 <- c("Total de filas", "Filas con ambos datos", "Filas con una o ambas celdas vacías")
+  tabla01 <- matrix(NA, 1, length(columnas01))  
+  tabla01[1,] <- c(filas_base, filas_minibase, cantidad_na)
+  colnames(tabla01) <- columnas01
+  
+  # Frases de celdas vacias
+  frase_armada01_A <- paste0("Todas las celdas de la columna seleccionada presentan datos.
+                              <br/>
+                              Al utilizar esta variable el 'n' será ", filas_base, ".")
+  
+  frase_armada01_B <- paste0("Solo conforman la muestra los pares de datos completos de ambas variables. 
+                              Al utilizar la columna seleccionada el 'n' será ", filas_minibase, ".")
+  
+  
+  # Frase elegida segun cantidad de celdas vacias
+  if(cantidad_na == 0) frase01 <- frase_armada01_A else frase01 <- frase_armada01_B
+  
+  ##############################################################################
+  
+  # Formato de la tabla02 y tabla03
+  
+  mis_tablas <- list()
+  
+  # Una tabla para cada variable
+  for (h in 1:2) {
+    
+    columnas02 <- c("Detalle",
+                    "Valor",
+                    "Cantidad de datos detectados",
+                    "Número de Orden en la base")
+    
+    filas02 <- c("Mínimo", "Máximo")
+    
+    orden <- 1:nrow(base)
+    
+    minimo <- min(minibase[,h])
+    maximo <- max(minibase[,h])
+    
+    minimo <- round2(minimo, decimales)
+    maximo <- round2(maximo, decimales)
+    
+    dt_min <- minimo == minibase[,h]
+    dt_min[is.na(dt_min)] <- FALSE
+    
+    dt_max <- maximo == minibase[,h]
+    dt_max[is.na(dt_max)] <- FALSE
+    
+    
+    cantidad_min <- sum(dt_min)
+    cantidad_max <- sum(dt_max)
+    
+    orden_min <- orden[dt_min]
+    orden_max <- orden[dt_max]
+    
+    
+    mostrar <- 5
+    
+    armado_orden <- list(orden_min, orden_max)
+    texto_salida <- list()
+    
+    
+    for(k in 1:length(armado_orden)) {
+      
+      pos <- armado_orden[[k]]
+      texto_salida[[k]] <- c()
+      
+      # Si hay mas de lo que hay que mostrar...
+      if(length(pos) > mostrar) {
+        pos <- pos[1:mostrar]
+        texto <- paste0(pos, ", ")
+        texto[length(texto)] <- paste0(texto[length(texto)], " ... (Solo se detallan los primeros ", mostrar, " datos)")
+        texto <- paste0(texto, collapse = "")
+      }  else
+        if(length(pos) <= mostrar && length(pos) > 1) {
+          
+          armado <- c(rep(", ", (length(pos) - 2)), " y ", "")
+          
+          texto <- paste0(pos, armado)
+          texto <- paste0(texto, collapse = "")
+        }   else
+          if(length(pos) <= mostrar && length(pos) == 1) {
+            texto <- pos
+          } 
+      
+      texto_salida[[k]] <- texto
+    }
+    
+    
+    tabla02 <- matrix(NA, length(filas02), length(columnas02))
+    colnames(tabla02) <- columnas02
+    #  rownames(tabla02) <- filas02
+    
+    tabla02[1,] <- c(filas02[1], minimo, cantidad_min, texto_salida[[1]])
+    tabla02[2,] <- c(filas02[2], maximo, cantidad_max, texto_salida[[2]])
+    
+    mis_tablas[[h]] <- tabla02
+    
+  }
+  names(mis_tablas) <- colnames(minibase)
+  tabla02 <- mis_tablas[[1]]
+  tabla03 <- mis_tablas[[2]]
+  ##############################################################################
+  
+  frase02 <- "Observe si los valores mínimos y máximos de la variable tienen sentido."
+  frase03 <- frase02
+  ##############################################################################
+  # Return exitoso
+  #  salida <- list(tabla01, frase01, tabla02, frase02)
+  
+  # Cambiamos el orden de la salida
+  salida <- list(tabla02, frase02, tabla03, frase03, tabla01, frase01)
+  return(salida)
+  
+  
+}
+
+
+
+################################################################################

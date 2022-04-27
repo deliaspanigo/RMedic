@@ -34,20 +34,27 @@ ModuleControlSERVER <-  function(input, output, session, base,
   
   
   callModule(module = Control1Q_SERVER, id =  "control03",
-             minibase = MiniBase,
+             base = base,
              batalla_naval = UserSelection$batalla_naval,
              decimales = UserSelection$decimales)
   
   
   callModule(module = Control1C_SERVER, id =  "control04",
-             minibase = MiniBase,
+             base = base,
              batalla_naval = UserSelection$batalla_naval,
              decimales = UserSelection$decimales)
   
   
+  callModule(module = Control2Q_SERVER, id =  "control05",
+             base = base,
+             batalla_naval = UserSelection$batalla_naval,
+             decimales = UserSelection$decimales)
   
   
-  
+  callModule(module = Control2C_SERVER, id =  "control06",
+             base = base,
+             batalla_naval = UserSelection$batalla_naval,
+             decimales = UserSelection$decimales)
   
   menuCONTROL <- reactive({
     
@@ -74,7 +81,9 @@ ModuleControlSERVER <-  function(input, output, session, base,
                BatallaNavalUI(ns("control01")),
                MiniBaseUI(ns("control02")),
                Control1Q_UI(ns("control03")),
-               Control1C_UI(ns("control04"))#,
+               Control1C_UI(ns("control04")),
+               Control2Q_UI(ns("control05")),
+               Control2C_UI(ns("control06"))
                # Tablas2Q_UI(ns("tablas05")),
                # Tablas2C_UI(ns("tablas06")),
                # TablasQC_UI(ns("tablas07"))
