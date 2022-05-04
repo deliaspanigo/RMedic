@@ -102,6 +102,7 @@ source("modules/Ho1C_05_TestChiCuadradoUnaMuestra.R")
 source("modules/Ho2Q_ALL.R")
 source("modules/Ho2Q_01_RMedicHelp.R")
 source("modules/Ho2Q_02_TestDeDosProporciones.R")
+source("modules/Ho2Q_03_TestChiCuadrado.R")
 
 # Ho 2C
 source("modules/Ho2C_ALL.R")

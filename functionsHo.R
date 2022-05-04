@@ -4264,7 +4264,228 @@ Test_2Q_TestDeDosProporciones_Fisher <- function(input_base = NULL,
 
 
 
-
+Test_2Q_ChiCuadrado <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 0.05){
+  
+  # Minibase  
+  minibase <- na.omit(base[,columnas])
+  
+  # Frecuencias absolutas
+  tabla_fa <- table(minibase)
+  
+  
+  # Test 1: Clasico
+  {
+    ###
+    
+    test01_clasico <- suppressWarnings(chisq.test(tabla_fa, correct = T, simulate.p.value = F))
+    test01_fae <- test01_clasico$expected
+    test01_residuos <- test01_clasico$residuals
+    test01_stdres <- test01_clasico$stdres
+    
+    tablas01 <- list(tabla_fa, test01_fae, test01_residuos, test01_stdres)
+    names(tablas01) <- c("Frecuencias Absolutas Observadas", "Frecuencias Absolutas Esperadas",
+                         "Residuos", "Residuos Estudentizados")
+    
+    porcentaje_esperados <- 20
+    total_celdas <- nrow(tabla_fa)*ncol(tabla_fa)
+    
+    # Requisitos01: hasta un 20% de celdas con valores esperados menores a 5
+    requisito01 <- (sum(test01_fae < 5)/porcentaje_esperados)*100 <= porcentaje_esperados
+    
+    # Requisitos02: Existe al menos una celda con valores esperados menores o igual a 2
+    requisito02 <- sum(test01_fae <= 2) == 0
+    
+    
+    
+    cumplimiento_general <- sum(requisito01, requisito02) == 2
+    
+    frase01_A <- "Se cumplen simultáneamente todos los requisitos del test Chi Cuadrado clásico.
+              Es posible sacar conclusiones."
+    
+    frase01_B <- "No se cumplen simultáneamente todos los requisitos del test Chi Cuadrado clásico.
+              No es posible sacar conclusiones a partir de los valores estadísticos del test Chi Cuadrado clásico.
+              En este caso debe utilzarse el test Chi Cuadrado Exacto"
+    
+    
+    
+    if(cumplimiento_general) frase_requisitos <- frase01_A else frase_requisitos <- frase01_B
+    
+    
+    # Tabla de Requisitos
+    nombre_columnas01 <- c("Hasta un 20% de las celdas con valores esperados menores a 5",
+                           "Ninguna celda posee un valor esperado menor o igual a 2",
+                           "¿Se cumplen todos los requisitos?", "¿Es correcto sacar conclusiones?")
+    
+    tabla_requisitos <- matrix(NA, 1, length(nombre_columnas01))
+    colnames(tabla_requisitos) <- nombre_columnas01
+    if(requisito01) tabla_requisitos[1,1] <- "Si" else tabla_requisitos[1,1] <- "No"
+    if(requisito02) tabla_requisitos[1,2] <- "Si" else tabla_requisitos[1,2] <- "No"
+    if(cumplimiento_general) tabla_requisitos[1,3] <- "Si" else tabla_requisitos[1,3] <- "No"
+    tabla_requisitos[1,4] <- tabla_requisitos[1,3]
+    
+    # Frase de cumplimiento de requisitos
+    if(cumplimiento_general) frase_requisitos <- frase01_A else frase_requisitos <- frase01_B
+    
+    
+    ############################################################
+    # Valor p interno
+    valor_p_interno01 <- test01_clasico$p.value
+    valor_p_externo01 <- round2(valor_p_interno01, decimales)
+    if(valor_p_externo01 < 0.01)  valor_p_externo01 <- "<0.01"
+    
+    decision01 <- "No Rechazo Ho"
+    if(valor_p_interno01 < alfa) decision01 <- "Rechazo Ho"
+    
+    explicacion01 <- "No"
+    if(valor_p_interno01 < alfa) explicacion01 <- "Si"
+    
+    frase_armada01_A <- paste0("El valor p es ", valor_p_externo01, ".<br/>",
+                               "El valor alfa es ", alfa, ".<br/>",
+                               "El valor p es menor que el valor de alfa, por lo tanto se rechaza Ho.<br/>",
+                               "Existe una asociación estadísticamente significativa entre las variables '",
+                               colnames(minibase)[1], " ' y '", colnames(minibase)[2], "'.<br/>",
+                               "Las variables no son independientes.")
+    
+    frase_armada01_B <- paste0("El valor p es ", valor_p_externo01, ".<br/>",
+                               "El valor alfa es ", alfa, ".<br/>",
+                               "El valor p es igual que el valor de alfa, por lo tanto se NO se rechaza Ho.<br/>",
+                               "No existe una asociación estadísticamente significativa entre las variables '",
+                               colnames(minibase)[1], " ' y '", colnames(minibase)[2], "'.<br/>",
+                               "Las variables son independientes.")
+    
+    frase_armada01_C <- paste0("El valor p es ", valor_p_externo01, ".<br/>",
+                               "El valor alfa es ", alfa, ".<br/>",
+                               "El valor p es mayor que el valor de alfa, por lo tanto se NO se rechaza Ho.<br/>",
+                               "No existe una asociación estadísticamente significativa entre las variables '",
+                               colnames(minibase)[1], " ' y '", colnames(minibase)[2], "'.<br/>",
+                               "Las variables son independientes.")
+    
+    
+    if(valor_p_interno01 < alfa) frase_test01 <- frase_armada01_A else
+      if(valor_p_interno01 == alfa) frase_test01 <- frase_armada01_B else
+        if (valor_p_interno01 > alfa) frase_test01 <- frase_armada01_C
+    
+    nombre_columnas02 <- c("Variable 1", "Variable 2", "Test", "Método", "Grados de Libertad", 
+                           "Valor Chi", "Valor p", "Alfa", "Decisión", "¿Existe una relación entre las variables?")
+    
+    tabla_test01 <- matrix(NA, 1, length(nombre_columnas02))
+    colnames(tabla_test01) <- nombre_columnas02
+    
+    tabla_test01[1, 1] <- colnames(minibase)[1]
+    tabla_test01[1, 2] <- colnames(minibase)[2]
+    tabla_test01[1, 3] <- "Test Chi Cuadrado de Independencia"
+    tabla_test01[1, 4] <- "Clásico"
+    tabla_test01[1, 5] <- test01_clasico$parameter
+    tabla_test01[1, 6] <- round2(test01_clasico$statistic, decimales)
+    tabla_test01[1, 7] <- valor_p_externo01
+    tabla_test01[1, 8] <- alfa
+    tabla_test01[1, 9] <- decision01
+    tabla_test01[1,10] <- explicacion01
+    
+    salida01 <- list(tabla_requisitos, frase_requisitos,  tabla_test01, frase_test01,
+                     tablas01)
+    ###
+  }
+  ###############################################################################
+  
+  
+  # Test 2: Montecarlo
+  {
+    ###
+    
+    test02_montecarlo <- chisq.test(tabla_fa, correct = T, simulate.p.value = T)
+    test02_fae <- test02_montecarlo$expected
+    test02_residuos <- test02_montecarlo$residuals
+    test02_stdres <- test02_montecarlo$stdres
+    
+    tablas02 <- list(tabla_fa, test02_fae, test02_residuos, test02_stdres)
+    names(tablas02) <- c("Frecuencias Absolutas Observadas", "Frecuencias Absolutas Esperadas",
+                         "Residuos", "Residuos Estudentizados")
+    
+    # Valor p interno
+    valor_p_interno02 <- test02_montecarlo$p.value
+    valor_p_externo02 <- round2(valor_p_interno02, decimales)
+    if(valor_p_externo02 < 0.01)  valor_p_externo02 <- "<0.01"
+    
+    decision02 <- "No Rechazo Ho"
+    if(valor_p_interno02 < alfa) decision02 <- "Rechazo Ho"
+    
+    explicacion02 <- "No"
+    if(valor_p_interno02 < alfa) explicacion02 <- "Si"
+    
+    frase_armada02_A <- paste0("El valor p es ", valor_p_externo02, ".<br/>",
+                               "El valor alfa es ", alfa, ".<br/>",
+                               "El valor p es menor que el valor de alfa, por lo tanto se rechaza Ho.<br/>",
+                               "Existe una asociación estadísticamente significativa entre las variables '",
+                               colnames(minibase)[1], " ' y '", colnames(minibase)[2], "'.<br/>",
+                               "Las variables no son independientes.")
+    
+    frase_armada02_B <- paste0("El valor p es ", valor_p_externo02, ".<br/>",
+                               "El valor alfa es ", alfa, ".<br/>",
+                               "El valor p es igual que el valor de alfa, por lo tanto se NO se rechaza Ho.<br/>",
+                               "No existe una asociación estadísticamente significativa entre las variables '",
+                               colnames(minibase)[1], " ' y '", colnames(minibase)[2], "'.<br/>",
+                               "Las variables son independientes.")
+    
+    frase_armada02_C <- paste0("El valor p es ", valor_p_externo02, ".<br/>",
+                               "El valor alfa es ", alfa, ".<br/>",
+                               "El valor p es mayor que el valor de alfa, por lo tanto se NO se rechaza Ho.<br/>",
+                               "No existe una asociación estadísticamente significativa entre las variables '",
+                               colnames(minibase)[1], " ' y '", colnames(minibase)[2], "'.<br/>",
+                               "Las variables son independientes.")
+    
+    
+    if(valor_p_interno02 < alfa) frase_test02 <- frase_armada02_A else
+      if(valor_p_interno02 == alfa) frase_test02 <- frase_armada02_B else
+        if (valor_p_interno02 > alfa) frase_test02 <- frase_armada02_C
+    
+    nombre_columnas02 <- c("Variable 1", 
+                           "Variable 2", 
+                           "Test", 
+                           "Método", 
+                           "Grados de Libertad", 
+                           "Valor Chi", 
+                           "Valor p", "Alfa", "Decisión", "¿Existe una relación entre las variables?")
+    
+    tabla_test02 <- matrix(NA, 1, length(nombre_columnas02))
+    colnames(tabla_test02) <- nombre_columnas02
+    
+    tabla_test02[1, 1] <- colnames(minibase)[1]
+    tabla_test02[1, 2] <- colnames(minibase)[2]
+    tabla_test02[1, 3] <- "Test Chi Cuadrado de Independencia"
+    tabla_test02[1, 4] <- "Montecarlo"
+    tabla_test02[1, 5] <- "No corresponde"
+    tabla_test02[1, 6] <- round2(test02_montecarlo$statistic, decimales)
+    tabla_test02[1, 7] <- valor_p_externo02
+    tabla_test02[1, 8] <- alfa
+    tabla_test02[1, 9] <- decision02
+    tabla_test02[1,10] <- explicacion02
+    
+    salida02 <- list(tabla_test02, frase_test02, tablas02)
+    ###
+  }
+  ###############################################################################
+  
+  
+  
+  # 3) Juego de Hipótesis
+  {
+    
+    frase_juego_hipotesis <-  "<b>Hipótesis Nula (Ho):</b> las variables '_mi_variable1_' y '_mi_variable2_' son independientes.<br/>
+                               <b>Hipótesis Alternativa (Hi):</b> las variables '_mi_variable1_' y '_mi_variable2_' no son independientes."
+    
+    frase_juego_hipotesis <- gsub("_mi_variable1_", colnames(minibase)[1], frase_juego_hipotesis)
+    frase_juego_hipotesis <- gsub("_mi_variable2_", colnames(minibase)[2], frase_juego_hipotesis)
+  }
+  
+  
+  # Return General
+  salida_general <- list(salida01, salida02, frase_juego_hipotesis)
+  names(salida_general) <- c("Chi Cuadrado Clasico", "Chi Cuadrado Montecarlo", "Juego de Hipotesis")
+  return(salida_general)
+  
+  
+}
 
 
 

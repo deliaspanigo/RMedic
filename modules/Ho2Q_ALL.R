@@ -46,6 +46,7 @@ Ho2Q_SERVER <- function(input, output, session,
     RMedic_2q_tablas(minibase(), decimales())
     })
   
+  
   callModule(module = Ho2Q_01_RMedicHelp_SERVER,
              id =  "ho05A",
              minibase = minibase,
@@ -64,7 +65,12 @@ Ho2Q_SERVER <- function(input, output, session,
              alfa = alfa)
 
   
-
+  callModule(module = Ho2Q_03_TestChiCuadrado_SERVER,
+             id =  "ho05C",
+             minibase = minibase,
+             decimales = decimales,
+             control_ejecucion = control_ejecucion,
+             alfa = alfa)
 
   
  
@@ -85,7 +91,10 @@ Ho2Q_SERVER <- function(input, output, session,
                           ) ,
                    tabPanel(title = "Test de Dos Proporciones", value = 2,
                             Ho2Q_02_TestDeDosProporciones_UI(ns("ho05B"))
-                            )
+                            ),
+                  tabPanel(title = "Test Chi Cuadrado", value = 3,
+                           Ho2Q_03_TestChiCuadrado_UI(ns("ho05C"))
+                  )
       )
     )
     

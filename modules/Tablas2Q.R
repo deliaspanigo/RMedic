@@ -69,6 +69,50 @@ Tablas2Q_SERVER <- function(input, output, session,
     return(general)
   })
   
+  Tablas_Chi <- reactive({
+    
+    test <- chisq.test(table(minibase()))
+    tabla01 <- test[[7]]
+    tabla02 <- tabla01 # test[[8]]
+    tabla03 <-tabla01 # test[[9]]
+  
+    for(k1 in 1:nrow(tabla02)) {  
+      for (k2 in 1:ncol(tabla01)) {
+      
+        
+        tabla02[k1, k2] <- test[[8]][k1, k2]
+        tabla03[k1, k2] <- test[[9]][k1, k2]
+      }
+    }
+    salida <- list(tabla01, tabla02, tabla03)
+    salida
+  })
+  
+  ##########################################
+  
+  # Tabla Esperados
+  observe( output$tabla_especial01 <- renderTable(digits = decimales(), align= "c",rownames = T,{
+    
+   # Tablas_Chi()$expected
+  Tablas_Chi()[[1]]
+    
+  }))
+  
+  # Tabla Residuos
+  observe( output$tabla_especial02 <- renderTable(digits = decimales(), align= "c",rownames = T,{
+    
+    #Tablas_Chi()$residuals
+    Tablas_Chi()[[2]]
+  }))
+  
+  # Tabla Residuos Estudentizados
+  observe( output$tabla_especial03 <- renderTable(digits = decimales(), align= "c",rownames = T,{
+    
+    #Tablas_Chi()$stdres
+    Tablas_Chi()[[3]]
+  }))
+  
+  ##########################################
   Referencias_var_2q <- reactive({
     
     if(is.null(casoRMedic())) return(NULL)
@@ -178,7 +222,8 @@ Tablas2Q_SERVER <- function(input, output, session,
                                                              "Al total" = 4, 
                                                              "Por filas" = 5, 
                                                              "Por columnas" = 6,
-                                                             "Simple Entrada" = 7)
+                                                             "Simple Entrada" = 7,
+                                                             "Otras Tablas" = 8)
                                     )
                              ),
                              column(8,
@@ -266,6 +311,13 @@ Tablas2Q_SERVER <- function(input, output, session,
                                                        )
                                                      )
                                     ),
+                                    conditionalPanel(condition = "input.help_tablas_2q == 8",
+                                                     div(
+                                                       h3("Otras Tablas"),
+                                                       HTML("Se presenta las <b>Tablas de Doble Entrada</b> de valores esperados, residuos y residuos studentizados."
+                                                       )
+                                                     )
+                                    )
                              )
                            )
                   ),
@@ -379,6 +431,19 @@ Tablas2Q_SERVER <- function(input, output, session,
                            Referencias_var_2q(),
                            tableOutput(ns("Salida_tabla_2q_RMedic_24")),
                            br()
+                           ),
+                  tabPanel(title = "Otras Tablas", value = 8,
+                           h3("Frecuencias Esperadas"),
+                           Referencias_var_2q(),
+                           tableOutput(ns("tabla_especial01")), 
+                           br(),
+                           h3("Residuos"),
+                           Referencias_var_2q(),
+                           tableOutput(ns("tabla_especial02")), 
+                           br(),
+                           h3("Residuos Studentizados"),
+                           Referencias_var_2q(),
+                           tableOutput(ns("tabla_especial03")), 
                            )
       ),
     )
