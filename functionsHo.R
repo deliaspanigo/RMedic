@@ -76,7 +76,7 @@ Test_1Q_TestDeUnaProporcion <- function(input_base = NULL,
  
  #  # Valor p externo
  valor_p_externo <- round2(valor_p_interno, input_decimales)
- if (valor_p_interno < 0.01) valor_p_externo <- "<0.01" else valor_p_externo <- round2(valor_p_interno, input_decimales)
+ if (valor_p_interno < 0.001) valor_p_externo <- "<0.001" else valor_p_externo <- round2(valor_p_interno, input_decimales)
 
  
  
@@ -308,11 +308,11 @@ Test_1C_TestNormalidad_ShapiroWilk <- function(input_base = NULL,
   
    #  # Valor p externo
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01" 
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001" 
   
   # Valor estadistico externo
   estadistico_obs_externo <- round2(estadistico_obs_interno, input_decimales)
-  if (estadistico_obs_interno < 0.01) estadistico_obs_externo <- "<0.01" 
+  if (estadistico_obs_interno < 0.001) estadistico_obs_externo <- "<0.001" 
   
   
   # Frase
@@ -498,7 +498,7 @@ Test_1C_TestT_UnaMuestra <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- test_t$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -808,7 +808,7 @@ Test_1C_TestWilcoxon_UnaMuestra <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- test_w$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -1102,7 +1102,7 @@ Test_1C_TestChiCuadrado_UnaMuestra <- function(input_base = NULL,
   
   #  # Valor p externo
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01" else valor_p_externo <- round2(valor_p_interno, input_decimales)
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001" else valor_p_externo <- round2(valor_p_interno, input_decimales)
   
   
   
@@ -1461,7 +1461,7 @@ Test_2C_TestHomogeneidadDeVarianzas_Fisher <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- test_f$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -1776,7 +1776,7 @@ Test_2C_TestT_DosMuestras_Apareado <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- the_test$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -2104,7 +2104,7 @@ Test_2C_TestWilcoxon_DosMuestras_Apareado <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- the_test$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -2404,7 +2404,7 @@ Test_2C_TestHomogeneidadDeVarianzas_Bartlett <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- the_test$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -2686,7 +2686,7 @@ Test_2C_TestHomogeneidadDeVarianzas_Levene <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- the_test$`Pr(>F)`[1]
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -2931,7 +2931,7 @@ Test_2C_TestCorrelacion_Pearson <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- the_test$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -3251,7 +3251,7 @@ Test_2C_TestCorrelacion_Spearman <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- the_test$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -3577,13 +3577,13 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
   
   # Valores p externos
   valor_p_ordenada_externo <- round2(valor_p_ordenada_interno, input_decimales)
-  if (valor_p_ordenada_interno < 0.01) valor_p_ordenada_externo <- "<0.01"
+  if (valor_p_ordenada_interno < 0.001) valor_p_ordenada_externo <- "<0.001"
   
   valor_p_pendiente_externo <- round2(valor_p_pendiente_interno, input_decimales)
-  if (valor_p_pendiente_interno < 0.01) valor_p_pendiente_externo <- "<0.01"
+  if (valor_p_pendiente_interno < 0.001) valor_p_pendiente_externo <- "<0.001"
   
   valor_p_r2ajus_externo <- round2(valor_p_r2ajus_interno, input_decimales)
-  if (valor_p_r2ajus_interno < 0.01) valor_p_r2ajus_externo <- "<0.01"
+  if (valor_p_r2ajus_interno < 0.001) valor_p_r2ajus_externo <- "<0.001"
   
   # Frases
   if (valor_p_ordenada_interno < input_alfa) decision_ordenada <- "Rechazo Ho" else decision_ordenada <- "No rechazo Ho"
@@ -4053,7 +4053,7 @@ Test_2Q_TestDeDosProporciones_Fisher <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- valor_p
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -4331,7 +4331,7 @@ Test_2Q_ChiCuadrado <- function(base = NULL, columnas = c(1,2), decimales = 2, a
     # Valor p interno
     valor_p_interno01 <- test01_clasico$p.value
     valor_p_externo01 <- round2(valor_p_interno01, decimales)
-    if(valor_p_externo01 < 0.01)  valor_p_externo01 <- "<0.01"
+    if(valor_p_externo01 < 0.001)  valor_p_externo01 <- "<0.001"
     
     decision01 <- "No Rechazo Ho"
     if(valor_p_interno01 < alfa) decision01 <- "Rechazo Ho"
@@ -4405,7 +4405,7 @@ Test_2Q_ChiCuadrado <- function(base = NULL, columnas = c(1,2), decimales = 2, a
     # Valor p interno
     valor_p_interno02 <- test02_montecarlo$p.value
     valor_p_externo02 <- round2(valor_p_interno02, decimales)
-    if(valor_p_externo02 < 0.01)  valor_p_externo02 <- "<0.01"
+    if(valor_p_externo02 < 0.001)  valor_p_externo02 <- "<0.001"
     
     decision02 <- "No Rechazo Ho"
     if(valor_p_interno02 < alfa) decision02 <- "Rechazo Ho"
@@ -4689,7 +4689,7 @@ Test_QC_TestHomogeneidadDeVarianzas_Fisher <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- test_f$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -5060,7 +5060,7 @@ Test_QC_TestT_DosMuestras_Independientes <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- the_test$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -5473,7 +5473,7 @@ Test_QC_TestWilcoxon_DosMuestras_Independientes <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- pvalue(the_test)
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -5786,7 +5786,7 @@ Test_QC_TestHomogeneidadDeVarianzas_Bartlett <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- the_test$p.value
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -6062,7 +6062,7 @@ Test_QC_TestHomogeneidadDeVarianzas_Levene <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- the_test$`Pr(>F)`[1]
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -6288,6 +6288,8 @@ Test_QC_TestAnova1Factor <- function(input_base = NULL,
   tabla_tukey1 <- tukey_completo1$groups
   tabla_tukey1 <- cbind(rownames(tabla_tukey1), tabla_tukey1)
   colnames(tabla_tukey1) <- c("Categorías", "Medias", "Grupos Estadísticos")
+  cantidad_grupos_tukey <-   length(table(tabla_tukey1[,3]))
+  
   
   # Tabla 2 de Tukey
   tabla_tukey2  <- tukey_completo2$parameters
@@ -6316,9 +6318,9 @@ Test_QC_TestAnova1Factor <- function(input_base = NULL,
     } else respuesta_corta[k] <- "No"
   
     # Cambio valor p
-    if(as.numeric(as.character(valores_p_mod[k])) < 0.01) {
+    if(as.numeric(as.character(valores_p_mod[k])) < 0.001) {
       
-      valores_p_mod[k] <- "<0.01"
+      valores_p_mod[k] <- "<0.001"
       
     } else valores_p_mod[k] <- round2(as.numeric(as.character(valores_p_mod[k])), input_decimales)
     
@@ -6342,7 +6344,7 @@ Test_QC_TestAnova1Factor <- function(input_base = NULL,
     tabla_lsd1 <- lsd_completo1$groups
     tabla_lsd1 <- cbind(rownames(tabla_lsd1), tabla_lsd1)
     colnames(tabla_lsd1) <- c("Categorías", "Medias", "Grupos Estadísticos")
-    
+    cantidad_grupos_lsd <-   length(table(tabla_lsd1[,3]))
     
     
     # Tabla 3 de LSD
@@ -6366,9 +6368,9 @@ Test_QC_TestAnova1Factor <- function(input_base = NULL,
       } else respuesta_corta[k] <- "No"
       
       # Cambio valor p
-      if(as.numeric(as.character(valores_p_mod[k])) < 0.01) {
+      if(as.numeric(as.character(valores_p_mod[k])) < 0.001) {
         
-        valores_p_mod[k] <- "<0.01"
+        valores_p_mod[k] <- "<0.001"
         
       } else valores_p_mod[k] <- round2(as.numeric(as.character(valores_p_mod[k])), input_decimales)
       
@@ -6439,7 +6441,7 @@ Test_QC_TestAnova1Factor <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- as.numeric(as.character(tabla_anova_interna[1,6]))
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   # Tabla Anova Externa  
@@ -6529,6 +6531,8 @@ Test_QC_TestAnova1Factor <- function(input_base = NULL,
   
   
   # Frase por incontenientes de redondeo
+  {
+    
   dt1 <- valor_p_interno < input_alfa
   dt2 <- round2(valor_p_interno, input_decimales) < input_alfa
   if (sum(dt1, dt2) == 2) frase_redondeo <- "" else
@@ -6540,9 +6544,10 @@ Test_QC_TestAnova1Factor <- function(input_base = NULL,
             Aumente la cantidad de decimales hasta que esta advertencia 
             desaparezca.</b>"
         
-      } 
-  # #######################################
-  # 
+      }
+  }
+  ########################################
+  
   
   # Tabla Requisitos
   {
@@ -6637,6 +6642,197 @@ Test_QC_TestAnova1Factor <- function(input_base = NULL,
     
   }
   
+  
+  
+  
+  if(TRUE) {
+  # Frase1 - Requisitos
+  {
+    
+    
+    # Frase advertencia para Fisher
+    frase_comparaciones01_A <- "<b><u>Advertencia:</u> Al no cumplirse los requisitos de Anova es incorrecto sacar conclusiones 
+                                                      a partir del valor p de la tabla de Anova. Deben desestimarase las 
+                                                      conclusiones y se debe considerar que no es posible poner a prueba 
+                                                      las hipótesis.</b><br/><br/><br/>"
+    
+    
+    frase_comparaciones01_B <- ""
+    
+    # Por defecto no decimos nada...
+    frase_comparaciones01 <- frase_comparaciones01_B
+    
+    # Si no se cumplen los requisitos...
+    if(cumplimiento_general == "No") frase_comparaciones01 <- frase_comparaciones01_A  
+  }
+  
+  
+    # Frase2 - Comparaciones Tukey
+    {
+      
+      
+
+      frase_comparaciones02_A <- "<b><u>Advertencia:</u> Al no cumplirse los requisitos de Anova es incorrecto utilizar 
+                                                          un test de comparaciones múltiple. Debe desestimarase las 
+                                                          el test de comparaciones.</b>
+                                                          <br/><br/><br/>"
+      
+      
+      frase_comparaciones02_B <- "<b><u>Advertencia:</u> Al no rechazarse la hipótesis nula del test de Anova es incorrecto 
+                                                          utilizar un test de comparaciones múltiple. Debieran desestimarse 
+                                                          los grupos estadísticos diferentes que pudieran obtenerse, ya que
+                                                          todos los niveles del factor son estadísticamente iguales.</b>
+                                                          <br/><br/><br/>"
+      
+
+      frase_comparaciones02_C <- ""
+      
+      
+      # Por defecto no decimos nada...
+      frase_comparaciones02 <- frase_comparaciones02_C
+      
+      # Si no se cumplen los requisitos....
+      if(cumplimiento_general == "No") frase_comparaciones02 <- frase_comparaciones02_A 
+      
+        # Si los requisitos se cumplen
+        else if(cumplimiento_general == "Si"){
+          
+          # Si no rechazamos Ho
+          if(valor_p_interno > input_alfa){
+            
+            # Si hay grupos estadisticos
+            if(cantidad_grupos_tukey > 1) frase_comparaciones02 <- frase_comparaciones02_B 
+          
+          }
+      }
+    }
+  
+    
+    # Frase3 - Comparaciones LSD
+    {
+      
+      
+      
+      frase_comparaciones03_A <- "<b><u>Advertencia:</u> Al no cumplirse los requisitos de Anova es incorrecto utilizar 
+                                                          un test de comparaciones múltiple. Debe desestimarase las 
+                                                          el test de comparaciones.</b>
+                                                          <br/><br/><br/>"
+      
+      
+      frase_comparaciones03_B <- "<b><u>Advertencia:</u> Al no rechazarse la hipótesis nula del test de Anova es incorrecto 
+                                                          utilizar un test de comparaciones múltiple. Debieran desestimarse 
+                                                          los grupos estadísticos diferentes que pudieran obtenerse, ya que
+                                                          todos los niveles del factor son estadísticamente iguales.</b>
+                                                          <br/><br/><br/>"
+      
+      
+      frase_comparaciones03_C <- ""
+      
+      
+      # Por defecto no decimos nada...
+      frase_comparaciones03 <- frase_comparaciones03_C
+      
+      # Si no se cumplen los requisitos....
+      if(cumplimiento_general == "No") frase_comparaciones03 <- frase_comparaciones03_A 
+      
+      # Si los requisitos se cumplen
+      else if(cumplimiento_general == "Si"){
+        
+        # Si no rechazamos Ho
+        if(valor_p_interno > input_alfa){
+          
+          # Si hay grupos estadisticos
+          if(cantidad_grupos_lsd > 1) frase_comparaciones03 <- frase_comparaciones03_B 
+          
+        }
+      }
+    }
+    
+    
+    # Frase4 - Comparaciones de a pares de Tukey
+    {
+      
+      
+      
+      frase_comparaciones04_A <- "<b><u>Advertencia:</u> Al no cumplirse los requisitos de Anova es incorrecto utilizar 
+                                                          comparaciones de a pares. Debe desestimarase las 
+                                                          el test de comparaciones.</b>
+                                                          <br/><br/><br/>"
+      
+      
+      frase_comparaciones04_B <- "<b><u>Advertencia:</u> Al no rechazarse la hipótesis nula del test de Anova es incorrecto 
+                                                          utilizar un test de comparaciones múltiple. Debieran desestimarse 
+                                                          las diferencias significativas entre los pares de niveles del factor, 
+                                                          ya que son estadísticamente iguales.</b>
+                                                          <br/><br/><br/>"
+      
+      
+      frase_comparaciones04_C <- ""
+      
+      
+      # Por defecto no decimos nada...
+      frase_comparaciones04 <- frase_comparaciones04_C
+      
+      # Si no se cumplen los requisitos....
+      if(cumplimiento_general == "No") frase_comparaciones04 <- frase_comparaciones04_A 
+      
+      # Si los requisitos se cumplen
+      else if(cumplimiento_general == "Si"){
+        
+        # Si no rechazamos Ho
+        if(valor_p_interno > input_alfa){
+          
+          # Si hay grupos estadisticos
+          if(cantidad_grupos_tukey > 1) frase_comparaciones04 <- frase_comparaciones04_B 
+          
+        }
+      }
+    }
+    
+    
+    # Frase5 - Comparaciones de a pares de LSD
+    {
+      
+      
+      
+      frase_comparaciones05_A <- "<b><u>Advertencia:</u> Al no cumplirse los requisitos de Anova es incorrecto utilizar 
+                                                          comparaciones de a pares. Debe desestimarase las 
+                                                          el test de comparaciones.</b>
+                                                          <br/><br/><br/>"
+      
+      
+      frase_comparaciones05_B <- "<b><u>Advertencia:</u> Al no rechazarse la hipótesis nula del test de Anova es incorrecto 
+                                                          utilizar un test de comparaciones múltiple. Debieran desestimarse 
+                                                          las diferencias significativas entre los pares de niveles del factor, 
+                                                          ya que son estadísticamente iguales.</b>
+                                                          <br/><br/><br/>"
+      
+      
+      frase_comparaciones05_C <- ""
+      
+      
+      # Por defecto no decimos nada...
+      frase_comparaciones05 <- frase_comparaciones05_C
+      
+      # Si no se cumplen los requisitos....
+      if(cumplimiento_general == "No") frase_comparaciones05 <- frase_comparaciones05_A 
+      
+      # Si los requisitos se cumplen
+      else if(cumplimiento_general == "Si"){
+        
+        # Si no rechazamos Ho
+        if(valor_p_interno > input_alfa){
+          
+          # Si hay grupos estadisticos
+          if(cantidad_grupos_lsd > 1) frase_comparaciones05 <- frase_comparaciones05_B 
+          
+        }
+      }
+    }
+    
+  }
+  ###########################################################################################
+  
   SALIDA_ARMADA <- list()
   
   SALIDA_ARMADA$tabla_requisitos <- tabla_requisitos
@@ -6666,6 +6862,17 @@ Test_QC_TestAnova1Factor <- function(input_base = NULL,
   SALIDA_ARMADA$tabla_lsd1 <- tabla_lsd1
   
   SALIDA_ARMADA$tabla_lsd2 <- tabla_lsd2
+  
+  SALIDA_ARMADA$frase_comparaciones01 <- frase_comparaciones01
+  
+  SALIDA_ARMADA$frase_comparaciones02 <- frase_comparaciones02
+  
+  SALIDA_ARMADA$frase_comparaciones03 <- frase_comparaciones03
+  
+  SALIDA_ARMADA$frase_comparaciones04 <- frase_comparaciones04
+  
+  SALIDA_ARMADA$frase_comparaciones05 <- frase_comparaciones05
+  
   
   # Returno Exitoso
   return(SALIDA_ARMADA)
@@ -6738,7 +6945,7 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
   # Valor p 
   valor_p_interno <- the_test$statistics[1,3]
   valor_p_externo <- round2(valor_p_interno, input_decimales)
-  if (valor_p_interno < 0.01) valor_p_externo <- "<0.01"
+  if (valor_p_interno < 0.001) valor_p_externo <- "<0.001"
   
   
   
@@ -6821,7 +7028,9 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
   } # Fin Frases Juego de Hipotesis
   
   
-  # Frase por incontenientes de redondeo
+  # Frase por inconvenientes de redondeo
+  {
+    
   dt1 <- valor_p_interno < input_alfa
   dt2 <- round2(valor_p_interno, input_decimales) < input_alfa
   if (sum(dt1, dt2) == 2) frase_redondeo <- "" else
@@ -6834,6 +7043,12 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
             desaparezca.</b>"
         
       } 
+  
+  }
+  
+  
+
+ 
   # #######################################
   # 
   
@@ -6931,9 +7146,9 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
       } else respuesta_corta[k] <- "No"
       
       # Cambio valor p
-      if(as.numeric(as.character(valores_p_mod[k])) < 0.01) {
+      if(as.numeric(as.character(valores_p_mod[k])) < 0.001) {
         
-        valores_p_mod[k] <- "<0.01"
+        valores_p_mod[k] <- "<0.001"
         
       } else valores_p_mod[k] <- round2(as.numeric(as.character(valores_p_mod[k])), input_decimales)
       
@@ -6956,7 +7171,7 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
    }
   
   
-  # Tabla de comparacion2 -  de a pares
+  # Tabla de comparacion3 
   {
     
     tabla_comparacion3 <- the_test$parameters
@@ -6965,6 +7180,61 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
     
     tabla_comparacion3[1,2] <- "Test t"
     
+  }
+  
+  
+  # Frase para comparacion 1 (Fisher)
+  {
+    
+    cantidad_grupos_estadisticos <- length(table(tabla_comparacion1[,3]))
+    
+    # Frase advertencia para Fisher
+    frase_comparaciones01_A <- "<b><u>Advertencia:</u> Al no rechazarse la hipótesis nula del test de Kruskal-Wallis es 
+                                                      incorrecto utilizar un test de comparaciones múltiples. <br/>
+                                                      Debieran desestimarse los grupos estadísticos diferentes que 
+                                                      pudieran obtenerse ya que todos los niveles del factor son 
+                                                      estadísticamente iguales.</b>"
+    
+    
+    frase_comparaciones01_B <- ""
+    
+    # Por defecto no decimos nada...
+    frase_comparaciones01 <- frase_comparaciones01_B
+    
+    # Si no se rechaza Ho....
+    if(valor_p_interno >= input_alfa) {
+      
+      # Pero de todas formas encontró grupoes estadísticos...
+      if(cantidad_grupos_estadisticos > 1) frase_comparaciones01 <- frase_comparaciones01_A  
+      
+    }
+  }
+  
+  
+  # Frase para comparacion 2 - Comparaciones de a pares
+  {
+    
+    cantidad_grupos_estadisticos <- length(table(tabla_comparacion1[,3]))
+    
+    # Frase advertencia para comparaciones de a pares
+    frase_comparaciones02_A <- "<b><u>Advertencia:</u> Al no rechazarse la hipótesis nula del test de Kruskal-Wallis
+                                                       es incorrecto utilizar un test de comparaciones múltiples.<br/> 
+                                                       Debieran desestimarse las diferencias significativas entre los 
+                                                       pares de niveles del factor, ya que son estadísticamente iguales.</b>"
+    
+    
+    frase_comparaciones02_B <- ""
+    
+    # Por defecto no decimos nada...
+    frase_comparaciones02 <- frase_comparaciones02_B
+    
+    # Si no se rechaza Ho....
+    if(valor_p_interno >= input_alfa) {
+      
+      # Pero de todas formas encontró grupos estadísticos...
+      if(cantidad_grupos_estadisticos > 1) frase_comparaciones02 <- frase_comparaciones02_A  
+      
+    }
   }
   
   
@@ -6988,7 +7258,9 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
   
   SALIDA_ARMADA$tabla_comparacion3 <- tabla_comparacion3
   
- 
+  SALIDA_ARMADA$frase_comparaciones01 <-     frase_comparaciones01
+  
+  SALIDA_ARMADA$frase_comparaciones02 <-     frase_comparaciones02
   
   # Returno Exitoso
   return(SALIDA_ARMADA)

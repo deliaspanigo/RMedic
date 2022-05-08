@@ -130,6 +130,18 @@ HoQC_05_TestKruskalWallis_SERVER <- function(input, output, session,
     HTML(The_Test()$frase_juego_hipotesis)
   }))
   
+  
+  # Frase 5: Frase comparaciones
+  observe(output$frase_comparaciones01 <- renderUI({
+    HTML(The_Test()$frase_comparaciones01)
+  }))
+  
+  
+  # Frase 6: Frase comparaciones
+  observe(output$frase_comparaciones02 <- renderUI({
+    HTML(The_Test()$frase_comparaciones02)
+  }))
+  
   # Armado/Salida del test de Proporciones 1Q
   output$armado_ho <- renderUI({
     
@@ -147,19 +159,21 @@ HoQC_05_TestKruskalWallis_SERVER <- function(input, output, session,
       span(htmlOutput(ns("frase_redondeo")), style="color:red"),
       br(),
       br(),
-      h3("Tabla Resumen del Test Kruskal-Wallis"),
-      tableOutput(ns("tabla_resumen")),
-      br(),
-      br(),
       h3("Juego de Hipótesis"),
       htmlOutput(ns("frase_juego_hipotesis")),
+      br(),
+      br(),
+      h3("Tabla Resumen del Test Kruskal-Wallis"),
+      tableOutput(ns("tabla_resumen")),
       br(),
       br(),
       h3("Frases y conclusiones"),
       htmlOutput(ns("frase_estadistica")),
       br(),
       br(),
-      h3("Tabla de comparación 1"),
+      br(),
+      h3("Test de Comparaciones de Fisher"),
+      span(htmlOutput(ns("frase_comparaciones01")), style="color:black"),
       tableOutput(ns("tabla_comparacion1")),
                  "Letras iguales en 'Grupo Estadístico' indica que las categorías son 
                  estadísticamente iguales.",br(),
@@ -167,12 +181,15 @@ HoQC_05_TestKruskalWallis_SERVER <- function(input, output, session,
                  estadísticamente diferentes.",
                  br(),
                  br(),
-      h3("Tabla de comparación 2"),
+                 br(),
+      h3("Comparaciones de a pares"),
+      span(htmlOutput(ns("frase_comparaciones02")), style="color:black"),
       tableOutput(ns("tabla_comparacion2")),
                  br(),
                  br(),
-      h3("Tabla de comparación 3"),
-      tableOutput(ns("tabla_comparacion3"))
+                 br()#,
+     # h3("Tabla de comparación 3"),
+     # tableOutput(ns("tabla_comparacion3"))
     )
     
     

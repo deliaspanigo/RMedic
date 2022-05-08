@@ -173,7 +173,31 @@ HoQC_04_TestAnova1Factor_SERVER <- function(input, output, session,
     HTML(The_Test()$frase_juego_hipotesis)
   }))
   
+  # Frase 5: Sobre validez del test de comparaciones
+  observe(output$frase_comparaciones01 <- renderUI({
+    HTML(The_Test()$frase_comparaciones01)
+  }))
   
+  # Frase 6: Sobre validez del test de comparaciones
+  observe(output$frase_comparaciones02 <- renderUI({
+    HTML(The_Test()$frase_comparaciones02)
+  }))
+  
+  # Frase 6: Sobre validez del test de comparaciones
+  observe(output$frase_comparaciones03 <- renderUI({
+    HTML(The_Test()$frase_comparaciones03)
+  }))
+  
+  # Frase 6: Sobre validez del test de comparaciones
+  observe(output$frase_comparaciones04 <- renderUI({
+    HTML(The_Test()$frase_comparaciones04)
+  }))
+  
+  
+  # Frase 6: Sobre validez del test de comparaciones
+  observe(output$frase_comparaciones05 <- renderUI({
+    HTML(The_Test()$frase_comparaciones05)
+  }))
   output$tabla_seleccionada <- renderUI({
     
     if(is.null(input$test_comparacion)) return(NULL)
@@ -182,6 +206,7 @@ HoQC_04_TestAnova1Factor_SERVER <- function(input, output, session,
     if(input$test_comparacion == 1 && input$tipo_tabla == 1){
       div(
         h3("Test de Tukey (Lista Descendente)"),
+        span(htmlOutput(ns("frase_comparaciones02")), style="color:red"),
         tableOutput(ns("tabla_tukey1")),
         "Los niveles del factor se encuentran ordenados a partir de sus valores de media, 
                  de mayor a menor.", br(),
@@ -194,12 +219,14 @@ HoQC_04_TestAnova1Factor_SERVER <- function(input, output, session,
       if(input$test_comparacion == 1 && input$tipo_tabla == 2){ 
         div(
           h3("Test de Tukey (Lista Matricial)"),
+          span(htmlOutput(ns("frase_comparaciones04")), style="color:red"),
           tableOutput(ns("tabla_tukey3"))
         )
         } else
           if(input$test_comparacion == 2 && input$tipo_tabla == 1){
             div(
               h3("Test LSD (Lista Descendente)"),
+              span(htmlOutput(ns("frase_comparaciones03")), style="color:red"),
               tableOutput(ns("tabla_lsd1")),
               "Los niveles del factor se encuentran ordenados a partir de sus valores de media, 
                  de mayor a menor.", br(),
@@ -212,6 +239,7 @@ HoQC_04_TestAnova1Factor_SERVER <- function(input, output, session,
             if(input$test_comparacion == 2 && input$tipo_tabla == 2){ 
               div(
                 h3("Test LSD (Lista Matricial)"),
+                span(htmlOutput(ns("frase_comparaciones05")), style="color:red"),
                 tableOutput(ns("tabla_lsd2"))
               )
             }
@@ -242,19 +270,21 @@ HoQC_04_TestAnova1Factor_SERVER <- function(input, output, session,
       # Mensaje de advertencia por redondeo
       span(htmlOutput(ns("frase_redondeo")), style="color:red"),
       br(),
+      h3("Juego de Hipótesis"),
+      htmlOutput(ns("frase_juego_hipotesis")),
+      br(),
+      br(),
       h3("Tabla de Requisitos del test Anova a 1 Factor"),
       tableOutput(ns("tabla_requisitos")),
       htmlOutput(ns("frase_requisitos")),
       br(),
       br(),
-      h3("Juego de Hipótesis"),
-      htmlOutput(ns("frase_juego_hipotesis")),
-      br(),
-      br(),
       tabsetPanel(
         tabPanel("Tabla Anova 1 Factor", 
                  br(),
+                 br(),
                  h3("Tabla Resumen del test Anova a 1 Factor"),
+                 span(htmlOutput(ns("frase_comparaciones01")), style="color:red"),
                  tableOutput(ns("tabla_resumen")),
                  br(),
                  br(),
