@@ -206,7 +206,7 @@ HoQC_04_TestAnova1Factor_SERVER <- function(input, output, session,
     if(input$test_comparacion == 1 && input$tipo_tabla == 1){
       div(
         h3("Test de Tukey (Lista Descendente)"),
-        span(htmlOutput(ns("frase_comparaciones02")), style="color:red"),
+        span(htmlOutput(ns("frase_comparaciones02")), style="color:black"),
         tableOutput(ns("tabla_tukey1")),
         "Los niveles del factor se encuentran ordenados a partir de sus valores de media, 
                  de mayor a menor.", br(),
@@ -219,14 +219,14 @@ HoQC_04_TestAnova1Factor_SERVER <- function(input, output, session,
       if(input$test_comparacion == 1 && input$tipo_tabla == 2){ 
         div(
           h3("Test de Tukey (Lista Matricial)"),
-          span(htmlOutput(ns("frase_comparaciones04")), style="color:red"),
+          span(htmlOutput(ns("frase_comparaciones04")), style="color:black"),
           tableOutput(ns("tabla_tukey3"))
         )
         } else
           if(input$test_comparacion == 2 && input$tipo_tabla == 1){
             div(
               h3("Test LSD (Lista Descendente)"),
-              span(htmlOutput(ns("frase_comparaciones03")), style="color:red"),
+              span(htmlOutput(ns("frase_comparaciones03")), style="color:black"),
               tableOutput(ns("tabla_lsd1")),
               "Los niveles del factor se encuentran ordenados a partir de sus valores de media, 
                  de mayor a menor.", br(),
@@ -239,7 +239,7 @@ HoQC_04_TestAnova1Factor_SERVER <- function(input, output, session,
             if(input$test_comparacion == 2 && input$tipo_tabla == 2){ 
               div(
                 h3("Test LSD (Lista Matricial)"),
-                span(htmlOutput(ns("frase_comparaciones05")), style="color:red"),
+                span(htmlOutput(ns("frase_comparaciones05")), style="color:black"),
                 tableOutput(ns("tabla_lsd2"))
               )
             }
@@ -284,7 +284,7 @@ HoQC_04_TestAnova1Factor_SERVER <- function(input, output, session,
                  br(),
                  br(),
                  h3("Tabla Resumen del test Anova a 1 Factor"),
-                 span(htmlOutput(ns("frase_comparaciones01")), style="color:red"),
+                 span(htmlOutput(ns("frase_comparaciones01")), style="color:black"),
                  tableOutput(ns("tabla_resumen")),
                  br(),
                  br(),

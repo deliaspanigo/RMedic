@@ -7193,7 +7193,7 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
                                                       incorrecto utilizar un test de comparaciones múltiples. <br/>
                                                       Debieran desestimarse los grupos estadísticos diferentes que 
                                                       pudieran obtenerse ya que todos los niveles del factor son 
-                                                      estadísticamente iguales.</b>"
+                                                      estadísticamente iguales.</b><br/><br/><br/>"
     
     
     frase_comparaciones01_B <- ""
@@ -7220,7 +7220,7 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
     frase_comparaciones02_A <- "<b><u>Advertencia:</u> Al no rechazarse la hipótesis nula del test de Kruskal-Wallis
                                                        es incorrecto utilizar un test de comparaciones múltiples.<br/> 
                                                        Debieran desestimarse las diferencias significativas entre los 
-                                                       pares de niveles del factor, ya que son estadísticamente iguales.</b>"
+                                                       pares de niveles del factor, ya que son estadísticamente iguales.</b><br/><br/><br/>"
     
     
     frase_comparaciones02_B <- ""
