@@ -115,6 +115,8 @@ source("modules/Ho2C_06_TestWilcoxonApareado.R")
 source("modules/Ho2C_07_TestHomogenedadDeVarianzasFisher.R")
 source("modules/Ho2C_08_TestHomogenedadDeVarianzasBartlett.R")
 source("modules/Ho2C_09_TestHomogenedadDeVarianzasLevene.R")
+source("modules/Ho2C_10_TestRegLogSimple.R")
+
 #####################################################
 
 # Ho QC

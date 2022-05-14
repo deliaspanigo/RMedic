@@ -3466,8 +3466,8 @@ Test_2C_TestCorrelacion_Spearman <- function(input_base = NULL,
 
 
 Test_2C_TestRegresionLinealSimple <- function(input_base = NULL, 
-                                            input_decimales = 2, 
-                                            input_alfa = 0.05){
+                                              input_decimales = 2, 
+                                              input_alfa = 0.05){
   
   
   
@@ -3485,7 +3485,7 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
   
   # Regresion Completa
   regresion_completa <- lm(Y ~ X)
-
+  
   # Info Extra
   info_extra <- summary(regresion_completa)
   
@@ -3498,7 +3498,7 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
   
   # Bases internas
   armado1 <- data.frame(residuos)
-
+  
   
   # Normalidad de los residuos
   test_normalidad_residuos <- Test_1C_TestNormalidad_ShapiroWilk(input_base = armado1,
@@ -3519,6 +3519,12 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
   cumplimiento_homogeneidad <- "Usted debe visualizar el gráfico de 'Residuos vs 
                                 Predichos' y tomar una decisión."
   
+  
+  # Cumplimiento General
+  # Debe cumplir normalidad y homogeneidad
+  # Como solo podemos autormatizar la normalidad, el unico requisito interno es la normalidad.
+  cumplimiento_general <- "No"
+  if(cumplimiento_normalidad == "Si") cumplimiento_general <- "Si"
   
   # Cumplimiento General
   cumplimiento_general1 <-  "El requisito de normalidad de residuos se cumple y la homogeneidad de varianzas 
@@ -3552,7 +3558,7 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
   estadistico_obs_pendiente_externo <- round2(estadistico_obs_pendiente_interno, input_decimales)
   estadistico_obs_r2ajus_externo <- round2(estadistico_obs_r2ajus_interno, input_decimales)
   
-
+  
   
   # Grados de Libertad
   gl_ordenada_interno <- (n_muestra - 2)   #info_extra$df
@@ -3562,8 +3568,8 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
   gl_ordenada_externo <- gl_ordenada_interno
   gl_pendiente_externo <- gl_pendiente_interno
   gl_r2ajus_externo <- gl_r2ajus_interno
-
-    
+  
+  
   # Valor p internos
   valor_p_ordenada_interno <- tabla_regresion[1,4]
   valor_p_pendiente_interno <- tabla_regresion[2,4]
@@ -3605,7 +3611,7 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
   
   
   
- 
+  
   
   
   # Frases Ordenada segun valor p
@@ -3634,14 +3640,14 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
                     "
     
     
-
+    
     
     # Seleccion de Frase Estadistica
     if(is.na(valor_p_ordenada_interno) | is.null(valor_p_ordenada_interno)) frase_estadistica_ordenada <- frase0_v1_ordenada else
       if (valor_p_ordenada_interno > input_alfa) frase_estadistica_ordenada <- frase1_v1_ordenada else
         if (valor_p_ordenada_interno == input_alfa) frase_estadistica_ordenada <- frase1_v2_ordenada else
           if (valor_p_ordenada_interno < input_alfa)  frase_estadistica_ordenada <- frase1_v3_ordenada
-
+    
     
     frase_estadistica_ordenada <- gsub("_mi_ordenada_", ordenada_obs_externa, frase_estadistica_ordenada)
     frase_estadistica_ordenada <- gsub("_mi_variable1_", colnames(input_base)[1], frase_estadistica_ordenada)
@@ -3709,6 +3715,8 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
     
   } # Fin Frases Pendientes segun valor p
   
+  
+  
   # Frases r2ajus segun valor p
   {
     
@@ -3760,19 +3768,19 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
   # Frases Juego de Hipotesis
   {
     
-      # Ordenada
-      frase_juego_hipotesis_ordenada <-  "<b>Hipótesis Nula (Ho):</b> la ordenada poblacional es igual a cero.<br/>
+    # Ordenada
+    frase_juego_hipotesis_ordenada <-  "<b>Hipótesis Nula (Ho):</b> la ordenada poblacional es igual a cero.<br/>
                                <b>Hipótesis Alternativa (Hi):</b> la ordenada poblacional es distinta de cero."
     
-      frase_juego_hipotesis_pendiente <-  "<b>Hipótesis Nula (Ho):</b> la pendiente poblacional es igual a cero.<br/>
+    frase_juego_hipotesis_pendiente <-  "<b>Hipótesis Nula (Ho):</b> la pendiente poblacional es igual a cero.<br/>
                                <b>Hipótesis Alternativa (Hi):</b> la pendiente poblacional es distinta de cero."
     
-
+    
     frase_juego_hipotesis_r2ajus <-  "<b>Hipótesis Nula (Ho):</b> el coeficiente de determinación poblacional es igual a cero.<br/>
                                <b>Hipótesis Alternativa (Hi):</b> el coeficiente de determianción poblacional es distinta de cero."
-
-        
-   
+    
+    
+    
     
     
     
@@ -3888,7 +3896,7 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
     
     tabla_resumen[1, 3] <- round2(tabla_regresion[1,2], input_decimales)
     tabla_resumen[2, 3] <- round2(tabla_regresion[2,2], input_decimales)
-  #  tabla_resumen[3, 3] <- n_muestra # ESTO QUEDA VACIO
+    #  tabla_resumen[3, 3] <- n_muestra # ESTO QUEDA VACIO
     
     tabla_resumen[1, 4] <- n_muestra
     tabla_resumen[2, 4] <- n_muestra
@@ -3903,7 +3911,7 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
     tabla_resumen[2, 6] <- "Bilateral"
     tabla_resumen[3, 6] <- "Unilateral Derecha"
     
-
+    
     
     tabla_resumen[1, 7] <- paste0("t = ",estadistico_obs_ordenada_externo)
     tabla_resumen[2, 7] <- paste0("t = ", estadistico_obs_ordenada_externo)
@@ -3929,7 +3937,7 @@ Test_2C_TestRegresionLinealSimple <- function(input_base = NULL,
     tabla_resumen[2, 12] <- respuesta_pendiente
     tabla_resumen[3, 12] <- respuesta_r2ajus
     
- 
+    
     
   }
   
@@ -7270,5 +7278,208 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
 } # Fin function
 
 
+##########################################################################################
+
+RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 0.05){
+  
+  # Creamos la minibase
+  minibase <- na.omit(base[columnas])
+  
+  # # # La primera columna sera tomada como X, y la segunda como Y
+  
+  # Vectores de ingreso
+  vector_x <- minibase[,1]
+  vector_y <- minibase[,2]
+  
+  # El n del test
+  n_test <- length(vector_x)
+  vector_n <- c(n_test, n_test)
+  
+  # Vector alfa
+  vector_alfa <- c(alfa, alfa)
+  
+  # Test de Regresion Logistica
+  test <- glm(vector_y ~ vector_x, family = binomial)
+  info_test <- summary(test)
+  tabla_regresion <- info_test$coefficients
+  
+  # Pendiente, Ordenada y Odd Ratios
+  ordenada_interna <- tabla_regresion[1,1]
+  pendiente_interna <- tabla_regresion[2,1]
+  odd_ratio_interno <- exp(pendiente_interna)
+  
+  ordenada_externa <- round2(ordenada_interna, decimales)
+  pendiente_externa <- round2(pendiente_interna, decimales)
+  odd_ratio_externo <- round2(odd_ratio_interno, decimales)
+  
+  
+  # Valores p y frases
+  {
+    
+    # Valor p Ordenada
+    valor_p_ordenada_interno <- tabla_regresion[1, 4]
+    valor_p_ordenada_externo <- round2(valor_p_ordenada_interno, decimales)
+    if(valor_p_ordenada_externo < 0.001) valor_p_ordenada_externo <- "<0.001"
+    
+    # Valor p Pendiente
+    valor_p_pendiente_interno <- tabla_regresion[2, 4]
+    valor_p_pendiente_externo <- round2(valor_p_pendiente_interno, decimales)
+    if(valor_p_pendiente_externo < 0.001) valor_p_pendiente_externo <- "<0.001"
+    
+    # Armamos la decision y la pregunta
+    decision <- c("No rechazo Ho", "No rechazo Ho")
+    pregunta <- c("No", "No")
+    frase_ordenada <- paste0("El valor p es ", valor_p_ordenada_externo, ".<br/>",
+                             "El valor alfa es ", alfa, ".<br/>",
+                             "El valor p es _mayor_ al valor de alfa. No se rechaza Ho de la ordenada.<br/>",
+                             "La ordenada es estadísticamente igual a cero.<br/>",
+                             "La variable '", colnames(minibase)[1], "' no depende de '",
+                             colnames(minibase)[2], "'.")
+    
+    
+    frase_pendiente <- paste0("El valor p es ", valor_p_pendiente_externo, ".<br/>",
+                             "El valor alfa es ", alfa, ".<br/>",
+                             "El valor p es _mayor_ al valor de alfa. No se rechaza Ho de la pendiente.<br/>",
+                             "La pendiente es estadísticamente igual a cero.")
+    
+    # Cambios para la ordenada
+    if(valor_p_ordenada_interno > alfa) frase_ordenada <- gsub("_mayor_", "mayor", frase_ordenada) else
+      if(valor_p_ordenada_interno == alfa) frase_ordenada <- gsub("_mayor_", "igual", frase_ordenada) else
+        if(valor_p_ordenada_interno < alfa){ 
+          decision[1] <- "Rechazo Ho"
+          pregunta[1] <- "Si"
+          frase_ordenada <- paste0("El valor p es ", valor_p_ordenada_externo, ".<br/>",
+                                   "El valor alfa es ", alfa, ".<br/>",
+                                   "El valor p es menor al valor de alfa. Se rechaza Ho de la ordenada.<br/>",
+                                   "La ordenada es estadísticamente distinta de cero.")
+          
+          
+          
+        }
+    
+    
+    # Cambios para la pendiente
+    if(valor_p_pendiente_interno > alfa) frase_pendiente <- gsub("_mayor_", "mayor", frase_pendiente) else
+      if(valor_p_pendiente_interno == alfa) frase_pendiente <- gsub("_mayor_", "igual", frase_pendiente) else
+        if(valor_p_pendiente_interno < alfa){ 
+          decision[2] <- "Rechazo Ho"
+          pregunta[2] <- "Si"
+          frase_pendiente <- paste0("El valor p es ", valor_p_pendiente_externo, ".<br/>",
+                                    "El valor alfa es ", alfa, ".<br/>",
+                                    "El valor p es menor al valor de alfa. Se rechaza Ho de la pendiente.<br/>",
+                                    "La pendiente es estadísticamente distinta de cero.<br/>",
+                                    "La variable '", colnames(minibase)[1], "' depende de '",
+                                    colnames(minibase)[2], "'.")
+
+
+
+        }
+    
+  }
+  
+  
+  # Tabla de Regresion Modificada
+  {
+    
+    # Redondeamos lo que tenemos de la tabla  
+    tabla_regresion_mod <- round2(tabla_regresion, decimales)
+    
+    
+    # Agregamos la decision y la pregunta
+    tabla_regresion_mod <- cbind(tabla_regresion_mod, decision, pregunta)
+    
+    # Agregamos el "n" y "alfa"
+    tabla_regresion_mod <- cbind(tabla_regresion_mod[,c(1,2)], vector_n, 
+                                 tabla_regresion_mod[,c(3:4)], vector_alfa, 
+                                 tabla_regresion_mod[,c(5:ncol(tabla_regresion_mod))])
+#    tabla_regresion_mod
+    
+    rownames(tabla_regresion_mod) <- c("Ordenada", "Pendiente")
+    colnames(tabla_regresion_mod) <- c("Estimado", "Error Estándard", "n", "Estadístico (z)", 
+                                       "Valor p", "Alfa", "Decisión", "¿El valor estimado es distinto de cero?")
+  }
+  
+  # Ajuste del modelo
+  {
+    aic_estimado <- round2(info_test$aic, decimales)  
+    
+  }
+  
+  
+  # Salida Final
+  salida <- list(test, 
+                 info_test, 
+                 tabla_regresion, 
+                 tabla_regresion_mod, 
+                 aic_estimado,
+                 odd_ratio_interno, 
+                 odd_ratio_externo, 
+                 frase_ordenada, frase_pendiente)
+  
+  names(salida) <- c("Test Original Completo", "Summary del Test", "Tabla Regresion sin redondear",
+                     "Tabla Regresion Redondeada y completa", "AIC", "Odd ratio sin redondear",
+                     "Odd ratio redondeado", "Frase para la ordenada", "Frase para la pendiente")
+  
+  
+  # Return Exitoso
+  return(salida)
+}
+
+
+
+GraficoRegLog <- function(base = NULL, 
+                          columnas = c(1,2), 
+                          decimales = 2, 
+                          alfa = 0.05){
+  
+  
+  test <-   RegLogGeneral(base = base, columnas = columnas, decimales = decimales, alfa = alfa)
+  
+  # Graficos...
+  # Creamos la minibase
+  minibase <- na.omit(base[columnas])
+  
+  # # # La primera columna sera tomada como X, y la segunda como Y
+  
+  # Vectores de ingreso
+  vector_x <- minibase[,1]
+  vector_y <- minibase[,2]
+  
+  tabla_regresion <- test$"Tabla Regresion sin redondear"
+  
+  # Terminos del modelo
+  ordenada <- tabla_regresion[1,1]
+  pendiente <- tabla_regresion[2,1]
+  
+  # Grafica de la funcion "S"
+  # Estamos usando la estructura de la funcion logistica
+  # p(x) = exp(ordenada + pendiente*x)/1 + exp(ordenada + pendiente*x)
+  x_completo <- seq(min(vector_x), max(vector_x), by = 0.01)
+  numerador <- exp(ordenada + pendiente*x_completo)
+  denominador <- 1 + numerador
+  cociente <- numerador/denominador
+  y_completo <- cociente
+  
+  
+  # Obtener predichos
+  predichos_y <- predict(test$"Test Original Completo", newdata = data.frame(vector_x), type = "response")
+  
+  
+  
+  # Grafico
+  plot(x = vector_x, y = vector_y, 
+       xlab = colnames(minibase)[1],
+       ylab = colnames(minibase)[2],
+       col = "red", 
+       pch = 16, 
+       cex = 2)
+  
+  # Marcamos la "S"
+  lines(x_completo, y_completo, lwd = 3)
+  
+  
+  # Marcamos los predichos
+  points(vector_x, predichos_y, col = "green", pch = 16, cex = 2)
+}
 
 
