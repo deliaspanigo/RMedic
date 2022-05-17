@@ -95,7 +95,8 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
     RegLogGeneral( base = minibase(),
                    columnas = c(1,2),
                    decimales = decimales(),
-                   alfa = alfa())
+                   alfa = alfa(),
+                   valor_x = input$valor_nuevo)
     
     
     
@@ -118,7 +119,15 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
     GraficoRegLog(base = minibase(),
                   columnas = c(1,2),
                   decimales = decimales(),
-                  alfa = alfa())
+                  alfa = alfa(),
+                  logic_obs = input$logic_obs,
+                  logic_esp = input$logic_esp,
+                  logic_funcion = input$logic_funcion,
+                  col_obs = input$color_obs,
+                  col_esp = input$color_esp,
+                  col_funcion = input$color_funcion,
+                  logic_prediccion = input$logic_nuevo,#T,
+                  valor_x = input$valor_nuevo)
     
   }))
 
@@ -150,14 +159,36 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
     HTML(The_Test()$"Frase para la pendiente")
   }))
   
+  
+  # Frase 5: Frase Prediccion
+  observe(output$frase_prediccion <- renderUI({
+    HTML(The_Test()$"Frase Predicho")
+  }))
+  
+  # Frase 6: Frase Hipotesis Pendiente
+  observe(output$"frase_juego_hipotesis_pendiente" <- renderUI({
+    HTML(The_Test()$"HipotesisPendiente")
+  }))
+  
+  # Frase 7: Frase Prediccion
+  observe(output$"frase_juego_hipotesis_ordenada" <- renderUI({
+    HTML(The_Test()$"HipotesisOrdenada")
+  }))
+  
+  
   # Armado/Salida del test de Proporciones 1Q
   output$armado_ho <- renderUI({
     
     div(
-      h2("Test de Regresión Lineal Simple"),
+      h2("Test de Regresión Logística Simple"),
       "Nota: para la utilización del test de Regresión Lineal Simple la variable Y debe tener solo dos valores.", 
       br(),
       br(),
+      h3("Juego de Hipótesis de la Pendiente"),
+      htmlOutput(ns("frase_juego_hipotesis_pendiente")),
+      br(),
+      h3("Juego de Hipótesis de la Ordenada"),
+      htmlOutput(ns("frase_juego_hipotesis_ordenada")),
     #  h3("Elecciones del usuario"),
     #  uiOutput(ns("opciones_ho")),
       br(),
@@ -167,27 +198,61 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
       # h3("Juego de Hipótesis"),
       # htmlOutput(ns("frase_juego_hipotesis")),
       # br(),
-      h3("Tabla Resumen del test de Regresión Lineal Simple"),
+      h3("Tabla Resumen del test de Regresión Logística Simple"),
       tableOutput(ns("tabla_resumen")),
       br(), br(),
-    h3("Ajuste del modelo"),
-    htmlOutput(ns("frase_aic")),
-    br(), br(),
-    h3("Odd Ratio"),
-    htmlOutput(ns("frase_odd_ratio")),
-    br(), br(),
-    h3("Frase Ordenada"),
-    htmlOutput(ns("frase_ordenada")),
-    br(), br(),
-    h3("Frase Pendiente"),
-    htmlOutput(ns("frase_pendiente")),
-    br(), br(),
+      h3("Frase de la Pendiente"),
+      htmlOutput(ns("frase_pendiente")),
+      br(), br(),
+      h3("Frase de la Ordenada"),
+      htmlOutput(ns("frase_ordenada")),
+      br(), br(),
+      h3("Odd Ratio"),
+      htmlOutput(ns("frase_odd_ratio")),
+      br(), br(),
+      h3("Ajuste del modelo"),
+      htmlOutput(ns("frase_aic")),
+      br(), br(),
+    
       # h3("Frases y conclusiones"),
       # htmlOutput(ns("frase_estadistica")),
       # br(), br()
       h3("Gráfico de Regresión Logística Simple"),
       plotOutput(ns("grafico_regresion")),
-      br()# ,
+    fluidRow(
+      column(2,
+      h3("Agregar al gráfico:"),
+      checkboxInput(ns("logic_obs"), "Observados", TRUE),
+      checkboxInput(ns("logic_esp"), "Esperados", TRUE),
+      checkboxInput(ns("logic_funcion"), "Función", TRUE)
+      ),
+      column(3,
+             h3("Elección de colores"),
+             colourpicker::colourInput(inputId = ns("color_obs"),
+                                       label = "Color valores observados", 
+                                       value = "red"),
+             br(),br(),
+             colourpicker::colourInput(inputId = ns("color_esp"),
+                                       label = "Color valores observados", 
+                                       value = "green"),
+             br(),br(),
+             colourpicker::colourInput(inputId = ns("color_funcion"),
+                                       label = "Color valores observados", 
+                                       value = "black")
+             ),
+      column(1),
+      column(6,
+             h3("Agregar predicción"),
+             checkboxInput(ns("logic_nuevo"), "Agregar predicción", FALSE),
+             br(),br(),
+             sliderInput(ns("valor_nuevo"), "Valor a predecir:",
+                         min = min(minibase()[,1]), max = max(minibase()[,1]), 
+                         value = mean(minibase()[,1], step = 0.01, width = '400px')
+             ),
+             htmlOutput(ns("frase_prediccion"))
+          ),
+    ),
+      br()#
     )
     
   })

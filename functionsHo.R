@@ -7280,7 +7280,10 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
 
 ##########################################################################################
 
-RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 0.05){
+
+
+RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 0.05,
+                          valor_x = NULL){
   
   # Creamos la minibase
   minibase <- na.omit(base[columnas])
@@ -7405,6 +7408,42 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
     
   }
   
+  # Prediccion
+  {
+    prediccion_y <- NA
+    frase_prediccion <- ""
+    
+    if(!is.null(valor_x)){
+      
+      ordenada <- ordenada_interna
+      pendiente <- pendiente_interna
+      numerador <- exp(ordenada + pendiente*valor_x)
+      denominador <- 1 + numerador
+      cociente <- numerador/denominador
+      prediccion_y <- round2(cociente, decimales)
+      
+      
+      frase_prediccion <- paste0("Para el valor x=", valor_x, " el valor de 
+                                  probabilidad predicho es ", prediccion_y, ".")
+      
+    }
+    
+    
+  }
+  
+  # Hipotesis
+  {
+    # Pendiente
+    frase_juego_hipotesis_pendiente <-  "<b>Hipótesis Nula (Ho):</b> la pendiente poblacional es igual a cero.<br/>
+                               <b>Hipótesis Alternativa (Hi):</b> la pendiente poblacional es distinta de cero."  
+    
+    # Ordenada
+    frase_juego_hipotesis_ordenada <-  "<b>Hipótesis Nula (Ho):</b> la ordenada poblacional es igual a cero.<br/>
+                               <b>Hipótesis Alternativa (Hi):</b> la ordenada poblacional es distinta de cero."
+    
+   
+  }
+  
   
   # Salida Final
   salida <- list(test, 
@@ -7414,11 +7453,19 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
                  aic_estimado,
                  odd_ratio_interno, 
                  odd_ratio_externo, 
-                 frase_ordenada, frase_pendiente)
+                 frase_ordenada, 
+                 frase_pendiente,
+                 valor_x, 
+                 prediccion_y,
+                 frase_prediccion,
+                 frase_juego_hipotesis_pendiente,
+                 frase_juego_hipotesis_ordenada)
   
   names(salida) <- c("Test Original Completo", "Summary del Test", "Tabla Regresion sin redondear",
                      "Tabla Regresion Redondeada y completa", "AIC", "Odd ratio sin redondear",
-                     "Odd ratio redondeado", "Frase para la ordenada", "Frase para la pendiente")
+                     "Odd ratio redondeado", "Frase para la ordenada", "Frase para la pendiente",
+                     "Valor x para predecir", "Valor unico Predicho", "Frase Predicho",
+                     "HipotesisPendiente", "HipotesisOrdenada")
   
   
   # Return Exitoso
@@ -7430,10 +7477,19 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
 GraficoRegLog <- function(base = NULL, 
                           columnas = c(1,2), 
                           decimales = 2, 
-                          alfa = 0.05){
+                          alfa = 0.05,
+                          logic_obs = T,
+                          logic_esp = T,
+                          logic_funcion = T,
+                          col_obs = "red",
+                          col_esp = "green",
+                          col_funcion = "black",
+                          logic_prediccion = F,
+                          valor_x = NULL){
   
   
-  test <-   RegLogGeneral(base = base, columnas = columnas, decimales = decimales, alfa = alfa)
+  test <-   RegLogGeneral(base = base, columnas = columnas, decimales = decimales, alfa = alfa,
+                          valor_x = valor_x)
   
   # Graficos...
   # Creamos la minibase
@@ -7464,22 +7520,45 @@ GraficoRegLog <- function(base = NULL,
   # Obtener predichos
   predichos_y <- predict(test$"Test Original Completo", newdata = data.frame(vector_x), type = "response")
   
-  
-  
+  # Prediccion Unica
+  valor_x <- test$"Valor x para predecir"
+  prediccion_y <- test$"Valor unico Predicho"
+  frase_prediccion <- test$"Frase Predicho"
+
   # Grafico
   plot(x = vector_x, y = vector_y, 
        xlab = colnames(minibase)[1],
        ylab = colnames(minibase)[2],
-       col = "red", 
+       col = "white", 
        pch = 16, 
        cex = 2)
   
-  # Marcamos la "S"
-  lines(x_completo, y_completo, lwd = 3)
   
+  # Marcamos la "S"
+  if(logic_funcion) {
+  lines(x_completo, y_completo, lwd = 3, col = col_funcion)
+  }
+  
+  # Marcamos los observados
+  if(logic_obs) {
+  points(vector_x, vector_y, col = col_obs, pch = 16, cex = 2)
+  }
   
   # Marcamos los predichos
-  points(vector_x, predichos_y, col = "green", pch = 16, cex = 2)
+  if(logic_esp) {
+  points(vector_x, predichos_y, col = col_esp, pch = 16, cex = 2)
+  }
+  
+  
+  if(logic_prediccion){
+    if(!is.na(valor_x)) {
+    rejunte <- rbind(c(valor_x, 0), c(valor_x, prediccion_y), c(0, prediccion_y))
+    lines(rejunte[,1], rejunte[,2], lwd = 3, col = "black", lty = 2)
+    
+    points(valor_x, prediccion_y, col = "blue", pch = 16, cex = 2)
+    }
+  }
+  
 }
 
 
