@@ -27,20 +27,96 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
   # NameSpaceasing for the session
   ns <- session$ns
   
+  control_2c_reglogsimple <- reactive({
+    Control01_2C_RegLogSimple(minibase())
+  })
+  
   # Control interno 01
   control_interno01 <- reactive({
     
-    if(is.null(control_ejecucion())) return(FALSE)
-    else return(control_ejecucion())
+    control_interno <- FALSE
+    
+    if(is.null(control_ejecucion())) control_interno <- FALSE
+    if(!is.null(control_ejecucion())) control_interno <- control_ejecucion()
+    if(!control_2c_reglogsimple()[[3]]) control_interno <- FALSE
+    
+    else return(control_interno)
   })
   
   
   
+  # Frase 2: Odd Ratio
+  observe(output$frase_control_2c <- renderUI({
+    # or <- The_Test()$"Odd ratio redondeado"
+    # pendiente <- The_Test()$"Tabla Regresion Redondeada y completa"[2,1]
+    
+    frase <- control_2c_reglogsimple()[[2]]
+    frase
+    #HTML(frase)
+  }))
   
+  
+  observe(output$menu_cambios01 <- renderUI({
+    
+    if(control_interno01()) {
+      if(control_2c_reglogsimple()[[1]] == 1) {
+    div(
+      selectInput(inputId = ns("x0"), 
+                  label = "Referencia '0' X", 
+                  choices = levels(as.factor(as.character(minibase()[,1]))), multiple = FALSE)
+    )
+        } else return(NULL)
+    } else return(NULL)
+    
+  }))
+  
+  
+  observe(output$menu_cambios02 <- renderUI({
+    
+    if(control_interno01()) {
+      if(control_2c_reglogsimple()[[1]] <= 2) {
+      div(
+        selectInput(inputId = ns("y0"), 
+                    label = "Referencia '0' Y", 
+                    choices = levels(as.factor(as.character(minibase()[,2]))), multiple = FALSE)
+      )
+        } else return(NULL)
+    } else return(NULL)
+    
+  }))
+  
+  
+  x0_interno <- reactive({
+    
+    if(control_interno01()) {
+      if(control_2c_reglogsimple()[[1]] == 1) {
+         input$x0
+      } else return(NULL)
+    } else return(NULL)
+  })
+
+
+  y0_interno <- reactive({
+    if(control_interno01()) {
+      if(control_2c_reglogsimple()[[1]] <= 2) {
+        input$y0
+      } else return(NULL)
+    } else return(NULL)
+  })
+  
+  
+ 
   ##################################################
   
   
+
+   
+
   
+  # observe(output$aver <- renderTable({
+  #   
+  #   minibase()[c(1:10), ]
+  # }))
   
   # # # # #
   # 2C - 07 - Test de Homogeneidad de Varianzas de Fisher
@@ -91,12 +167,13 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
     if(is.null(decimales())) return(NULL)
     if(is.null(alfa())) return(NULL)
     
-    
     RegLogGeneral( base = minibase(),
                    columnas = c(1,2),
                    decimales = decimales(),
                    alfa = alfa(),
-                   valor_x = input$valor_nuevo)
+                   valor_x = input$valor_nuevo,
+                   x0 = x0_interno(),
+                   y0 = y0_interno())
     
     
     
@@ -127,7 +204,9 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
                   col_esp = input$color_esp,
                   col_funcion = input$color_funcion,
                   logic_prediccion = input$logic_nuevo,#T,
-                  valor_x = input$valor_nuevo)
+                  valor_x = input$valor_nuevo,
+                  x0 = x0_interno(),
+                  y0 = y0_interno())
     
   }))
 
@@ -176,22 +255,41 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
   }))
   
   
+  
   # Armado/Salida del test de Proporciones 1Q
-  output$armado_ho <- renderUI({
+  output$armado_ho_1 <- renderUI({
     
+
     div(
       h2("Test de Regresión Logística Simple"),
       "Nota: para la utilización del test de Regresión Lineal Simple la variable Y debe tener solo dos valores.", 
       br(),
       br(),
+      htmlOutput(ns("frase_control_2c")), # ACAAAAAAAAAAAAAAAAAAAAAAAAAA
       h3("Juego de Hipótesis de la Pendiente"),
       htmlOutput(ns("frase_juego_hipotesis_pendiente")),
       br(),
       h3("Juego de Hipótesis de la Ordenada"),
       htmlOutput(ns("frase_juego_hipotesis_ordenada")),
-    #  h3("Elecciones del usuario"),
-    #  uiOutput(ns("opciones_ho")),
+      #  h3("Elecciones del usuario"),
+      #  uiOutput(ns("opciones_ho")),
       br(),
+      h3("Cambio de Categorías"),
+      uiOutput(ns("menu_cambios01")), br(),
+      uiOutput(ns("menu_cambios02")), br()
+    )
+      
+
+  })
+      
+  # Armado/Salida del test de Proporciones 1Q
+  output$armado_ho <- renderUI({
+    
+
+    div(
+      uiOutput(ns("armado_ho_1")), br(),
+      #input$x0, input$y0, br(),
+      #tableOutput(ns("aver")), br(),
       # Mensaje de advertencia por redondeo
       span(htmlOutput(ns("frase_redondeo")), style="color:red"),
       br(),
@@ -246,8 +344,11 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
              checkboxInput(ns("logic_nuevo"), "Agregar predicción", FALSE),
              br(),br(),
              sliderInput(ns("valor_nuevo"), "Valor a predecir:",
-                         min = min(minibase()[,1]), max = max(minibase()[,1]), 
-                         value = mean(minibase()[,1], step = 0.01, width = '400px')
+                         min = min(minibase()[,1]),
+                         max = max(minibase()[,1]),
+                         value = mean(minibase()[,1],
+                         step = 0.01, 
+                         width = '400px')
              ),
              htmlOutput(ns("frase_prediccion"))
           ),

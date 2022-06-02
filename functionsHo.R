@@ -7283,10 +7283,28 @@ Test_QC_TestKruskalWallis <- function(input_base = NULL,
 
 
 RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 0.05,
-                          valor_x = NULL){
+                          valor_x = NULL, x0 = NULL, y0 = NULL){
   
   # Creamos la minibase
   minibase <- na.omit(base[columnas])
+  
+  if(!is.null(x0)){
+    dt_x0 <- minibase[,1] == x0
+    minibase[dt_x0,1] <- 0
+    minibase[!dt_x0,1] <- 1
+    minibase[,1] <- as.numeric(as.character(minibase[,1]))
+    
+  }
+  
+  
+  if(!is.null(y0)){
+    dt_y0 <- minibase[,2] == y0
+    minibase[dt_y0,2] <- 0
+    minibase[!dt_y0,2] <- 1
+    minibase[,2] <- as.numeric(as.character(minibase[,2]))
+    
+    
+  }
   
   # # # La primera columna sera tomada como X, y la segunda como Y
   
@@ -7341,9 +7359,9 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
     
     
     frase_pendiente <- paste0("El valor p es ", valor_p_pendiente_externo, ".<br/>",
-                             "El valor alfa es ", alfa, ".<br/>",
-                             "El valor p es _mayor_ al valor de alfa. No se rechaza Ho de la pendiente.<br/>",
-                             "La pendiente es estadísticamente igual a cero.")
+                              "El valor alfa es ", alfa, ".<br/>",
+                              "El valor p es _mayor_ al valor de alfa. No se rechaza Ho de la pendiente.<br/>",
+                              "La pendiente es estadísticamente igual a cero.")
     
     # Cambios para la ordenada
     if(valor_p_ordenada_interno > alfa) frase_ordenada <- gsub("_mayor_", "mayor", frase_ordenada) else
@@ -7373,9 +7391,9 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
                                     "La pendiente es estadísticamente distinta de cero.<br/>",
                                     "La variable '", colnames(minibase)[1], "' depende de '",
                                     colnames(minibase)[2], "'.")
-
-
-
+          
+          
+          
         }
     
   }
@@ -7395,7 +7413,7 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
     tabla_regresion_mod <- cbind(tabla_regresion_mod[,c(1,2)], vector_n, 
                                  tabla_regresion_mod[,c(3:4)], vector_alfa, 
                                  tabla_regresion_mod[,c(5:ncol(tabla_regresion_mod))])
-#    tabla_regresion_mod
+    #    tabla_regresion_mod
     
     rownames(tabla_regresion_mod) <- c("Ordenada", "Pendiente")
     colnames(tabla_regresion_mod) <- c("Estimado", "Error Estándard", "n", "Estadístico (z)", 
@@ -7441,7 +7459,7 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
     frase_juego_hipotesis_ordenada <-  "<b>Hipótesis Nula (Ho):</b> la ordenada poblacional es igual a cero.<br/>
                                <b>Hipótesis Alternativa (Hi):</b> la ordenada poblacional es distinta de cero."
     
-   
+    
   }
   
   
@@ -7474,6 +7492,8 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
 
 
 
+
+
 GraficoRegLog <- function(base = NULL, 
                           columnas = c(1,2), 
                           decimales = 2, 
@@ -7485,11 +7505,13 @@ GraficoRegLog <- function(base = NULL,
                           col_esp = "green",
                           col_funcion = "black",
                           logic_prediccion = F,
-                          valor_x = NULL){
+                          valor_x = NULL,
+                          x0 = NULL, 
+                          y0 = NULL){
   
   
   test <-   RegLogGeneral(base = base, columnas = columnas, decimales = decimales, alfa = alfa,
-                          valor_x = valor_x)
+                          valor_x = valor_x, x0 = x0, y0 = y0)
   
   # Graficos...
   # Creamos la minibase
@@ -7560,5 +7582,64 @@ GraficoRegLog <- function(base = NULL,
   }
   
 }
+
+
+
+################################################################################
+
+Control01_2C_RegLogSimple <- function(base){
+  
+  # Minibase interna
+  minibase <- na.omit(base)
+  
+  # Cantidad x
+  cantidad_x <- length(table(minibase[,1]))
+  
+  # Cantidad y
+  cantidad_y <- length(table(minibase[,2]))
+  
+  
+  caso <- c()
+  frase <- c()
+  control_interno <- TRUE
+  
+  # Caso 1: x e y con dos valore, todo OK
+  if(cantidad_x == 2 && cantidad_y == 2){
+    caso <- 1
+    frase <- ""
+    control_interno <- TRUE
+  } else
+    # Caso 2: x con dos valores, y Y con mas de dos valores, todo OK
+    if(cantidad_x > 2 && cantidad_y == 2){
+      caso <- 2
+      frase <- ""
+      control_interno <- TRUE
+    } else
+      # Caso 3: Cualquier otro error
+    {
+      caso <- 3
+      frase <- "La variable X debe contener 2 valores numéricos o ser cuantitativa continua.
+                La variable Y debe tener 2 valores numéricos (por ejemplo 0 y 1)."
+      control_interno <- FALSE
+    }
+  
+  # Return Exitoso
+  salida <- list(caso, frase, control_interno)
+  return(salida)
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
