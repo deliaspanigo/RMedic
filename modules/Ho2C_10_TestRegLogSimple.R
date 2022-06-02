@@ -51,8 +51,7 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
     # pendiente <- The_Test()$"Tabla Regresion Redondeada y completa"[2,1]
     
     frase <- control_2c_reglogsimple()[[2]]
-    frase
-    #HTML(frase)
+    HTML(frase)
   }))
   
   
@@ -121,40 +120,6 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
   # # # # #
   # 2C - 07 - Test de Homogeneidad de Varianzas de Fisher
   
-  
-  
-  if (1 == 2) {
-  # Menu del opciones para el test de proporciones
-  output$opciones_ho <- renderUI({
-    
-    
-    div(
-      # Seleccion de una categoria
-      fluidRow(
-        column(4,
-               # Seleccion del valor bajo H0
-               numericInput(inputId = ns("valor_bajo_ho"),
-                            label = "Media poblacional (Valor esperado bajo hipótesis): ",
-                            min = NA,  max = NA, step = 0.01, value = 0)
-        ),
-        column(4,
-               
-               # Seleccion del tipo de prueba
-               radioButtons(ns("tipo_prueba_ho"), "Tipo de Prueba de Hipótesis:",
-                            choices = c("Bilateral" = "two.sided",
-                                        "Unilateral izquierda" = "less",
-                                        "Unilateral derecha" = "greater")
-               )
-        )
-        
-        
-      )
-    )
-    
-    
-    
-  })
-  }
   
   
   # Test de Proporciones
@@ -262,10 +227,19 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
 
     div(
       h2("Test de Regresión Logística Simple"),
-      "Nota: para la utilización del test de Regresión Lineal Simple la variable Y debe tener solo dos valores.", 
+      "Nota: para la utilización del test de Regresión Logística Simple la variable Y debe tener solo dos valores.", 
       br(),
       br(),
-      htmlOutput(ns("frase_control_2c")), # ACAAAAAAAAAAAAAAAAAAAAAAAAAA
+      span(htmlOutput(ns("frase_control_2c")), style="color:red")
+      # htmlOutput(ns("frase_control_2c"))
+      )
+  })# ACAAAAAAAAAAAAAAAAAAAAAAAAAA
+      
+  # Armado/Salida del test de Proporciones 1Q
+  output$armado_ho_2 <- renderUI({
+    
+    if(!control_interno01()) return(NULL)
+    div(
       h3("Juego de Hipótesis de la Pendiente"),
       htmlOutput(ns("frase_juego_hipotesis_pendiente")),
       br(),
@@ -276,18 +250,8 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
       br(),
       h3("Cambio de Categorías"),
       uiOutput(ns("menu_cambios01")), br(),
-      uiOutput(ns("menu_cambios02")), br()
-    )
+      uiOutput(ns("menu_cambios02")), br(),
       
-
-  })
-      
-  # Armado/Salida del test de Proporciones 1Q
-  output$armado_ho <- renderUI({
-    
-
-    div(
-      uiOutput(ns("armado_ho_1")), br(),
       #input$x0, input$y0, br(),
       #tableOutput(ns("aver")), br(),
       # Mensaje de advertencia por redondeo
@@ -311,49 +275,62 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
       h3("Ajuste del modelo"),
       htmlOutput(ns("frase_aic")),
       br(), br(),
-    
+      
       # h3("Frases y conclusiones"),
       # htmlOutput(ns("frase_estadistica")),
       # br(), br()
       h3("Gráfico de Regresión Logística Simple"),
       plotOutput(ns("grafico_regresion")),
-    fluidRow(
-      column(2,
-      h3("Agregar al gráfico:"),
-      checkboxInput(ns("logic_obs"), "Observados", TRUE),
-      checkboxInput(ns("logic_esp"), "Esperados", TRUE),
-      checkboxInput(ns("logic_funcion"), "Función", TRUE)
+      fluidRow(
+        column(2,
+               h3("Agregar al gráfico:"),
+               checkboxInput(ns("logic_obs"), "Observados", TRUE),
+               checkboxInput(ns("logic_esp"), "Esperados", TRUE),
+               checkboxInput(ns("logic_funcion"), "Función", TRUE)
+        ),
+        column(3,
+               h3("Elección de colores"),
+               colourpicker::colourInput(inputId = ns("color_obs"),
+                                         label = "Color valores observados", 
+                                         value = "red"),
+               br(),br(),
+               colourpicker::colourInput(inputId = ns("color_esp"),
+                                         label = "Color valores observados", 
+                                         value = "green"),
+               br(),br(),
+               colourpicker::colourInput(inputId = ns("color_funcion"),
+                                         label = "Color valores observados", 
+                                         value = "black")
+        ),
+        column(1),
+        column(6,
+               h3("Agregar predicción"),
+               checkboxInput(ns("logic_nuevo"), "Agregar predicción", FALSE),
+               br(),br(),
+               sliderInput(ns("valor_nuevo"), "Valor a predecir:",
+                           min = min(minibase()[,1]),
+                           max = max(minibase()[,1]),
+                           value = mean(minibase()[,1],
+                                        step = 0.01, 
+                                        width = '400px')
+               ),
+               htmlOutput(ns("frase_prediccion"))
+        ),
       ),
-      column(3,
-             h3("Elección de colores"),
-             colourpicker::colourInput(inputId = ns("color_obs"),
-                                       label = "Color valores observados", 
-                                       value = "red"),
-             br(),br(),
-             colourpicker::colourInput(inputId = ns("color_esp"),
-                                       label = "Color valores observados", 
-                                       value = "green"),
-             br(),br(),
-             colourpicker::colourInput(inputId = ns("color_funcion"),
-                                       label = "Color valores observados", 
-                                       value = "black")
-             ),
-      column(1),
-      column(6,
-             h3("Agregar predicción"),
-             checkboxInput(ns("logic_nuevo"), "Agregar predicción", FALSE),
-             br(),br(),
-             sliderInput(ns("valor_nuevo"), "Valor a predecir:",
-                         min = min(minibase()[,1]),
-                         max = max(minibase()[,1]),
-                         value = mean(minibase()[,1],
-                         step = 0.01, 
-                         width = '400px')
-             ),
-             htmlOutput(ns("frase_prediccion"))
-          ),
-    ),
       br()#
+    )
+    
+      
+
+  })
+      
+  # Armado/Salida del test de Proporciones 1Q
+  output$armado_ho <- renderUI({
+    
+
+    div(
+      uiOutput(ns("armado_ho_1")), br(),
+      uiOutput(ns("armado_ho_2")), br()
     )
     
   })

@@ -7618,7 +7618,8 @@ Control01_2C_RegLogSimple <- function(base){
       # Caso 3: Cualquier otro error
     {
       caso <- 3
-      frase <- "La variable X debe contener 2 valores numéricos o ser cuantitativa continua.
+      frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable X debe contener 2 valores numéricos o ser cuantitativa continua.<br/>
                 La variable Y debe tener 2 valores numéricos (por ejemplo 0 y 1)."
       control_interno <- FALSE
     }
