@@ -141,6 +141,12 @@ HoQC_SERVER <- function(input, output, session,
              alfa = alfa)
   
   
+  callModule(module = HoQC_11_TestRegLogSimple_SERVER,
+             id =  "ho07K",
+             minibase = minibase,
+             decimales = decimales,
+             control_ejecucion = control_ejecucion,
+             alfa = alfa)
   
   # callModule(module = GraficosQC_02_MediaDesvioEstandard_SERVER,
   #            id =  "graficos07B",
@@ -232,6 +238,9 @@ HoQC_SERVER <- function(input, output, session,
                     
                     tabPanel(title = "Test de Normalidad Shapiro-Wilk (Particionado)", value = 9,
                              HoQC_10_TestNormalidadShapiroWilkParticionado_UI(ns("ho07J"))),
+                    
+                    tabPanel(title = "Test de Regresión Logística Simple", value = 10,
+                             HoQC_11_TestRegLogSimple_UI(ns("ho07K")))
 
                     
                     # 

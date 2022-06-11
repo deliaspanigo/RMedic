@@ -98,11 +98,12 @@ source("modules/Ho1C_04_TestNormalidadShapiroWilk.R")
 source("modules/Ho1C_05_TestChiCuadradoUnaMuestra.R")
 # source("modules/Ho1Q_03_TestDeUniformidad.R")
 
-
+# Ho 2Q
 source("modules/Ho2Q_ALL.R")
 source("modules/Ho2Q_01_RMedicHelp.R")
 source("modules/Ho2Q_02_TestDeDosProporciones.R")
 source("modules/Ho2Q_03_TestChiCuadrado.R")
+source("modules/Ho2Q_04_TestRegLogSimple.R")
 
 # Ho 2C
 source("modules/Ho2C_ALL.R")
@@ -130,7 +131,7 @@ source("modules/HoQC_07_TestHomogeneidadDeVarianzasFisher.R")
 source("modules/HoQC_08_TestHomogeneidadDeVarianzasBartlett.R")
 source("modules/HoQC_09_TestHomogeneidadDeVarianzasLevene.R")
 source("modules/HoQC_10_TestNormalidadShapiroWilkParticionado.R")
-
+source("modules/HoQC_11_TestRegLogSimple.R")
 
 # KaplanMeier
 source("modules/KM_SobrevidaGeneral.R")

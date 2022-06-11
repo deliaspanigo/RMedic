@@ -7294,7 +7294,7 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
     minibase[!dt_x0,1] <- 1
     minibase[,1] <- as.numeric(as.character(minibase[,1]))
     
-  }
+  } else minibase[,1] <- as.numeric(as.character(minibase[,1]))
   
   
   if(!is.null(y0)){
@@ -7304,7 +7304,7 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
     minibase[,2] <- as.numeric(as.character(minibase[,2]))
     
     
-  }
+  } else minibase[,2] <- as.numeric(as.character(minibase[,2]))
   
   # # # La primera columna sera tomada como X, y la segunda como Y
   
@@ -7516,6 +7516,29 @@ GraficoRegLog <- function(base = NULL,
   # Graficos...
   # Creamos la minibase
   minibase <- na.omit(base[columnas])
+  # minibase[,1] <- as.numeric(as.character(minibase[,1]))
+  # minibase[,2] <- as.numeric(as.character(minibase[,2]))
+  
+  if(!is.null(x0)){
+    dt_x0 <- minibase[,1] == x0
+    minibase[dt_x0,1] <- 0
+    minibase[!dt_x0,1] <- 1
+    minibase[,1] <- as.numeric(as.character(minibase[,1]))
+    
+  } else minibase[,1] <- as.numeric(as.character(minibase[,1]))
+  
+  
+  if(!is.null(y0)){
+    dt_y0 <- minibase[,2] == y0
+    minibase[dt_y0,2] <- 0
+    minibase[!dt_y0,2] <- 1
+    minibase[,2] <- as.numeric(as.character(minibase[,2]))
+    
+    
+  } else minibase[,2] <- as.numeric(as.character(minibase[,2]))
+  
+
+  
   
   # # # La primera columna sera tomada como X, y la segunda como Y
   
@@ -7532,7 +7555,7 @@ GraficoRegLog <- function(base = NULL,
   # Grafica de la funcion "S"
   # Estamos usando la estructura de la funcion logistica
   # p(x) = exp(ordenada + pendiente*x)/1 + exp(ordenada + pendiente*x)
-  x_completo <- seq(min(vector_x), max(vector_x), by = 0.01)
+  x_completo <- seq(min(vector_x), max(vector_x), by = 0.001)
   numerador <- exp(ordenada + pendiente*x_completo)
   denominador <- 1 + numerador
   cociente <- numerador/denominador
@@ -7631,8 +7654,136 @@ Control01_2C_RegLogSimple <- function(base){
 }
 
 
+######################################################################################################
+
+Control02_2Q_RegLogSimple <- function(base){
+  
+  # Minibase interna
+  minibase <- na.omit(base)
+  
+  # Cantidad x
+  cantidad_x <- length(table(minibase[,1]))
+  
+  # Cantidad y
+  cantidad_y <- length(table(minibase[,2]))
+  
+  
+  caso <- c()
+  frase <- c()
+  control_interno <- TRUE
+  
+  # Caso 1: x e y con dos valore, todo OK
+  if(cantidad_x == 2 && cantidad_y == 2){
+    caso <- 1
+    frase <- ""
+    control_interno <- TRUE
+  } else
+      # Caso 2: Cualquier otro error
+    {
+      caso <- 2
+      frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable X debe contener 2 categorías (por ejemplo '0' y '1').<br/>
+                La variable Y debe contener 2 categorías (por ejemplo '0' y '1')."
+      control_interno <- FALSE
+    }
+  
+  # Return Exitoso
+  salida <- list(caso, frase, control_interno)
+  return(salida)
+  
+}
 
 
+######################################################################################################
+
+
+
+Control03_QC_RegLogSimple <- function(base){
+  
+  # Minibase interna
+  minibase <- na.omit(base)
+
+  # Cantidad x
+  cantidad_x <- length(table(minibase[,1]))
+  
+  # Cantidad y
+  cantidad_y <- length(table(minibase[,2]))
+
+  caso <- c()
+  frase <- c()
+  control_interno <- TRUE
+  caso_particular <- c()
+  
+  if(is.character(minibase[,1]) && is.numeric(minibase[,2]))  caso_particular <- 1 else
+  if(is.numeric(minibase[,1]) && is.character(minibase[,2]))  caso_particular <- 2  
+  
+  # X es categorico (solo puede tener dos categorias)
+  # Y es numerico (Dos valores o mas de dos valores)
+  if(caso_particular == 1) {
+    
+    # Caso 1: x e y con dos valore, todo OK
+    if(cantidad_x == 2 && cantidad_y == 2){
+      caso <- 1
+      frase <- ""
+      control_interno <- TRUE
+    } else
+      # Caso 2: x dos categorias y y con mas de dos valores, todo OK
+      if(cantidad_x == 2 && cantidad_y > 2){
+        caso <- 2
+        frase <- ""
+        control_interno <- TRUE
+      } else
+        # Caso 3: Cualquier otro error
+      {
+        caso <- 3
+        frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable X (categórica) debe contener 2 categorías.<br/>
+                La variable Y (nunérica) debe tener 2 o más valores."
+        control_interno <- FALSE
+      }
+    
+    
+  } else
+    
+    # X es numerico (Dos valores o mas)
+    # Y es categorico (Solo puede contener dos categorias)
+    if(caso_particular == 2) {
+      
+      # Caso 1: x e y con dos valore, todo OK
+      if(cantidad_x == 2 && cantidad_y == 2){
+        caso <- 1
+        frase <- ""
+        control_interno <- TRUE
+      } else
+        # Caso 2: x mas de dos valores y y con dos categorias, todo OK
+        if(cantidad_x > 2 && cantidad_y == 2){
+          caso <- 2
+          frase <- ""
+          control_interno <- TRUE
+        } else
+          # Caso 3: Cualquier otro error
+        {
+          caso <- 3
+          frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable X (numérica) debe contener 2 o más valores.<br/>
+                La variable Y (categórica) debe tener solo dos categorías."
+          control_interno <- FALSE
+        }
+      
+      
+    }
+  
+
+  
+
+
+  # Return Exitoso
+  salida <- list(caso, frase, control_interno, caso_particular)
+  return(salida)
+  
+}
+
+######################################################################################################
 
 
 

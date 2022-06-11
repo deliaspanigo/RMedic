@@ -73,6 +73,12 @@ Ho2Q_SERVER <- function(input, output, session,
              alfa = alfa)
 
   
+  callModule(module = Ho2Q_04_TestRegLogSimple_SERVER,
+             id =  "ho05D",
+             minibase = minibase,
+             decimales = decimales,
+             control_ejecucion = control_ejecucion,
+             alfa = alfa)
  
   output$SeccionHo2Q <- renderUI({
     
@@ -94,6 +100,9 @@ Ho2Q_SERVER <- function(input, output, session,
                             ),
                   tabPanel(title = "Test Chi Cuadrado", value = 3,
                            Ho2Q_03_TestChiCuadrado_UI(ns("ho05C"))
+                  ),
+                  tabPanel(title = "Regresión Logística Simple", value = 4,
+                           Ho2Q_04_TestRegLogSimple_UI(ns("ho05D"))
                   )
       )
     )
