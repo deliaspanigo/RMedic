@@ -85,11 +85,32 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
     return(armado)
   })
   
-  observe(output$tabla_referencias <- renderTable(align = "c",{
+  valores_importantes <- reactive({
     
-    tabla_referencias()
-  }))
+    # Para la X si es numerica
+    if(is.numeric(minibase_mod()[,1])) {
+      
+      minimo <- min(minibase_mod()[,1])
+      maximo <- max(minibase_mod()[,1])
+      media <-  round2(mean(minibase_mod()[,1]), 2)
+      rango <- (maximo - minimo)/100
+      
+      salida <- c(minimo, maximo, media, rango)
+      
+      # Para X si es categorica
+    } else salida <- c(0,1,0,1)
+      
+      
+    
+    return(salida)
+    
+  })
   
+  # observe(output$tabla_referencias <- renderTable(align = "c",{
+  #   
+  #   tabla_referencias()
+  # }))
+  # 
   control_qc_reglogsimple <- reactive({
     
     if(is.null(minibase_mod())) return(NULL)
@@ -190,13 +211,9 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
   
   
   
+  # 
   
   
-  
-  # observe(output$aver <- renderTable({
-  #   
-  #   minibase()[c(1:10), ]
-  # }))
   
   # # # # #
   # 2C - 07 - Test de Homogeneidad de Varianzas de Fisher
@@ -217,7 +234,7 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
                    columnas = c(1,2),
                    decimales = decimales(),
                    alfa = alfa(),
-                   valor_x = input$valor_nuevo,
+                   valor_x = input$valor_nuevo06,
                    x0 = x0_interno(),
                    y0 = y0_interno())
     
@@ -228,6 +245,39 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
   })
   # #######################################################
   # 
+  
+  
+  observeEvent(input$valor_nuevo06,{
+    updateSliderInput(session,
+                      inputId = "valor_nuevo05", 
+                      label = "Valor a predecir ", 
+                      min = valores_importantes()[1], 
+                      max = valores_importantes()[2], 
+                      value = input$valor_nuevo06,
+                      step = valores_importantes()[4]
+    )
+    
+  })
+  
+  
+  observeEvent(input$valor_nuevo05,{
+    updateNumericInput(session,
+                       inputId = "valor_nuevo06",
+                       label = "Valor a predecir ", 
+                       min =  valores_importantes()[1], 
+                       max = valores_importantes()[2], 
+                       value = input$valor_nuevo05,
+                       step = valores_importantes()[4]
+    )
+  })
+  
+  
+  my_ratio <- reactive({
+    
+    ratio <- (max(minibase_mod()[,1]) - min(minibase_mod()[,1]))/100
+    ratio
+    
+  })
   
   # Tabla Resumen
   observe( output$tabla_resumen <- renderTable(rownames = TRUE, digits=decimales(), align = "c",{
@@ -250,7 +300,7 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
                   col_esp = input$color_esp,
                   col_funcion = input$color_funcion,
                   logic_prediccion = input$logic_nuevo,#T,
-                  valor_x = input$valor_nuevo,
+                  valor_x = input$valor_nuevo06,
                   x0 = x0_interno(),
                   y0 = y0_interno())
     
@@ -309,7 +359,7 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
     
     div(
       h2("Test de Regresión Logística Simple"),
-      "Nota: para la utilización del test de Regresión Logística Simple la variable Y debe tener solo dos valores.", br(),
+      "Nota: para la utilización del test de Regresión Logística Simple la variable 'Y' debe tener solo dos valores.", br(),
       "Los valores de la variable categórica podrán ser referenciados a '0' y '1'.", br(),
       "Los valores de la variable numérica serán tomados literalmente",
       br(),
@@ -322,6 +372,18 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
   
   output$armado_ho_2 <- renderUI({
     
+    fluidRow(
+      column(6,
+             h3("Valores de Referencia"),
+             uiOutput(ns("menu_cambios01")), 
+             uiOutput(ns("menu_cambios02"))
+      ),
+      column(6,
+             br(), br(),
+             h2("Seleccione de cada variable las categorías que serán consideradas
+                como '0' y haga clic en 'Obtener Análisis'"),
+             actionButton(ns("button"), "Obtener Análisis"))
+    )
     
     div(
       h3("Selección de Variable X"),
@@ -331,19 +393,10 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
     )
   })
   
-  
-  output$armado_ho_3 <- renderUI({
-    
-    if(!control_interno01()) return(NULL)
-    div(
-    uiOutput(ns("menu_cambios01")),
-    uiOutput(ns("menu_cambios02")), br(),
-    tableOutput(ns("tabla_referencias"))
-    )
-  })
+
   
   # Armado/Salida del test de Proporciones 1Q
-  output$armado_ho_4 <- renderUI({
+  output$armado_ho_3 <- renderUI({
     
     if(!control_interno01()) return(NULL)
     div(
@@ -351,12 +404,40 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
       htmlOutput(ns("frase_juego_hipotesis_pendiente")),
       br(),
       h3("Juego de Hipótesis de la Ordenada"),
-      htmlOutput(ns("frase_juego_hipotesis_ordenada")),
-      #  h3("Elecciones del usuario"),
-      #  uiOutput(ns("opciones_ho")),
-      br(),
+      htmlOutput(ns("frase_juego_hipotesis_ordenada"))
+    )
+    #  h3("Elecciones del usuario"),
+    #  uiOutput(ns("opciones_ho")),
+  })
+  
+  
+  output$armado_ho_4 <- renderUI({
+    
+    if(!control_interno01()) return(NULL)
+    fluidRow(
+      column(6,
+             #h3("Valores de Referencia"),
+             uiOutput(ns("menu_cambios01")), 
+             uiOutput(ns("menu_cambios02"))
+      ),
+      column(6,
+             br(), br(),
+             h2("Seleccione de cada variable las categorías que serán consideradas
+                como '0' y haga clic en 'Obtener Análisis'"),
+             actionButton(ns("button"), "Obtener Análisis"))
+    )
+  })
+  
+
       
       
+    # Armado/Salida del test de Proporciones 1Q
+    output$armado_ho_5 <- renderUI({
+      
+      if(!control_interno01()) return(NULL)
+ 
+      div(
+        conditionalPanel(condition = "input.button != 0", ns = ns,
       #input$x0, input$y0, br(),
       #tableOutput(ns("aver")), br(),
       # Mensaje de advertencia por redondeo
@@ -365,8 +446,8 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
       # h3("Juego de Hipótesis"),
       # htmlOutput(ns("frase_juego_hipotesis")),
       # br(),
-      h3("Tabla Resumen del test de Regresión Logística Simple"),
-      tableOutput(ns("tabla_resumen")),
+      # h3("Tabla Resumen del test de Regresión Logística Simple"),
+      # tableOutput(ns("tabla_resumen")),
       br(), br(),
       h3("Frase de la Pendiente"),
       htmlOutput(ns("frase_pendiente")),
@@ -412,25 +493,33 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
                h3("Agregar predicción"),
                checkboxInput(ns("logic_nuevo"), "Agregar predicción", FALSE),
                br(),br(),
-               sliderInput(ns("valor_nuevo"), "Valor a predecir:",
-                           min = min(as.numeric(as.character(minibase()[,1]))),
-                           max = max(as.numeric(as.character(minibase()[,1]))),
-                           value = mean(as.numeric(as.character(minibase()[,1]))),
-                                        step = 0.01, 
-                                        width = '400px'
-                           )
-        
-               ,
+               sliderInput(ns("valor_nuevo05"), 
+                           label = "Valor a predecir:",
+                           min = valores_importantes()[1], 
+                           max = valores_importantes()[2], 
+                           value = valores_importantes()[3],
+                           step = valores_importantes()[4],
+                           width = '400px'), 
+               br(),
+               numericInput(inputId = ns("valor_nuevo06"), 
+                            label = "Valor a predecir ", 
+                            min = valores_importantes()[1], 
+                            max = valores_importantes()[2], 
+                            value = valores_importantes()[3],
+                            step = valores_importantes()[4],
+                            ),
+               br(),
                htmlOutput(ns("frase_prediccion"))
         ),
       ),
       br()#
     )
-    
+      )
     
     
   })
   
+    
   # Armado/Salida del test de Proporciones 1Q
   output$armado_ho <- renderUI({
     
@@ -439,7 +528,8 @@ HoQC_11_TestRegLogSimple_SERVER <- function(input, output, session,
       uiOutput(ns("armado_ho_1")), br(),
       uiOutput(ns("armado_ho_2")), br(),
       uiOutput(ns("armado_ho_3")), br(),
-      uiOutput(ns("armado_ho_4")), br()
+      uiOutput(ns("armado_ho_4")), br(), 
+      uiOutput(ns("armado_ho_5"))
     )
     
   })

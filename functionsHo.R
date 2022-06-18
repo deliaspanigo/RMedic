@@ -7405,7 +7405,8 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
     # Redondeamos lo que tenemos de la tabla  
     tabla_regresion_mod <- round2(tabla_regresion, decimales)
     
-    
+    valores_p_externos <- c(valor_p_ordenada_externo, valor_p_pendiente_externo)
+    names(valores_p_externos) <- c("Ordenada", "Pendiente")
     # Agregamos la decision y la pregunta
     tabla_regresion_mod <- cbind(tabla_regresion_mod, decision, pregunta)
     
@@ -7418,6 +7419,8 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
     rownames(tabla_regresion_mod) <- c("Ordenada", "Pendiente")
     colnames(tabla_regresion_mod) <- c("Estimado", "Error Estándard", "n", "Estadístico (z)", 
                                        "Valor p", "Alfa", "Decisión", "¿El valor estimado es distinto de cero?")
+    
+    tabla_regresion_mod[,5] <-  valores_p_externos
   }
   
   # Ajuste del modelo
@@ -7430,6 +7433,14 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
   {
     prediccion_y <- NA
     frase_prediccion <- ""
+    
+    ###################################################################################
+    # Control interno
+    frase_nueva <- ""
+    detalle <- tabla_regresion_mod[2,8]
+    if(detalle == "No") frase_nueva <- "Nota: Al no rechazarse la hipótesis nula de la pendiente
+  no es válido realizar predicciones con el modelo de Regresión Lineal Simple."
+    ###################################################################################  
     
     if(!is.null(valor_x)){
       
@@ -7444,6 +7455,7 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
       frase_prediccion <- paste0("Para el valor x=", valor_x, " el valor de 
                                   probabilidad predicho es ", prediccion_y, ".")
       
+      if(detalle == "No") frase_prediccion <- frase_nueva
     }
     
     
@@ -7552,6 +7564,17 @@ GraficoRegLog <- function(base = NULL,
   ordenada <- tabla_regresion[1,1]
   pendiente <- tabla_regresion[2,1]
   
+  ###################################################################################
+  # Control interno
+  frase_nueva <- ""
+  detalle <- test$`Tabla Regresion Redondeada y completa`[2,8]
+  if(detalle == "No") frase_nueva <- "Al no rechazarse la hipótesis nula de la pendiente
+  no es válido realizar predicciones con el modelo de Regresión Lineal Simple."
+
+  
+  
+  ###################################################################################  
+  
   # Grafica de la funcion "S"
   # Estamos usando la estructura de la funcion logistica
   # p(x) = exp(ordenada + pendiente*x)/1 + exp(ordenada + pendiente*x)
@@ -7576,8 +7599,14 @@ GraficoRegLog <- function(base = NULL,
        ylab = colnames(minibase)[2],
        col = "white", 
        pch = 16, 
-       cex = 2)
-  
+       cex = 2,
+       las = 1) 
+     #  axes = F,
+   #    yaxt="n")
+  #axis(1,cex.axis=2)
+  #axis(2,cex.axis=2)
+  #axis(3,cex.axis=1)
+  #axis(4,cex.axis=1)
   
   # Marcamos la "S"
   if(logic_funcion) {
@@ -7595,12 +7624,16 @@ GraficoRegLog <- function(base = NULL,
   }
   
   
+  # La prediccion
   if(logic_prediccion){
     if(!is.na(valor_x)) {
+      
+      if(detalle == "Si"){ #Solo si la pendiente es significativa
     rejunte <- rbind(c(valor_x, 0), c(valor_x, prediccion_y), c(0, prediccion_y))
     lines(rejunte[,1], rejunte[,2], lwd = 3, col = "black", lty = 2)
     
     points(valor_x, prediccion_y, col = "blue", pch = 16, cex = 2)
+    }
     }
   }
   
@@ -7632,21 +7665,48 @@ Control01_2C_RegLogSimple <- function(base){
     frase <- ""
     control_interno <- TRUE
   } else
+    
     # Caso 2: x con dos valores, y Y con mas de dos valores, todo OK
     if(cantidad_x > 2 && cantidad_y == 2){
       caso <- 2
       frase <- ""
       control_interno <- TRUE
     } else
-      # Caso 3: Cualquier otro error
-    {
-      caso <- 3
-      frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
-                La variable X debe contener 2 valores numéricos o ser cuantitativa continua.<br/>
-                La variable Y debe tener 2 valores numéricos (por ejemplo 0 y 1)."
-      control_interno <- FALSE
-    }
+      
+      # Caso 3: x con solo un valor valores, y Y bien, Es un error!
+      if(cantidad_x == 1 && cantidad_y == 2){
+        caso <- 3
+        frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable 'X' debe contener 2 valores numéricos o ser cuantitativa continua."
+        control_interno <- FALSE
+      } else
+        
+        
+        # Caso 4: x esta bien, pero Y tiene un solo valor, Es un error!
+        if(cantidad_x >= 2 && cantidad_y == 1){
+          caso <- 4
+          frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable 'Y' debe contener 2 valores numéricos (por ejemplo '0' y '1')."
+          control_interno <- FALSE
+        } else
+          
+          # Caso 5: x esta bien, pero Y tiene un solo valor, Es un error!
+          if(cantidad_x >= 2 && cantidad_y >= 3){
+            caso <- 5
+            frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable 'Y' debe contener 2 valores numéricos (por ejemplo '0' y '1')."
+            control_interno <- FALSE
+          } else
   
+          # Caso 6: x e y tienen cada uno un solo valor, Es un error!
+          if(cantidad_x == 1 && cantidad_y == 1){
+            caso <- 6
+            frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable 'Y' debe contener 2 valores numéricos (por ejemplo '0' y '1').<br/>
+            La variable 'Y' debe contener 2 valores numéricos (por ejemplo '0' y '1')."
+            control_interno <- FALSE
+          } 
+            
   # Return Exitoso
   salida <- list(caso, frase, control_interno)
   return(salida)
@@ -7678,14 +7738,31 @@ Control02_2Q_RegLogSimple <- function(base){
     frase <- ""
     control_interno <- TRUE
   } else
-      # Caso 2: Cualquier otro error
-    {
+    
+    # Caso 2: x tiene dos valores y 'Y' es diferente de 2
+    if(cantidad_x == 2 && cantidad_y != 2){
       caso <- 2
       frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
-                La variable X debe contener 2 categorías (por ejemplo '0' y '1').<br/>
-                La variable Y debe contener 2 categorías (por ejemplo '0' y '1')."
-      control_interno <- FALSE
-    }
+                La variable 'Y' debe contener 2 categorías (por ejemplo '0' y '1')."
+      control_interno <- TRUE
+    } else
+      
+      # Caso 3: X no tiene dos valores y 'Y' si
+      if(cantidad_x != 2 && cantidad_y == 2){
+        caso <- 3
+        frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable 'X' debe contener 2 categorías (por ejemplo '0' y '1')."
+        control_interno <- TRUE
+      } else
+        
+        # Caso 3: X no tiene dos valores y 'Y' si
+        if(cantidad_x != 2 && cantidad_y != 2){
+            caso <- 4
+            frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable 'X' debe contener 2 categorías (por ejemplo '0' y '1').<br/>
+                La variable 'Y' debe contener 2 categorías (por ejemplo '0' y '1')."
+            control_interno <- FALSE
+        }
   
   # Return Exitoso
   salida <- list(caso, frase, control_interno)
@@ -7721,26 +7798,51 @@ Control03_QC_RegLogSimple <- function(base){
   # Y es numerico (Dos valores o mas de dos valores)
   if(caso_particular == 1) {
     
-    # Caso 1: x e y con dos valore, todo OK
+    # Caso 1: 
+    #         X con dos categorias --- Esta bien
+    #         Y con dos valores numericos --- Esta bien
+    # todo OK
     if(cantidad_x == 2 && cantidad_y == 2){
       caso <- 1
       frase <- ""
       control_interno <- TRUE
     } else
-      # Caso 2: x dos categorias y y con mas de dos valores, todo OK
+      
+      # Caso 2: 
+      #         X con dos categorias --- Esta bien
+      #         Y con mas de dos valores numericos --- Esta Mal
+      # todo MAAAAL
       if(cantidad_x == 2 && cantidad_y > 2){
         caso <- 2
-        frase <- ""
-        control_interno <- TRUE
-      } else
-        # Caso 3: Cualquier otro error
-      {
-        caso <- 3
         frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable 'Y' (numérica) debe contener 2 valores."
+        control_interno <- FALSE
+      } else
+        
+        # Caso 3: 
+        #         X con 1 o  con 3 más (o sea, diferente de 2) --- Esta Mal
+        #         Y con mas dos valores numericos --- Esta bien
+        # todo MAAAAL
+        if(cantidad_x != 2 && cantidad_y == 2){
+          caso <- 3
+          frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable X (categórica) debe contener 2 categorías."
+          control_interno <- FALSE
+        } else
+          
+          # Caso 3: 
+          #         X con 1 o  con 3 más (o sea, diferente de 2) --- Esta Mal
+          #         Y con 1 o menos categorias --- Esta Mal
+          # todo MAAAAL
+          if(cantidad_x != 2 && cantidad_y <= 1){
+            caso <- 4
+            frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
                 La variable X (categórica) debe contener 2 categorías.<br/>
                 La variable Y (nunérica) debe tener 2 o más valores."
-        control_interno <- FALSE
-      }
+            control_interno <- FALSE
+          } 
+    
+      
     
     
   } else
@@ -7761,14 +7863,24 @@ Control03_QC_RegLogSimple <- function(base){
           frase <- ""
           control_interno <- TRUE
         } else
-          # Caso 3: Cualquier otro error
-        {
-          caso <- 3
-          frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
-                La variable X (numérica) debe contener 2 o más valores.<br/>
+          
+          # Caso 3: x bien y Y mal, MAL
+          if(cantidad_x >= 2 && cantidad_y != 2){
+            caso <- 3
+            frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
                 La variable Y (categórica) debe tener solo dos categorías."
-          control_interno <- FALSE
-        }
+            control_interno <- FALSE
+          } else
+          
+            
+            # Caso 4: x MAL y Y mal, MAL
+            if(cantidad_x <= 1 && cantidad_y != 2){
+              caso <- 3
+              frase <- "El test de regresión logística simple no puede ser llevado a cabo con los datos seleccionados. <br/>
+                La variable X (numérica) debe contener 2 o más valores.<br/>
+                La variable Y (categórica) debe tener dos categorías."
+              control_interno <- FALSE
+            } 
       
       
     }

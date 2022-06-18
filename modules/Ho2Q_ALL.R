@@ -80,6 +80,14 @@ Ho2Q_SERVER <- function(input, output, session,
              control_ejecucion = control_ejecucion,
              alfa = alfa)
  
+  
+  callModule(module = Ho2Q_05_Otros_SERVER,
+             id =  "ho05E",
+             minibase = minibase,
+             decimales = decimales,
+             control_ejecucion = control_ejecucion,
+             alfa = alfa)
+  
   output$SeccionHo2Q <- renderUI({
     
     # Especificaciones de cumplimiento
@@ -103,6 +111,9 @@ Ho2Q_SERVER <- function(input, output, session,
                   ),
                   tabPanel(title = "Regresión Logística Simple", value = 4,
                            Ho2Q_04_TestRegLogSimple_UI(ns("ho05D"))
+                  ),
+                  tabPanel(title = "Otros", value = 5,
+                           Ho2Q_05_Otros_UI(ns("ho05E"))
                   )
       )
     )

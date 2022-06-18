@@ -19,6 +19,8 @@ library(agricolae)
 library(gplots)
 library(xtable)
 library(survival)
+# library(epitools)
+library(fmsb)
 
 source("uiCode.R")
 
@@ -104,6 +106,7 @@ source("modules/Ho2Q_01_RMedicHelp.R")
 source("modules/Ho2Q_02_TestDeDosProporciones.R")
 source("modules/Ho2Q_03_TestChiCuadrado.R")
 source("modules/Ho2Q_04_TestRegLogSimple.R")
+source("modules/Ho2Q_05_Otros.R")
 
 # Ho 2C
 source("modules/Ho2C_ALL.R")

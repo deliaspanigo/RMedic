@@ -72,7 +72,7 @@ Ho2Q_04_TestRegLogSimple_SERVER <- function(input, output, session,
   observe(output$menu_cambios01 <- renderUI({
     
     if(control_interno01()) {
-      if(control_2q_reglogsimple()[[1]] == 1) {
+      if(control_2q_reglogsimple()[[1]] == 1) { # Esto es que ambas variables son viables...
         div(
           selectInput(inputId = ns("x0"), 
                       label = "Referencia '0' X", 
@@ -87,7 +87,7 @@ Ho2Q_04_TestRegLogSimple_SERVER <- function(input, output, session,
   observe(output$menu_cambios02 <- renderUI({
     
     if(control_interno01()) {
-      if(control_2q_reglogsimple()[[1]] == 1) {
+      if(control_2q_reglogsimple()[[1]] == 1) {# Esto es que ambas variables son viables...
         div(
           selectInput(inputId = ns("y0"), 
                       label = "Referencia '0' Y", 
@@ -102,7 +102,7 @@ Ho2Q_04_TestRegLogSimple_SERVER <- function(input, output, session,
   x0_interno <- reactive({
     
     if(control_interno01()) {
-      if(control_2q_reglogsimple()[[1]] == 1) {
+      if(control_2q_reglogsimple()[[1]] == 1) {# Esto es que ambas variables son viables...
         input$x0
       } else return(levels(as.factor(as.character(minibase[,1])))[1])
     } else return(levels(as.factor(as.character(minibase[,1])))[1])
@@ -111,7 +111,7 @@ Ho2Q_04_TestRegLogSimple_SERVER <- function(input, output, session,
   
   y0_interno <- reactive({
     if(control_interno01()) {
-      if(control_2q_reglogsimple()[[1]] == 1) {
+      if(control_2q_reglogsimple()[[1]] == 1) {# Esto es que ambas variables son viables...
         input$y0
       } else return(levels(as.factor(as.character(minibase[,2])))[1])
     } else return(levels(as.factor(as.character(minibase[,2])))[1])
@@ -151,7 +151,7 @@ Ho2Q_04_TestRegLogSimple_SERVER <- function(input, output, session,
                    columnas = c(1,2),
                    decimales = decimales(),
                    alfa = alfa(),
-                   valor_x = input$valor_nuevo,
+                   valor_x = input$valor_nuevo02,
                    x0 = x0_interno(),
                    y0 = y0_interno())
     
@@ -187,7 +187,7 @@ Ho2Q_04_TestRegLogSimple_SERVER <- function(input, output, session,
                   col_esp = input$color_esp,
                   col_funcion = input$color_funcion,
                   logic_prediccion = input$logic_nuevo,#T,
-                  valor_x = input$valor_nuevo,
+                  valor_x = input$valor_nuevo02,
                   x0 = x0_interno(),
                   y0 = y0_interno())
     
@@ -239,13 +239,45 @@ Ho2Q_04_TestRegLogSimple_SERVER <- function(input, output, session,
   
   
   
+
+  
+  observeEvent(input$valor_nuevo02,{
+  updateSliderInput(session,
+                    inputId = "valor_nuevo01", 
+                    label = "Valor a predecir:",
+                    min = 0,
+                    max = 1,
+                    value = input$valor_nuevo02,
+                    step = 1
+  )
+  
+  })
+  
+  
+  observeEvent(input$valor_nuevo01,{
+  updateNumericInput(session,
+                     inputId = "valor_nuevo02",
+                     label = "Valor a predecir", 
+                     value = input$valor_nuevo01,
+                     min = 0,
+                     max = 1
+  )
+  })
+  
+  
+ 
+  # observeEvent(input$x0, {
+  #   reset(ns("button"))
+  # })
+  # 
+  
   # Armado/Salida del test de Proporciones 1Q
   output$armado_ho_1 <- renderUI({
     
     
     div(
       h2("Test de Regresión Logística Simple"),
-      "Nota: para la utilización del test de Regresión Logística Simple la variable Y debe tener solo dos valores.", 
+      "Nota: para la utilización del test de Regresión Logística Simple la variable 'Y' debe tener solo dos valores.", 
       br(),
       br(),
       span(htmlOutput(ns("frase_control_2c")), style="color:red")
@@ -266,10 +298,26 @@ Ho2Q_04_TestRegLogSimple_SERVER <- function(input, output, session,
       #  h3("Elecciones del usuario"),
       #  uiOutput(ns("opciones_ho")),
       br(),
-      h3("Cambio de Categorías"),
-      uiOutput(ns("menu_cambios01")), br(),
-      uiOutput(ns("menu_cambios02")), br(),
-      
+      fluidRow(
+        column(6,
+      h3("Categorías de Referencia"),
+      uiOutput(ns("menu_cambios01")), 
+      uiOutput(ns("menu_cambios02"))
+      ),
+      column(6,
+             br(), br(),
+             h2("Seleccione de cada variable las categorías que serán consideradas
+                como '0' y haga clic en 'Obtener Análisis'"),
+             actionButton(ns("button"), "Obtener Análisis"))
+      )
+    )
+  })
+  
+  
+  output$armado_ho_3 <- renderUI({
+    if(!control_interno01()) return(NULL)
+    div(
+      conditionalPanel(condition = "input.button != 0", ns = ns,
       #input$x0, input$y0, br(),
       #tableOutput(ns("aver")), br(),
       # Mensaje de advertencia por redondeo
@@ -325,15 +373,25 @@ Ho2Q_04_TestRegLogSimple_SERVER <- function(input, output, session,
                h3("Agregar predicción"),
                checkboxInput(ns("logic_nuevo"), "Agregar predicción", FALSE),
                br(),br(),
-               sliderInput(ns("valor_nuevo"), "Valor a predecir:",
+               sliderInput(ns("valor_nuevo01"), "Valor a predecir:",
                            min = 0,
                            max = 1,
-                           value = 0.5,
-                           step = 0.01, 
-                           width = '400px')
+                           value = 0,
+                           step = 1, 
+                           width = '400px'), br(),
+               numericInput(inputId = ns("valor_nuevo02"), 
+                            label = "Valor a predecir ", 
+                            value = 0,
+                            min = 0, 
+                            max = 1, 
+                            step = 1),
+               br(),
+               htmlOutput(ns("frase_prediccion")
+                          )
                ),
-               htmlOutput(ns("frase_prediccion"))
-        ),
+        
+        )
+      ),
      
       br()#
     )
@@ -348,7 +406,8 @@ Ho2Q_04_TestRegLogSimple_SERVER <- function(input, output, session,
     
     div(
       uiOutput(ns("armado_ho_1")), br(),
-      uiOutput(ns("armado_ho_2")), br()
+      uiOutput(ns("armado_ho_2")), br(),
+      uiOutput(ns("armado_ho_3"))
     )
     
   })

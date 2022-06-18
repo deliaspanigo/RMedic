@@ -136,7 +136,7 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
                    columnas = c(1,2),
                    decimales = decimales(),
                    alfa = alfa(),
-                   valor_x = input$valor_nuevo,
+                   valor_x = input$valor_nuevo04,
                    x0 = x0_interno(),
                    y0 = y0_interno())
     
@@ -147,6 +147,37 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
   })
   # #######################################################
   # 
+  
+  my_ratio <- reactive({
+    
+    ratio <- (max(minibase()[,1]) - min(minibase()[,1]))/100
+    ratio
+    
+  })
+
+  observeEvent(input$valor_nuevo04,{
+    updateSliderInput(session,
+                      inputId = "valor_nuevo03", 
+                      label = "Valor a predecir:",
+                      value = input$valor_nuevo04,
+                      min = round2(min(minibase()[,1]), 2), 
+                      max = round2(max(minibase()[,1]), 2), 
+                      step = my_ratio()
+    )
+    
+  })
+  
+  
+  observeEvent(input$valor_nuevo03,{
+    updateNumericInput(session,
+                       inputId = "valor_nuevo04",
+                       label = "Valor a predecir", 
+                       value = input$valor_nuevo03,
+                       min = round2(min(minibase()[,1]), 2), 
+                       max = round2(max(minibase()[,1]), 2), 
+                       step = my_ratio()
+    )
+  })
   
   # Tabla Resumen
   observe( output$tabla_resumen <- renderTable(rownames = TRUE, digits=decimales(), align = "c",{
@@ -169,7 +200,7 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
                   col_esp = input$color_esp,
                   col_funcion = input$color_funcion,
                   logic_prediccion = input$logic_nuevo,#T,
-                  valor_x = input$valor_nuevo,
+                  valor_x = input$valor_nuevo04,
                   x0 = x0_interno(),
                   y0 = y0_interno())
     
@@ -227,7 +258,7 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
 
     div(
       h2("Test de Regresión Logística Simple"),
-      "Nota: para la utilización del test de Regresión Logística Simple la variable Y debe tener solo dos valores.", 
+      "Nota: para la utilización del test de Regresión Logística Simple la variable 'Y' debe tener solo dos valores.", 
       br(),
       br(),
       span(htmlOutput(ns("frase_control_2c")), style="color:red")
@@ -248,10 +279,28 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
       #  h3("Elecciones del usuario"),
       #  uiOutput(ns("opciones_ho")),
       br(),
-      h3("Cambio de Categorías"),
-      uiOutput(ns("menu_cambios01")), br(),
-      uiOutput(ns("menu_cambios02")), br(),
+      fluidRow(
+        column(6,
+               h3("Valores de Referencia"),
+               uiOutput(ns("menu_cambios01")), 
+               uiOutput(ns("menu_cambios02"))
+        ),
+        column(6,
+               br(), br(),
+               h2("Seleccione de cada variable las categorías que serán consideradas
+                como '0' y haga clic en 'Obtener Análisis'"),
+               actionButton(ns("button"), "Obtener Análisis"))
+      )
       
+    )
+  })# ACAAAAAAAAAAAAAAAAAAAAAAAAAA
+  
+  # Armado/Salida del test de Proporciones 1Q
+  output$armado_ho_3 <- renderUI({
+    
+    if(!control_interno01()) return(NULL)
+    div(
+      conditionalPanel(condition = "input.button != 0", ns = ns,
       #input$x0, input$y0, br(),
       #tableOutput(ns("aver")), br(),
       # Mensaje de advertencia por redondeo
@@ -307,17 +356,24 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
                h3("Agregar predicción"),
                checkboxInput(ns("logic_nuevo"), "Agregar predicción", FALSE),
                br(),br(),
-               sliderInput(ns("valor_nuevo"), "Valor a predecir:",
-                           min = min(minibase()[,1]),
-                           max = max(minibase()[,1]),
-                           value = mean(minibase()[,1],
-                                        step = 0.01, 
-                                        width = '400px')
-               ),
+               sliderInput(ns("valor_nuevo03"), "Valor a predecir:",
+                           min = round2(min(minibase()[,1]), 2),
+                           max = round2(max(minibase()[,1]), 2),
+                           value = round2(mean(minibase()[,1]), 2),
+                           step = my_ratio(), 
+                           width = '400px'), br(),
+               numericInput(inputId = ns("valor_nuevo04"), 
+                            label = "Valor a predecir ", 
+                            value = round2(mean(minibase()[,1]), 2),
+                            min = round2(min(minibase()[,1]), 2), 
+                            max = round2(max(minibase()[,1]), 2), 
+                            step = my_ratio()),
+               br(),
                htmlOutput(ns("frase_prediccion"))
         ),
       ),
       br()#
+      )
     )
     
       
@@ -329,8 +385,9 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
     
 
     div(
-      uiOutput(ns("armado_ho_1")), br(),
-      uiOutput(ns("armado_ho_2")), br()
+      uiOutput(ns("armado_ho_1")),br(),
+      uiOutput(ns("armado_ho_2")),
+      uiOutput(ns("armado_ho_3"))
     )
     
   })
