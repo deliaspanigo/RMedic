@@ -1,44 +1,32 @@
 
 
 
-fluidPage(
-  useShinyjs(),
-  theme = "styles.css", 
-  titlePanel("R+Medic"),
+# fluidPage(
+#   useShinyjs(),
+#   theme = "styles.css", 
   
+  navbarPage(theme = "styles.css",inverse=TRUE,
+             useShinyjs(),
+             title = strong("I need RMEDIC here!"),
+             windowTitle = "RMedic - Medicina y R", 
+             fluid = TRUE, 
+             header = column(12, ""),
+             # footer =  HTML(includeHTML("tools/footer.txt")),
+             footer = column(12,
+                             div(id = "footer",
+                                 a("Consultoria Bioestadística de la Salud"), br(),
+                                 "Contacto: ", a("d.eliaspanigo@gmail.com"),
+                                 br(),
+                                 HTML('&copy; David Elías Panigo (2016)')
+                                 )
+                             ),
+             #footer = includeHTML("tools/footer.html"),
+             # footer =  tags$iframe(src = "tools/footer.html"),
+             id = "nav",
+
   
-  
-  br(), br(),
-  fluidRow(
-    column(1),
-    column(4,
-           bsButton("showpanel", "Ocultar/Mostrar Carga de Datos", 
-                      type = "toggle", value = TRUE,
-                    icon("bars"), style = "primary", size = "large"
-           )
-    )
-  ),
-  br(), br(),
-  
-  sidebarLayout(
-    div(id = "MySidebar",
-        
-        sidebarPanel(id = "Sidebar", 
-                                      SideBarBaseUI("base01"))),
-  mainPanel(id = "Main",
-  
-            
-            uiOutput("RMedicSoft"),
-            
-    #        MiTexto01_UI("tablas05"),
-  #  MiBase01_UI("tablas05"), # tableOutput("BaseSalida"),
-  #          MiBase01_UI("tablas05"),
-  #  BatallaNavalUI("tablas01"),
-  #  MiniBaseUI("tablas02"),
-   # Tablas1Q_UI("tablas03"),
-  #  Tablas1C_UI("tablas04"),
-    br(), br()
-    
-  )
-) # End MainPanel ------------------------------------------
+             # Tab Inicio (HOME)
+             # Tab Inicio (HOME)
+             shiny::tabPanel(title = "Inicio", icon = icon("home"), source("tabs/homeTab.R", encoding = "UTF-8")$value),
+             shiny::tabPanel(title = "RMedic", source("tabs/RMedicTab.R", encoding = "UTF-8")$value)
 )
