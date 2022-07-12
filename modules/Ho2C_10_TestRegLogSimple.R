@@ -186,6 +186,13 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
     
   }))
   
+  # Tabla IC
+  observe( output$tabla_IC <- renderTable(rownames = TRUE, digits=decimales(), align = "c",{
+    
+    The_Test()$"Tabla IC"
+    
+  }))
+  
   # Grafico Regresion
   observe( output$grafico_regresion <- renderPlot({
     
@@ -252,7 +259,7 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
   
   
   
-  # Armado/Salida del test de Proporciones 1Q
+  # Armado/Salida del test de Regresion Logistica 2C
   output$armado_ho_1 <- renderUI({
     
 
@@ -312,6 +319,9 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
       h3("Tabla Resumen del test de Regresión Logística Simple"),
       tableOutput(ns("tabla_resumen")),
       br(), br(),
+      h3("Ajuste del modelo"),
+      htmlOutput(ns("frase_aic")),
+      br(), br(),
       h3("Frase de la Pendiente"),
       htmlOutput(ns("frase_pendiente")),
       br(), br(),
@@ -321,9 +331,10 @@ Ho2C_10_TestRegLogSimple_SERVER <- function(input, output, session,
       h3("Odd Ratio"),
       htmlOutput(ns("frase_odd_ratio")),
       br(), br(),
-      h3("Ajuste del modelo"),
-      htmlOutput(ns("frase_aic")),
+      h3("Tabla de Intervalos de Confianza"),
+      tableOutput(ns("tabla_IC")),
       br(), br(),
+     
       
       # h3("Frases y conclusiones"),
       # htmlOutput(ns("frase_estadistica")),

@@ -7474,7 +7474,45 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
     
   }
   
-  
+  # Tabla de Intervalos de confianza
+  {
+    confianza <- 1 - alfa
+    medio_alfa <- alfa/2
+    valor_z_interno <- abs(qnorm(p = medio_alfa, mean = 0, sd = 1))
+    confianza_porcentaje <- paste0(confianza*100, "%")
+
+    ee_ordenada_interna <- tabla_regresion[1,2]
+    ee_pendiente_interna <- tabla_regresion[2,2]
+    
+    li_ordenada_interna <- ordenada_interna - valor_z_interno*ee_ordenada_interna
+    ls_ordenada_interna <- ordenada_interna + valor_z_interno*ee_ordenada_interna
+    
+    li_ordenada_externa <- round2(li_ordenada_interna, decimales)
+    ls_ordenada_externa <- round2(ls_ordenada_interna, decimales)
+    
+    li_pendiente_interna <- pendiente_interna - valor_z_interno*ee_pendiente_interna
+    ls_pendiente_interna <- pendiente_interna + valor_z_interno*ee_pendiente_interna
+    
+    li_pendiente_externa <- round2(li_pendiente_interna, decimales)
+    ls_pendiente_externa <- round2(ls_pendiente_interna, decimales)
+    
+    li_odd_ratio_interno <- exp(li_pendiente_interna)
+    ls_odd_ratio_interno <- exp(ls_pendiente_interna)
+
+    li_odd_ratio_externo <- round2(li_odd_ratio_interno, decimales)
+    ls_odd_ratio_externo <- round2(ls_odd_ratio_interno, decimales)
+
+        
+    las_columnas <- c("Estimador", "Estimado", "Intervalo de Confianza", "Límite Inferior", "Límite Superior")
+    tabla_IC <- as.data.frame(matrix(NA, 3, length(las_columnas)))
+    colnames(tabla_IC) <- las_columnas
+    tabla_IC["Estimador"] <- c("Ordenada", "Pendiente", "Odd Ratio")
+    tabla_IC["Estimado"] <- c(ordenada_externa, pendiente_externa, odd_ratio_externo)
+    tabla_IC["Intervalo de Confianza"] <- rep(confianza_porcentaje, nrow(tabla_IC))
+    tabla_IC["Límite Inferior"] <- c(li_ordenada_externa, li_pendiente_externa, li_odd_ratio_externo)
+    tabla_IC["Límite Superior"] <- c(ls_ordenada_externa, ls_pendiente_externa, ls_odd_ratio_externo)
+    
+  }
   # Salida Final
   salida <- list(test, 
                  info_test, 
@@ -7489,13 +7527,14 @@ RegLogGeneral <- function(base = NULL, columnas = c(1,2), decimales = 2, alfa = 
                  prediccion_y,
                  frase_prediccion,
                  frase_juego_hipotesis_pendiente,
-                 frase_juego_hipotesis_ordenada)
+                 frase_juego_hipotesis_ordenada,
+                 tabla_IC)
   
   names(salida) <- c("Test Original Completo", "Summary del Test", "Tabla Regresion sin redondear",
                      "Tabla Regresion Redondeada y completa", "AIC", "Odd ratio sin redondear",
                      "Odd ratio redondeado", "Frase para la ordenada", "Frase para la pendiente",
                      "Valor x para predecir", "Valor unico Predicho", "Frase Predicho",
-                     "HipotesisPendiente", "HipotesisOrdenada")
+                     "HipotesisPendiente", "HipotesisOrdenada", "Tabla IC")
   
   
   # Return Exitoso
