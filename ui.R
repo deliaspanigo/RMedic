@@ -28,5 +28,6 @@
              # Tab Inicio (HOME)
              # Tab Inicio (HOME)
              shiny::tabPanel(title = "Inicio", icon = icon("home"), source("tabs/homeTab.R", encoding = "UTF-8")$value),
-             shiny::tabPanel(title = "RMedic", source("tabs/RMedicTab.R", encoding = "UTF-8")$value)
+             shiny::tabPanel(title = "RMedic", source("tabs/RMedicTab.R", encoding = "UTF-8")$value),
+             shiny::tabPanel(title = "Herramientas", source("tabs/HerramientasTab.R", encoding = "UTF-8")$value)
 )

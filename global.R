@@ -152,3 +152,7 @@ source("modules/Control1Q.R")
 source("modules/Control1C.R")
 source("modules/Control2Q.R")
 source("modules/Control2C.R")
+
+###########################################
+source("modules/Z_Distribuciones.R")
+
