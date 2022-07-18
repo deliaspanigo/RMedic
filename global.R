@@ -21,6 +21,7 @@ library(xtable)
 library(survival)
 # library(epitools)
 library(fmsb)
+library(stringi)
 
 source("uiCode.R")
 
