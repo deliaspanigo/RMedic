@@ -251,7 +251,98 @@ Server01_Normal_Server <- function(input, output, session,
   # NameSpaceasing for the session
   ns <- session$ns
   
+  los_valores <- reactive({
+    if(is.null(input$color_variable)) return(NULL)
+    if(is.null(input$mu)) return(NULL)
+    if(is.null(input$sigma_cuadrado)) return(NULL)
+    if(is.null(input$opciones)) return(NULL)
+    if(is.null(input$intervalo)) return(NULL)
+    
+    mu_variable <- NA
+    sigma_cuadrado_variable <- NA
+    sigma_variable <- NA
+    opciones <- NA
+    intervalo <- NA
+    color_variable <- NA
+    decimals <- NA
+    var1 <- NA
+    var2 <- NA
+    var3 <- NA
+    var4 <- NA
+    z1 <- NA
+    z2 <- NA
+    z3 <- NA
+    z4 <- NA
+    probabilidad_externo <- NA
+    porcentaje_externo <- NA
+    
+    
+    if(!is.null(input$color_variable))color_variable <- input$color_variable
+    if(!is.null(input$mu)) mu_variable <- input$mu
+    if(!is.null(input$sigma_cuadrado)){
+      
+      sigma_cuadrado_variable <- input$sigma_cuadrado
+      sigma_variable <- sqrt(sigma_cuadrado_variable)
+    } 
+    if(!is.null(input$opciones)) opciones <- input$opciones
+    if(!is.null(input$intervalo))intervalo <- input$intervalo
+    if(!is.null(input$decimals)) decimals <- input$decimals
+    
+    if(!is.null(input$var1))var1 <- input$var1
+    if(!is.null(input$var2))var2 <- input$var2
+    if(!is.null(input$var3))var3 <- input$var3
+    if(!is.null(input$var4))var4 <- input$var4
+    
+    if(!is.null(input$z_var1))z1 <- input$z_var1
+    if(!is.null(input$z_var2))z2 <- input$z_var2
+    if(!is.null(input$z_var3))z3 <- input$z_var3
+    if(!is.null(input$z_var4))z4 <- input$z_var4
+    
+    if(!is.null(input$prob_var1))probabilidad_externo <- input$prob_var1
+    if(!is.null(input$porcentaje_var1))porcentaje_externo <- input$porcentaje_var1
+    
+    
+   los_valores <- Hmisc::llist(mu_variable, sigma_cuadrado_variable, sigma_variable,
+                               opciones, intervalo, color_variable,
+                               var1, var2, var3, var4, 
+                               z1, z2, z3, z4, 
+                               probabilidad_externo, porcentaje_externo, decimals)
+   
+   return(los_valores)
+     
+     
+     
+  })
+  
+  las_tablas <- reactive({
 
+   if(is.null(los_valores())) return(NULL)
+    
+    mis_valores <- los_valores()
+    mis_valores$ejecucion <- "tablas"
+    
+  
+   las_tablas <-  Distribucion.Normal(mu_variable = mis_valores$mu_variable, 
+                                      sigma_cuadrado_variable = mis_valores$sigma_cuadrado_variable, 
+                                      sigma_variable = mis_valores$sigma_variable,
+                                      opciones = mis_valores$opciones,
+                                      intervalo = mis_valores$intervalo, 
+                                      color_variable = mis_valores$color_variable,
+                                      var1 = mis_valores$var1, 
+                                      var2 = mis_valores$var2, 
+                                      var3 = mis_valores$var3, 
+                                      var4 = mis_valores$var4, 
+                                      z1 = mis_valores$z1, 
+                                      z2 = mis_valores$z2, 
+                                      z3 = mis_valores$z3, 
+                                      z4 = mis_valores$z4, 
+                                      probabilidad_externo = mis_valores$probabilidad_externo, 
+                                      porcentaje_externo = mis_valores$porcentaje_externo, 
+                                      decimals = mis_valores$decimals,
+                                      ejecucion = mis_valores$ejecucion)
+    
+   return(las_tablas)
+  })
     
   tabla_interna01 <- reactive({ 
     if(is.null(input$color_variable)) return(NULL)
@@ -620,12 +711,15 @@ Server01_Normal_Server <- function(input, output, session,
   tabla_externa01 <- reactive({
     
     if(is.null(tabla_interna01())) return(NULL)
+    decimals <- input$decimals
     
     tabla <- tabla_interna01()
     tabla <- tabla[,c(1:3)]
     
     tabla <- as.matrix(tabla)
     colnames(tabla) <- c("Media Poblacional", "Varianza Poblacional", "Desvío Poblacional")
+    tabla <- round2(tabla, decimals)
+    
     tabla[,1] <- as.character(tabla[,1])
     
     tabla
@@ -637,6 +731,7 @@ Server01_Normal_Server <- function(input, output, session,
     if(is.null(tabla_interna02())) return(NULL)
     
     intervalo <- tabla_interna01()$"intervalo"
+    decimals <- input$decimals
     
     tabla <- tabla_interna02()
    # tabla <- as.matrix(tabla)
@@ -660,6 +755,7 @@ Server01_Normal_Server <- function(input, output, session,
         }
     
     tabla <- tabla[,-c(ncol(tabla), ncol(tabla)-1)] # Quitamos las frases01 y frases02
+    tabla <- round2(tabla, decimals)
     tabla <- as.matrix(tabla)
     tabla[,1] <- as.character(tabla[,1])
     tabla
@@ -668,160 +764,90 @@ Server01_Normal_Server <- function(input, output, session,
   
   output$tabla_normal01 <- renderTable(align = "c", {
     
-    if(is.null(tabla_externa01())) return(NULL)
-    tabla_externa01()
+    if(is.null(las_tablas())) return(NULL)
+    out <- las_tablas()$tabla_externa01
+    out <- CharaterALL(out)
+    out
   })
   
   output$tabla_normal02 <- renderTable(align = "c",{
   
-  if(is.null(tabla_externa02())) return(NULL)
-    tabla_externa02()
+  if(is.null(las_tablas())) return(NULL)
+    out <- las_tablas()$tabla_externa02
+    out <- CharaterALL(out)
+    out
+    # tabla_externa02()
 })
   
   output$frase_final01 <- renderUI({
     
-    frase <- tabla_interna02()$"Frase01"[1]
-    HTML(frase)
+    if(is.null(las_tablas())) return(NULL)
+    out <- las_tablas()$frase01
+    HTML(out)
   })
   
   output$frase_final02 <- renderUI({
     
-    frase <- tabla_interna02()$"Frase02"[1]
-    HTML(frase)
+    if(is.null(las_tablas())) return(NULL)
+    out <- las_tablas()$frase02
+    HTML(out)
   })
   
   # Gráfico 1
   observe(output$distPlot1 <- renderPlot({
     
-    # https://r-coder.com/plot-en-r/
+    if(is.null(los_valores())) return(NULL)
+    mis_valores <- los_valores()
+    mis_valores$ejecucion <- "grafico01"
     
-   if(is.null(tabla_interna01())) return(NULL)
-   if(is.null(tabla_interna02())) return(NULL)
     
-    mu_variable <- tabla_interna01()[1,1]
-    sigma_variable <- tabla_interna01()[1,3]
-    color_variable <- tabla_interna01()$"color_variable"
-    decimals <- input$decimals
-    
-  z_izquierdo <- tabla_interna02()$"Z"[1] 
-  z_derecho <- tabla_interna02()$"Z"[2]
-  
-  var_izquierdo <- tabla_interna02()$"Variable"[1] 
-  var_derecho <- tabla_interna02()$"Variable"[2]
-  
-  
-    # Parametros
-    # sigma <- 1
-    # mu    <- 0
-    
-    # Normal Completa
-    min_distribucion <- -4
-    max_distribucion <- 4
-    h <- (max_distribucion - min_distribucion)/10000
-    
-    marcas_z <- min_distribucion:max_distribucion
-    marcas_variable <- (marcas_z*sigma_variable) + mu_variable
-    marcas_variable <- round2(marcas_variable, decimals)
-  
-    
-    # # Rango Acotado
-    # lower.x <- -0.0
-    # upper.x <-  2.1
-     lower.x <- z_izquierdo
-     upper.x <-  z_derecho
-    
-    # Grafico completo
-    x  <- seq(from = min_distribucion, to = max_distribucion, by = h)
-    y <- dnorm(x = x, mean = 0, sd = 1)
-    
-    par(mai=c(1,3,1,1), mar=(c(5,9,4,2)+0.1), mgp=c(4,1,0))
-    
-    plot(x, y ,type="l", lwd=4, col="black", 
-         xlim = c(min_distribucion, max_distribucion), 
-         ylim=c(0,0.5),
-         xlab = "Variable Original",
-         ylab = "Frecuencia Relativa",
-         axes = F,
-         cex.lab = 2)
-    
-
-    axis(side = 2,  las=1, cex.axis=2) # Eje Y
-    axis(side = 1, at = marcas_z, labels = marcas_variable , las=1, cex.axis=2) # Eje X
-    
-    # Grafico Acotado
-    x_mod <- seq(lower.x, upper.x, by = h)
-    y_mod  <- dnorm(x = x_mod, mean = 0, sd = 1)
-    polygon(c(lower.x, x_mod, upper.x), c(0, y_mod, 0), col = color_variable)
-    lines(x_mod, y_mod, col="black", lwd=4)
+    Distribucion.Normal(mu_variable = mis_valores$mu_variable, 
+                                       sigma_cuadrado_variable = mis_valores$sigma_cuadrado_variable, 
+                                       sigma_variable = mis_valores$sigma_variable,
+                                       opciones = mis_valores$opciones,
+                                       intervalo = mis_valores$intervalo, 
+                                       color_variable = mis_valores$color_variable,
+                                       var1 = mis_valores$var1, 
+                                       var2 = mis_valores$var2, 
+                                       var3 = mis_valores$var3, 
+                                       var4 = mis_valores$var4, 
+                                       z1 = mis_valores$z1, 
+                                       z2 = mis_valores$z2, 
+                                       z3 = mis_valores$z3, 
+                                       z4 = mis_valores$z4, 
+                                       probabilidad_externo = mis_valores$probabilidad_externo, 
+                                       porcentaje_externo = mis_valores$porcentaje_externo, 
+                                       decimals = mis_valores$decimals,
+                                       ejecucion = mis_valores$ejecucion)
     
   }))
   
   
   output$distPlot2 <- renderPlot({
     
-    
-    if(is.null(tabla_interna01())) return(NULL)
-    if(is.null(tabla_interna02())) return(NULL)
-    
-
-    # mu_variable <- tabla_interna01()[1,1]
-    # sigma_variable <- tabla_interna01()[1,3]
-    
-    mu_variable <- 0
-    sigma_variable <- 1
-    color_variable <- tabla_interna01()$"color_variable"
-    decimals <- input$decimals
-    
-    z_izquierdo <- tabla_interna02()$"Z"[1] 
-    z_derecho <- tabla_interna02()$"Z"[2]
-    
-    var_izquierdo <- tabla_interna02()$"Variable"[1] 
-    var_derecho <- tabla_interna02()$"Variable"[2]
+    if(is.null(los_valores())) return(NULL)
+    mis_valores <- los_valores()
+    mis_valores$ejecucion <- "grafico02"
     
     
-    # Parametros
-    # sigma <- 1
-    # mu    <- 0
-    
-    # Normal Completa
-    min_distribucion <- -4
-    max_distribucion <- 4
-    h <- (max_distribucion - min_distribucion)/10000
-    
-    marcas_z <- min_distribucion:max_distribucion
-    marcas_variable <- (marcas_z*sigma_variable) + mu_variable
-    marcas_variable <- round2(marcas_variable, decimals)
-    
-    
-    # # Rango Acotado
-    # lower.x <- -0.0
-    # upper.x <-  2.1
-    lower.x <- z_izquierdo
-    upper.x <-  z_derecho
-    
-    # Grafico completo
-    x  <- seq(from = min_distribucion, to = max_distribucion, by = h)
-    y <- dnorm(x = x, mean = 0, sd = 1)
-    
-    par(mai=c(1,3,1,1), mar=(c(5,9,4,2)+0.1), mgp=c(4,1,0))
-    
-    plot(x, y ,type="l", lwd=4, col="black", 
-         xlim = c(min_distribucion, max_distribucion), 
-         ylim=c(0,0.5),
-         xlab = "Variable Z",
-         ylab = "Frecuencia Relativa",
-         axes = F,
-         cex.lab = 2)
-    
-    
-    axis(side = 2,  las=1, cex.axis=2) # Eje Y
-    axis(side = 1, at = marcas_z, labels = marcas_variable , las=1, cex.axis=2) # Eje X
-    
-    # Grafico Acotado
-    x_mod <- seq(lower.x, upper.x, by = h)
-    y_mod  <- dnorm(x = x_mod, mean = 0, sd = 1)
-    polygon(c(lower.x, x_mod, upper.x), c(0, y_mod, 0), col = color_variable)
-    lines(x_mod, y_mod, col="black", lwd=4)
+    Distribucion.Normal(mu_variable = mis_valores$mu_variable, 
+                        sigma_cuadrado_variable = mis_valores$sigma_cuadrado_variable, 
+                        sigma_variable = mis_valores$sigma_variable,
+                        opciones = mis_valores$opciones,
+                        intervalo = mis_valores$intervalo, 
+                        color_variable = mis_valores$color_variable,
+                        var1 = mis_valores$var1, 
+                        var2 = mis_valores$var2, 
+                        var3 = mis_valores$var3, 
+                        var4 = mis_valores$var4, 
+                        z1 = mis_valores$z1, 
+                        z2 = mis_valores$z2, 
+                        z3 = mis_valores$z3, 
+                        z4 = mis_valores$z4, 
+                        probabilidad_externo = mis_valores$probabilidad_externo, 
+                        porcentaje_externo = mis_valores$porcentaje_externo, 
+                        decimals = mis_valores$decimals,
+                        ejecucion = mis_valores$ejecucion)
     
     
   })
@@ -829,6 +855,7 @@ Server01_Normal_Server <- function(input, output, session,
   
   output$armado01 <- renderUI({
     
+    if(is.null(la_distribucion())) return(NULL)
     if (la_distribucion() != "001_Normal") return(NULL)
     
     div( h2("Distribución de la Variable"),
