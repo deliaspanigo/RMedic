@@ -251,6 +251,8 @@ Server01_Normal_Server <- function(input, output, session,
   # NameSpaceasing for the session
   ns <- session$ns
   
+
+    
   tabla_interna01 <- reactive({ 
     if(is.null(input$color_variable)) return(NULL)
     if(is.null(input$mu)) return(NULL)
@@ -826,6 +828,8 @@ Server01_Normal_Server <- function(input, output, session,
   
   
   output$armado01 <- renderUI({
+    
+    if (la_distribucion() != "001_Normal") return(NULL)
     
     div( h2("Distribución de la Variable"),
             plotOutput(ns("distPlot1")),
