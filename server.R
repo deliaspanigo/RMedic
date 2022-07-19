@@ -220,6 +220,29 @@ function(input, output, session) {
              # la_distribucion = "001_Normal")
              la_distribucion = juntos)
   
+  #####################################################################################
+  juntos2 <-   callModule(module = SideBarDistribucionGeneral2_SERVER, 
+                         id =  "aver3",
+                         carpeta_distribuciones = "009App/002_Distribucion_de_Probabilidades")
+  
+  
+  
+  
+  callModule(module = SideBarDistribucionElegida2_SERVER, 
+             id =  "aver3",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos2)
+  
+  callModule(module = ServerDistribucionElegida2_SERVER, 
+             id =  "aver3",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos2)
+  
+  
+  callModule(module = Server01_Normal_Server2, 
+             id =  "aver3",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos2)
 }
 
 

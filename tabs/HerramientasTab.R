@@ -22,6 +22,11 @@ div(
                      br(), br(),
                      SideBarDistribucionElegida_UI("aver2")
                      ),
+       conditionalPanel("input.selector_general == 'opc02'",
+                        SideBarDistribucionGeneral2_UI("aver3"),
+                        br(), br(),
+                        SideBarDistribucionElegida2_UI("aver3")
+       )
        
 
         )
@@ -30,6 +35,9 @@ div(
               # uiOutput("RMedicSoft"),
               conditionalPanel("input.selector_general == 'opc01'",
               MainPanelDistribucionElegida_UI("aver2")
+              ),
+              conditionalPanel("input.selector_general == 'opc02'",
+                               MainPanelDistribucionElegida2_UI("aver3")
               ),
               br(), br(), br(),br(),br(),br(),br()
               

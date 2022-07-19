@@ -5,10 +5,10 @@ account: thugchem
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5761413
-bundleId: 6112776
+bundleId: 6113148
 url: https://thugchem.shinyapps.io/RMedic/
-when: 1658253792.45084
-lastSyncTime: 1658253792.45084
+when: 1658261369.80824
+lastSyncTime: 1658261369.80824
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: .RDataTmp|base.csv|BaseParaControles/KW/comparaciones de KW.xlsx|Ejemplo CSV Test de Proporciones.csv|README.md
