@@ -56,8 +56,7 @@ SideBarDistribucionGeneral2_SERVER <- function(input, output, session,
 SideBarDistribucionElegida2_UI <- function(id) {
   ns <- NS(id)
   
-  
-  
+
   uiOutput(ns("outMe_elegida"))
   
   
@@ -118,6 +117,7 @@ SideBar01_Normal2 <- function(id) {
   
   
   div(
+    withMathJax(),
     h3("Distribución Normal"),
     fluidRow(
       column(6,
@@ -141,19 +141,25 @@ SideBar01_Normal2 <- function(id) {
       )
     ),
     br(),
-    numericInput(inputId = ns("mu"),
-                 label = "Media Poblacional:",
-                 step= 0,
-                 value= 0,
-                 min = 0,
-                 max = 0),
-    numericInput(inputId = ns("sigma_cuadrado"),
-                 label = "Varianza Poblacional: ",
-                 step = 0,
-                 value = 1,
-                 min=1,
-                 max = 1),
+    h2("Parámetros Poblacionales"),
+    h3("Media Poblacional"),
+    h2("$$\\mu = 0$$"),br(),
+    h3("Varianza Poblacional"),
+    h2("$$\\sigma^{2} = 1$$"),
     br(),
+    # numericInput(inputId = ns("mu"),
+    #              label = "Media Poblacional:",
+    #              step= 0,
+    #              value= 0,
+    #              min = 0,
+    #              max = 0),
+    # numericInput(inputId = ns("sigma_cuadrado"),
+    #              label = "Varianza Poblacional: ",
+    #              step = 0,
+    #              value = 1,
+    #              min=1,
+    #              max = 1),
+    # br(),
     radioButtons(inputId = ns("opciones"), 
                  label = "Datos conocidos:",
                  choices =  c("Valor Z" = "valor_z",
@@ -231,14 +237,17 @@ Server01_Normal_Server2 <- function(input, output, session,
   
   los_valores <- reactive({
     if(is.null(input$color_variable)) return(NULL)
-    if(is.null(input$mu)) return(NULL)
-    if(is.null(input$sigma_cuadrado)) return(NULL)
+   # if(is.null(input$mu)) return(NULL)
+   # if(is.null(input$sigma_cuadrado)) return(NULL)
     if(is.null(input$opciones)) return(NULL)
     if(is.null(input$intervalo)) return(NULL)
     
-    mu_variable <- NA
-    sigma_cuadrado_variable <- NA
-    sigma_variable <- NA
+    # Los valores iniciales de MU y SIGMA CUADRADO los imponemos
+    # ya que es para realizar solo la distribucion normal standard
+    mu_variable <- 0
+    sigma_cuadrado_variable <- 1
+    sigma_variable <- sqrt(sigma_cuadrado_variable)
+    
     opciones <- NA
     intervalo <- NA
     color_variable <- NA
@@ -256,12 +265,12 @@ Server01_Normal_Server2 <- function(input, output, session,
     
     
     if(!is.null(input$color_variable))color_variable <- input$color_variable
-    if(!is.null(input$mu)) mu_variable <- input$mu
-    if(!is.null(input$sigma_cuadrado)){
-      
-      sigma_cuadrado_variable <- input$sigma_cuadrado
-      sigma_variable <- sqrt(sigma_cuadrado_variable)
-    } 
+    # if(!is.null(input$mu)) mu_variable <- input$mu
+    # if(!is.null(input$sigma_cuadrado)){
+    #   
+    #   sigma_cuadrado_variable <- input$sigma_cuadrado
+    #   sigma_variable <- sqrt(sigma_cuadrado_variable)
+    # } 
     if(!is.null(input$opciones)) opciones <- input$opciones
     if(!is.null(input$intervalo))intervalo <- input$intervalo
     if(!is.null(input$decimals)) decimals <- input$decimals
@@ -322,429 +331,13 @@ Server01_Normal_Server2 <- function(input, output, session,
     return(las_tablas)
   })
   
-  tabla_interna01 <- reactive({ 
-    if(is.null(input$color_variable)) return(NULL)
-    if(is.null(input$mu)) return(NULL)
-    if(is.null(input$sigma_cuadrado)) return(NULL)
-    if(is.null(input$opciones)) return(NULL)
-    if(is.null(input$intervalo)) return(NULL)
-    
-    color_variable <- input$color_variable
-    mu_variable <- input$mu
-    sigma_cuadrado_variable <- input$sigma_cuadrado
-    sigma_variable <- sqrt(sigma_cuadrado_variable)
-    opciones <- input$opciones
-    intervalo <- input$intervalo
-    
-    out <- data.frame(mu_variable, sigma_cuadrado_variable, sigma_variable, opciones, intervalo, color_variable)
-    out
-    
-  })
-  
-  tabla_interna02 <- reactive({
-    
-    if(is.null(input$color_variable)) return(NULL)
-    if(is.null(input$mu)) return(NULL)
-    if(is.null(input$sigma_cuadrado)) return(NULL)
-    if(is.null(input$opciones)) return(NULL)
-    if(is.null(input$intervalo)) return(NULL)
-    if(is.null(input$decimals)) return(NULL)
-    
-    color_variable <- input$color_variable
-    mu_variable <- input$mu
-    sigma_cuadrado_variable <- input$sigma_cuadrado
-    sigma_variable <- sqrt(sigma_cuadrado_variable)
-    opciones <- input$opciones
-    intervalo <- input$intervalo
-    decimals <- input$decimals
-    
-    # Normal Completa
-    min_distribucion <- -4
-    max_distribucion <- 4
-    h <- (max_distribucion - min_distribucion)/1000
-    
-    marcas_z <- min_distribucion:max_distribucion
-    marcas_variable <- marcas_z*sigma_variable + mu_variable
-    
-    if(1 == 1){
-      # Si los valores ingresados son de la variable original
-      if(opciones == "original") {
-        if(intervalo == "menor"){
-          
-          if(is.null(input$var1)) return(NULL)
-          
-          var_izquierdo <- min(marcas_variable)
-          var_derecho <- input$var1
-          
-          z_izquierdo <- min_distribucion
-          z_derecho <- (var_derecho - mu_variable)/sigma_variable
-          
-          la_probabilidad <- pnorm(z_derecho, mean = 0, sd = 1, lower.tail = T)
-          el_porcentaje <- la_probabilidad*100
-          
-          frase01 <- "El valor de la variable original es _VariableDerecho_.<br/>
-                      El valor estandarizado es z = _z_derecho_."
-          
-          frase02 <- "La probabilidad de pacientes con valores de la variable original menores a _VariableDerecho_ es _probabilidad_.<br/>
-                      La probabilidad de pacientes con valores z menores a _z_derecho_ es _probabilidad_."
-          
-        } else
-          if(intervalo == "mayor"){
-            
-            if(is.null(input$var2)) return(NULL)
-            var_izquierdo <- input$var2
-            var_derecho <- max(marcas_variable)
-            
-            z_izquierdo <- (var_izquierdo - mu_variable)/sigma_variable
-            z_derecho <- max_distribucion
-            
-            la_probabilidad <- pnorm(z_izquierdo, mean = 0, sd = 1, lower.tail = F)
-            el_porcentaje <- la_probabilidad*100
-            
-            frase01 <- "El valor de la variable original es _VariableIzquierdo_.<br/>
-                        El valor estandarizado es z = _z_izquierdo_."
-            
-            frase02 <- "La probabilidad de pacientes con valores de la variable original mayores a _VariableIzquierdo_ es _probabilidad_.<br/>
-                        La probabilidad de pacientes con valores z mayores a _z_izquierdo_ es _probabilidad_."
-            
-            
-          } else
-            if(intervalo == "entre"){
-              
-              if(is.null(input$var3)) return(NULL)
-              if(is.null(input$var4)) return(NULL)
-              
-              var_izquierdo <- input$var3
-              var_derecho <- input$var4
-              
-              z_izquierdo <- (var_izquierdo - mu_variable)/sigma_variable
-              z_derecho <- (var_derecho - mu_variable)/sigma_variable
-              
-              p_der <- pnorm(z_derecho, mean = 0, sd = 1, lower.tail = T)
-              p_izq <- pnorm(z_izquierdo, mean = 0, sd = 1, lower.tail = T)
-              la_probabilidad <- p_der - p_izq
-              el_porcentaje <- la_probabilidad*100
-              
-              frase01 <- "Los valores de la variable original son _VariableIzquierdo_ y _VariableDerecho_.<br/>
-                          Los valores estandarizados son _z_izquierdo_ y _z_derecho_.
-                          "
-              
-              frase02 <- "La probabilidad de pacientes con valores de la variable original entre _VariableIzquierdo_ y _VariableDerecho_ es _probabilidad_.<br/>
-                          La probabilidad de pacientes con valores z entre _z_izquierdo_ y _z_derecho_ es _probabilidad_."
-            }
-      } else
-        if(opciones == "valor_z") {
-          if(intervalo == "menor"){
-            
-            if(is.null(input$z_var1)) return(NULL)
-            
-            z_izquierdo <- min_distribucion
-            z_derecho <- as.numeric(as.character(input$z_var1))
-            
-            var_izquierdo <- z_izquierdo*sigma_variable + mu_variable
-            var_derecho <- z_derecho*sigma_variable + mu_variable
-            
-            la_probabilidad <- pnorm(z_derecho, mean = 0, sd = 1, lower.tail = T)
-            el_porcentaje <- la_probabilidad*100
-            
-            frase01 <- "El valor estandarizado es z = _z_derecho_.<br/>
-                        El valor de la variable original es _VariableDerecho_."
-            
-            frase02 <- "La probabilidad de pacientes con valores de la variable original menores a _VariableDerecho_ es _probabilidad_.<br/>
-                        La probabilidad de pacientes con valores z menores a _z_derecho_ es _probabilidad_."
-            
-          } else
-            if(intervalo == "mayor"){
-              
-              if(is.null(input$z_var2)) return(NULL)
-              
-              z_izquierdo <- input$z_var2
-              z_derecho <- max_distribucion
-              
-              var_izquierdo <- z_izquierdo*sigma_variable + mu_variable
-              var_derecho <- z_derecho*sigma_variable + mu_variable
-              
-              la_probabilidad <- pnorm(z_izquierdo, mean = 0, sd = 1, lower.tail = F)
-              el_porcentaje <- la_probabilidad*100
-              
-              frase01 <- "El valor estandarizado es z = _z_izquierdo_.<br/>
-                          El valor de la variable original es _VariableIzquierdo_."
-              
-              frase02 <- "La probabilidad de pacientes con valores de la variable original mayores a _VariableIzquierdo_ es _probabilidad_.<br/>
-                          La probabilidad de pacientes con valores z mayores a _z_izquierdo_ es _probabilidad_."
-            } else
-              if(intervalo == "entre"){
-                
-                if(is.null(input$z_var3)) return(NULL)
-                if(is.null(input$z_var4)) return(NULL)
-                
-                z_izquierdo <- input$z_var3
-                z_derecho <- input$z_var4
-                
-                var_izquierdo <- z_izquierdo*sigma_variable + mu_variable
-                var_derecho <- z_derecho*sigma_variable + mu_variable
-                
-                p_der <- pnorm(z_derecho, mean = 0, sd = 1, lower.tail = T)
-                p_izq <- pnorm(z_izquierdo, mean = 0, sd = 1, lower.tail = T)
-                la_probabilidad <- p_der - p_izq
-                el_porcentaje <- la_probabilidad*100
-                
-                frase01 <- "Los valores estandarizados son z1 = _z_izquierdo_ y z2 = _z_derecho_.<br/>
-                            Los valores de la variable original son _VariableIzquierdo_ y _VariableDerecho_."
-                
-                frase02 <- "La probabilidad de pacientes con valores de la variable original entre _VariableIzquierdo_ y _VariableDerecho_ es _probabilidad_.<br/>
-                            La probabilidad de pacientes con valores z entre _z_izquierdo_ y _z_derecho_ es _probabilidad_." 
-              }
-        } else
-          if(opciones == "probabilidad") {
-            if(intervalo == "menor"){
-              
-              if(is.null(input$prob_var1)) return(NULL)
-              
-              la_probabilidad <- as.numeric(as.character(input$prob_var1))
-              
-              z_izquierdo <- min_distribucion
-              z_derecho <- qnorm(la_probabilidad, mean = 0, sd = 1, lower.tail = T)
-              
-              var_izquierdo <- z_izquierdo*sigma_variable + mu_variable
-              var_derecho <- z_derecho*sigma_variable + mu_variable
-              
-              el_porcentaje <- la_probabilidad*100
-              
-              frase01 <- "La probabilidad es _probabilidad_.<br/>
-                          El valor estandarizado es z = _z_derecho_.<br/>
-                          El valor de la variable original es _VariableDerecho_.
-                          "
-              
-              frase02 <- "La probabilidad de pacientes con valores de la variable original menores a _VariableDerecho_ es _probabilidad_.<br/>
-                          La probabilidad de pacientes con valores z menores a _z_derecho_ es _probabilidad_."
-              
-            } else
-              if(intervalo == "mayor"){
-                
-                if(is.null(input$prob_var1)) return(NULL)
-                
-                la_probabilidad <- input$prob_var1
-                
-                z_izquierdo <- qnorm(input$prob_var1, mean = 0, sd = 1, lower.tail = F)
-                z_derecho <- max_distribucion
-                
-                var_izquierdo <- z_izquierdo*sigma_variable + mu_variable
-                var_derecho <- z_derecho*sigma_variable + mu_variable
-                
-                el_porcentaje <- la_probabilidad*100
-                
-                frase01 <- "La probabilidad es _probabilidad_.<br/>
-                            El valor estandarizado es z = _z_izquierdo_.<br/>
-                            El valor de la variable original es _VariableIzquierdo_."
-                
-                frase02 <- "La probabilidad de pacientes con valores de la variable original mayores a _VariableIzquierdo_ es _probabilidad_.<br/>
-                            La probabilidad de pacientes con valores z mayores a _z_izquierdo_ es _probabilidad_."
-                
-              } else
-                if(intervalo == "entre"){
-                  
-                  if(is.null(input$prob_var1)) return(NULL)
-                  la_probabilidad <- input$prob_var1
-                  el_resto <- 1 - la_probabilidad
-                  la_mitad <- el_resto/2
-                  
-                  z_izquierdo <- qnorm(la_mitad, mean = 0, sd = 1, lower.tail = T)
-                  z_derecho <- qnorm(la_mitad, mean = 0, sd = 1, lower.tail = F)
-                  
-                  var_izquierdo <- z_izquierdo*sigma_variable + mu_variable
-                  var_derecho <- z_derecho*sigma_variable + mu_variable
-                  
-                  el_porcentaje <- la_probabilidad*100
-                  
-                  frase01 <- "La probabilidad es _probabilidad_.<br/>
-                              Los valores estandarizados son z1 = _z_izquierdo_ y z2 = _z_derecho_.<br/>
-                              Los valores de la variable original son _VariableIzquierdo_ y _VariableDerecho_."
-                  
-                  frase02 <- "La probabilidad de pacientes con valores de la variable original entre _VariableIzquierdo_ y _VariableDerecho_ es _probabilidad_.<br/>
-                              La probabilidad de pacientes con valores z entre _z_izquierdo_ y _z_derecho_ es _probabilidad_." 
-                }
-          } else
-            if(opciones == "porcentaje") {
-              if(intervalo == "menor"){
-                
-                if(is.null(input$porcentaje_var1)) return(NULL)
-                
-                el_porcentaje <- input$porcentaje_var1
-                la_probabilidad <- el_porcentaje/100
-                
-                z_izquierdo <- min_distribucion
-                z_derecho <- qnorm(la_probabilidad, mean = 0, sd = 1, lower.tail = T)
-                
-                var_izquierdo <- z_izquierdo*sigma_variable + mu_variable
-                var_derecho <- z_derecho*sigma_variable + mu_variable
-                
-                el_porcentaje <- la_probabilidad*100
-                
-                frase01 <- "El porcentaje es _porcentaje_.<br/>
-                            La probabilidad es _probabilidad_.<br/>
-                            El valor estandarizado es z = _z_derecho_.<br/>
-                            El valor de la variable original es _VariableDerecho_.
-                           "
-                
-                frase02 <- "La probabilidad de pacientes con valores de la variable original menores a _VariableDerecho_ es _probabilidad_.<br/>
-                            La probabilidad de pacientes con valores z menores a _z_derecho_ es _probabilidad_."
-                
-              } else
-                if(intervalo == "mayor"){
-                  
-                  if(is.null(input$porcentaje_var1)) return(NULL)
-                  
-                  el_porcentaje <- input$porcentaje_var1
-                  la_probabilidad <- el_porcentaje/100
-                  
-                  z_izquierdo <- qnorm(input$prob_var1, mean = 0, sd = 1, lower.tail = F)
-                  z_derecho <- max_distribucion
-                  
-                  var_izquierdo <- z_izquierdo*sigma_variable + mu_variable
-                  var_derecho <- z_derecho*sigma_variable + mu_variable
-                  
-                  el_porcentaje <- la_probabilidad*100
-                  
-                  frase01 <- "El porcentaje es _porcentaje_.<br/>
-                              La probabilidad es _probabilidad_.<br/>
-                              El valor estandarizado es z = _z_izquierdo_.<br/>
-                              El valor de la variable original es _VariableIzquierdo_."
-                  
-                  frase02 <- "La probabilidad de pacientes con valores de la variable original mayores a _VariableIzquierdo_ es _probabilidad_.<br/>
-                              La probabilidad de pacientes con valores z mayores a _z_izquierdo_ es _probabilidad_."
-                  
-                } else
-                  if(intervalo == "entre"){
-                    
-                    if(is.null(input$porcentaje_var1)) return(NULL)
-                    
-                    el_porcentaje <- input$porcentaje_var1
-                    la_probabilidad <- el_porcentaje/100
-                    el_resto <- 1 - la_probabilidad
-                    la_mitad <- el_resto/2
-                    
-                    z_izquierdo <- qnorm(la_mitad, mean = 0, sd = 1, lower.tail = T)
-                    z_derecho <- qnorm(la_mitad, mean = 0, sd = 1, lower.tail = F)
-                    
-                    var_izquierdo <- z_izquierdo*sigma_variable + mu_variable
-                    var_derecho <- z_derecho*sigma_variable + mu_variable
-                    
-                    el_porcentaje <- la_probabilidad*100
-                    
-                    frase01 <- "El porcentaje es _porcentaje_.<br/>
-                                La probabilidad es _probabilidad_.<br/>
-                                Los valores estandarizados son z1 = _z_izquierdo_ y z2 = _z_derecho_.<br/>
-                                Los valores de la variable original son _VariableIzquierdo_ y _VariableDerecho_."
-                    
-                    frase02 <- "La probabilidad de pacientes con valores de la variable original entre _VariableIzquierdo_ y _VariableDerecho_ es _probabilidad_.<br/>
-                                La probabilidad de pacientes con valores z entre _z_izquierdo_ y _z_derecho_ es _probabilidad_." 
-                    
-                  }
-            }
-      
-      
-      Pattern <- c("_VariableIzquierdo_", "_VariableDerecho_", "_z_izquierdo_", "_z_derecho_",
-                   "_probabilidad_", "_porcentaje_")
-      
-      Replacement <- c(var_izquierdo, var_derecho, z_izquierdo, z_derecho,
-                       la_probabilidad, el_porcentaje)
-      
-      Replacement <- round2(Replacement, decimals)
-      
-      frase01 <- stringi::stri_replace_all_fixed(str = frase01,
-                                                 pattern = Pattern,
-                                                 replacement = Replacement,
-                                                 vectorize_all = F)
-      
-      frase02 <- stringi::stri_replace_all_fixed(str = frase02,
-                                                 pattern = Pattern,
-                                                 replacement = Replacement,
-                                                 vectorize_all = F)
-    }
-    
-    
-    
-    las_columnas <- c("Variable", "Z", "Probabilidad", "Porcentaje", "Frase01", "Frase02")
-    las_filas <- c("Izquierda", "Derecha")
-    
-    armado <- as.data.frame(matrix(NA, length(las_filas), length(las_columnas)))
-    colnames(armado) <- las_columnas
-    rownames(armado) <- las_filas
-    
-    armado$"Variable" <- c(var_izquierdo, var_derecho)
-    armado$"Z" <- c(z_izquierdo, z_derecho)
-    armado$"Probabilidad" <- c(la_probabilidad, la_probabilidad)
-    armado$"Porcentaje" <- c(el_porcentaje, el_porcentaje)
-    
-    armado <- round2(armado, decimals)
-    
-    armado$"Frase01"  <- c(frase01, frase01)
-    armado$"Frase02"  <- c(frase02, frase02)
-    
-    
-    armado
-  })
-  
-  tabla_externa01 <- reactive({
-    
-    if(is.null(tabla_interna01())) return(NULL)
-    decimals <- input$decimals
-    
-    tabla <- tabla_interna01()
-    tabla <- tabla[,c(1:3)]
-    
-    tabla <- as.matrix(tabla)
-    colnames(tabla) <- c("Media Poblacional", "Varianza Poblacional", "Desvío Poblacional")
-    tabla <- round2(tabla, decimals)
-    
-    tabla[,1] <- as.character(tabla[,1])
-    
-    tabla
-  })
-  
-  tabla_externa02 <- reactive({
-    
-    if(is.null(tabla_interna01())) return(NULL)
-    if(is.null(tabla_interna02())) return(NULL)
-    
-    intervalo <- tabla_interna01()$"intervalo"
-    decimals <- input$decimals
-    
-    tabla <- tabla_interna02()
-    # tabla <- as.matrix(tabla)
-    # tabla[,1] <- as.character(tabla[,1])
-    
-    if(intervalo == "menor"){ 
-      tabla <- as.data.frame(tabla[2,])
-      #return(tabla)
-      
-    }else
-      if(intervalo == "mayor"){ 
-        tabla <- as.data.frame(tabla[1,])
-        #return(tabla)
-        
-      }else
-        if(intervalo == "entre"){
-          
-          Posicion <- c("Izquierdo", "Derecho")
-          tabla <- cbind(Posicion, tabla)
-          # return(tabla)
-        }
-    
-    tabla <- tabla[,-c(ncol(tabla), ncol(tabla)-1)] # Quitamos las frases01 y frases02
-    tabla <- round2(tabla, decimals)
-    tabla <- as.matrix(tabla)
-    tabla[,1] <- as.character(tabla[,1])
-    tabla
-    
-  })
+ 
   
   output$tabla_normal01 <- renderTable(align = "c", {
     
     if(is.null(las_tablas())) return(NULL)
     out <- las_tablas()$tabla_externa01
-    out <- CharaterALL(out)
+    out <- CharacterALL(out)
     out
   })
   
@@ -752,7 +345,7 @@ Server01_Normal_Server2 <- function(input, output, session,
     
     if(is.null(las_tablas())) return(NULL)
     out <- las_tablas()$tabla_externa02
-    out <- CharaterALL(out)
+    out <- CharacterALL(out)
     out
     # tabla_externa02()
   })
@@ -760,24 +353,24 @@ Server01_Normal_Server2 <- function(input, output, session,
   output$frase_final01 <- renderUI({
     
     if(is.null(las_tablas())) return(NULL)
-    out <- las_tablas()$frase01
+    out <- las_tablas()$frase03
     HTML(out)
   })
   
   output$frase_final02 <- renderUI({
     
     if(is.null(las_tablas())) return(NULL)
-    out <- las_tablas()$frase02
+    out <- las_tablas()$frase04
     HTML(out)
   })
   
 
   
-  output$distPlot2 <- renderPlot({
+  output$distPlot1 <- renderPlot({
     
     if(is.null(los_valores())) return(NULL)
     mis_valores <- los_valores()
-    mis_valores$ejecucion <- "grafico02"
+    mis_valores$ejecucion <- "grafico01"
     
     
     Distribucion.Normal(mu_variable = mis_valores$mu_variable, 
@@ -809,7 +402,7 @@ Server01_Normal_Server2 <- function(input, output, session,
     if (la_distribucion() != "001_Normal") return(NULL)
     
     div( h2("Distribución Normal Estándar (Z)"),
-         plotOutput(ns("distPlot2")), br(),
+         plotOutput(ns("distPlot1")), br(),
          br(),
          br(),
          

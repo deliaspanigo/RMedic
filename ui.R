@@ -7,6 +7,12 @@
   
   navbarPage(theme = "styles.css",inverse=TRUE,
              useShinyjs(),
+             tags$head(tags$style(HTML("
+        .selectize-input, .selectize-dropdown, .select-input, .select-dropdown,
+        [type = 'number'], .radio, label, .nav-tabs{
+          font-size: 120%;
+        }
+        "))),   
              title = strong("I need RMEDIC here!"),
              windowTitle = "RMedic - Medicina y R", 
              fluid = TRUE, 

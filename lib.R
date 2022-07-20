@@ -4336,6 +4336,10 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
           frase02 <- "La probabilidad de pacientes con valores de la variable original menores a _VariableDerecho_ es _probabilidad_.<br/>
                       La probabilidad de pacientes con valores z menores a _z_derecho_ es _probabilidad_."
           
+          frase03 <- "El valor estandarizado es z = _z_derecho_."
+          
+          frase04 <- "La probabilidad de valores z menores a _z_derecho_ es _probabilidad_."
+          
         } else
           if(intervalo == "mayor"){
             
@@ -4355,6 +4359,9 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
             frase02 <- "La probabilidad de pacientes con valores de la variable original mayores a _VariableIzquierdo_ es _probabilidad_.<br/>
                         La probabilidad de pacientes con valores z mayores a _z_izquierdo_ es _probabilidad_."
             
+            frase03 <- "El valor estandarizado es z = _z_izquierdo_."
+            
+            frase04 <- "La probabilidad de valores z mayores a _z_izquierdo_ es _probabilidad_."
             
           } else
             if(intervalo == "entre"){
@@ -4379,6 +4386,10 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
               
               frase02 <- "La probabilidad de pacientes con valores de la variable original entre _VariableIzquierdo_ y _VariableDerecho_ es _probabilidad_.<br/>
                           La probabilidad de pacientes con valores z entre _z_izquierdo_ y _z_derecho_ es _probabilidad_."
+            
+              frase03 <- "Los valores estandarizados son z1 = _z_izquierdo_ y z2 = _z_derecho_."
+              
+              frase04 <- "La probabilidad contenida entre los valores estadarizados z de _z_izquierdo_ y _z_derecho_ es _probabilidad_."
             }
       } else
         if(opciones == "valor_z") {
@@ -4398,8 +4409,12 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
             frase01 <- "El valor estandarizado es z = _z_derecho_.<br/>
                         El valor de la variable original es _VariableDerecho_."
             
-            frase02 <- "La probabilidad de pacientes con valores de la variable original menores a _VariableDerecho_ es _probabilidad_.<br/>
-                        La probabilidad de pacientes con valores z menores a _z_derecho_ es _probabilidad_."
+            frase02 <- "La probabilidad de pacientes con valores z menores a _z_derecho_ es _probabilidad_.<br/>
+                        La probabilidad de pacientes con valores de la variable original menores a _VariableDerecho_ es _probabilidad_."
+            
+            frase03 <- "El valor estandarizado es z = _z_derecho_."
+            
+            frase04 <- "La probabilidad de valores z menores a _z_derecho_ es _probabilidad_."
             
           } else
             if(intervalo == "mayor"){
@@ -4418,9 +4433,14 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
               frase01 <- "El valor estandarizado es z = _z_izquierdo_.<br/>
                           El valor de la variable original es _VariableIzquierdo_."
               
-              frase02 <- "La probabilidad de pacientes con valores de la variable original mayores a _VariableIzquierdo_ es _probabilidad_.<br/>
-                          La probabilidad de pacientes con valores z mayores a _z_izquierdo_ es _probabilidad_."
-            } else
+              frase02 <- "La probabilidad de pacientes con valores z mayores a _z_izquierdo_ es _probabilidad_.<br/>
+                          La probabilidad de pacientes con valores de la variable original mayores a _VariableIzquierdo_ es _probabilidad_."
+          
+              frase03 <- "El valor estandarizado es z = _z_izquierdo_."
+              
+              frase04 <- "La probabilidad de valores z mayores a _z_izquierdo_ es _probabilidad_."
+                
+          } else
               if(intervalo == "entre"){
                 
                 if(is.na(z3)) return(NULL)
@@ -4440,9 +4460,13 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
                 frase01 <- "Los valores estandarizados son z1 = _z_izquierdo_ y z2 = _z_derecho_.<br/>
                             Los valores de la variable original son _VariableIzquierdo_ y _VariableDerecho_."
                 
-                frase02 <- "La probabilidad de pacientes con valores de la variable original entre _VariableIzquierdo_ y _VariableDerecho_ es _probabilidad_.<br/>
-                            La probabilidad de pacientes con valores z entre _z_izquierdo_ y _z_derecho_ es _probabilidad_." 
-              }
+                frase02 <- "La probabilidad de pacientes con valores z entre _z_izquierdo_ y _z_derecho_ es _probabilidad_.<br/>
+                            La probabilidad de pacientes con valores de la variable original entre _VariableIzquierdo_ y _VariableDerecho_ es _probabilidad_." 
+             
+                frase03 <- "Los valores estandarizados son z1 = _z_izquierdo_ y z2 = _z_derecho_."
+                
+                frase04 <- "La probabilidad contenida entre los valores estadarizados z de _z_izquierdo_ y _z_derecho_ es _probabilidad_."
+             }
         } else
           if(opciones == "probabilidad") {
             if(intervalo == "menor"){
@@ -4460,12 +4484,14 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
               el_porcentaje <- la_probabilidad*100
               
               frase01 <- "La probabilidad es _probabilidad_.<br/>
-                          El valor estandarizado es z = _z_derecho_.<br/>
-                          El valor de la variable original es _VariableDerecho_.
-                          "
+                          El porcentaje es _porcentaje_%."
+
+              frase02 <- "El valor estandarizado z = _z_derecho_ acumula hacia la izquierda un valor de probabilidad de _probabilidad_.<br/>
+                          El valor de la variable original _VariableDerecho_ acumula hacia la izquierda un valor de probabilidad de _probabilidad_."
               
-              frase02 <- "La probabilidad de pacientes con valores de la variable original menores a _VariableDerecho_ es _probabilidad_.<br/>
-                          La probabilidad de pacientes con valores z menores a _z_derecho_ es _probabilidad_."
+              frase03 <- frase01
+              
+              frase04 <- "El valor estandarizado z = _z_derecho_ acumula hacia la izquierda un valor de probabilidad de _probabilidad_."
               
             } else
               if(intervalo == "mayor"){
@@ -4483,11 +4509,14 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
                 el_porcentaje <- la_probabilidad*100
                 
                 frase01 <- "La probabilidad es _probabilidad_.<br/>
-                            El valor estandarizado es z = _z_izquierdo_.<br/>
-                            El valor de la variable original es _VariableIzquierdo_."
+                            El porcentaje es _porcentaje_%."
                 
-                frase02 <- "La probabilidad de pacientes con valores de la variable original mayores a _VariableIzquierdo_ es _probabilidad_.<br/>
-                            La probabilidad de pacientes con valores z mayores a _z_izquierdo_ es _probabilidad_."
+                frase02 <- "El valor estandarizado z = _z_izquierdo_ acumula hacia la derecha una probabilidad de _probabilidad_.<br/>
+                            El valor de la variable original _VariableIzquierdo_ acumula hacia la derecha una probabilidad de _probabilidad_."
+
+                frase03 <- frase01
+                
+                frase04 <- "El valor estandarizado z = _z_izquierdo_ acumula hacia la derecha una probabilidad de _probabilidad_."
                 
               } else
                 if(intervalo == "entre"){
@@ -4506,12 +4535,16 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
                   el_porcentaje <- la_probabilidad*100
                   
                   frase01 <- "La probabilidad es _probabilidad_.<br/>
-                              Los valores estandarizados son z1 = _z_izquierdo_ y z2 = _z_derecho_.<br/>
-                              Los valores de la variable original son _VariableIzquierdo_ y _VariableDerecho_."
+                              El porcentaje es _porcentaje_%."
                   
-                  frase02 <- "La probabilidad de pacientes con valores de la variable original entre _VariableIzquierdo_ y _VariableDerecho_ es _probabilidad_.<br/>
-                              La probabilidad de pacientes con valores z entre _z_izquierdo_ y _z_derecho_ es _probabilidad_." 
-                }
+                  frase02 <- "Entre los valores estandarizados z1 = _z_izquierdo_ y z2 = _z_derecho_ se define una probabilidad de _probabilidad_.<br/>
+                              Entre los valores de la variable original _VariableIzquierdo_ y _VariableDerecho_ se define una probabilidad de _probabilidad_."
+                  
+                  frase03 <- frase01
+                  
+                  frase04 <- "Entre los valores estandarizados z1 = _z_izquierdo_ y z2 = _z_derecho_ se define una probabilidad de _probabilidad_."
+                  
+                            }
           } else
             if(opciones == "porcentaje") {
               if(intervalo == "menor"){
@@ -4538,6 +4571,12 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
                 frase02 <- "La probabilidad de pacientes con valores de la variable original menores a _VariableDerecho_ es _probabilidad_.<br/>
                             La probabilidad de pacientes con valores z menores a _z_derecho_ es _probabilidad_."
                 
+                frase03 <- "El porcentaje es _porcentaje_.<br/>
+                            La probabilidad es _probabilidad_.<br/>
+                            El valor estandarizado es z = _z_derecho_.<br/>
+                           "
+                frase04 <- "La probabilidad de pacientes con valores z menores a _z_derecho_ es _probabilidad_."
+                
               } else
                 if(intervalo == "mayor"){
                   
@@ -4561,6 +4600,13 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
                   
                   frase02 <- "La probabilidad de pacientes con valores de la variable original mayores a _VariableIzquierdo_ es _probabilidad_.<br/>
                               La probabilidad de pacientes con valores z mayores a _z_izquierdo_ es _probabilidad_."
+                  
+                  frase03 <- "El porcentaje es _porcentaje_.<br/>
+                              La probabilidad es _probabilidad_.<br/>
+                              El valor estandarizado es z = _z_izquierdo_."
+                  
+                  frase04 <- "La probabilidad de pacientes con valores z mayores a _z_izquierdo_ es _probabilidad_."
+                  
                   
                 } else
                   if(intervalo == "entre"){
@@ -4588,6 +4634,13 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
                     frase02 <- "La probabilidad de pacientes con valores de la variable original entre _VariableIzquierdo_ y _VariableDerecho_ es _probabilidad_.<br/>
                                 La probabilidad de pacientes con valores z entre _z_izquierdo_ y _z_derecho_ es _probabilidad_." 
                     
+                    frase03 <- "El porcentaje es _porcentaje_.<br/>
+                                La probabilidad es _probabilidad_.<br/>
+                                Los valores estandarizados son z1 = _z_izquierdo_ y z2 = _z_derecho_."
+                    
+                    frase04 <- "La probabilidad de pacientes con valores z entre _z_izquierdo_ y _z_derecho_ es _probabilidad_." 
+                    
+                    
                   }
             }
       
@@ -4609,11 +4662,22 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
                                                  pattern = Pattern,
                                                  replacement = Replacement,
                                                  vectorize_all = F)
+      
+      frase03 <- stringi::stri_replace_all_fixed(str = frase03,
+                                                 pattern = Pattern,
+                                                 replacement = Replacement,
+                                                 vectorize_all = F)
+      
+      frase04 <- stringi::stri_replace_all_fixed(str = frase04,
+                                                 pattern = Pattern,
+                                                 replacement = Replacement,
+                                                 vectorize_all = F)
     }
     
     
     
-    las_columnas <- c("Variable", "Z", "Probabilidad", "Porcentaje", "Frase01", "Frase02")
+    las_columnas <- c("Variable", "Z", "Probabilidad", "Porcentaje", 
+                      "Frase01", "Frase02", "Frase03", "Frase04")
     las_filas <- c("Izquierda", "Derecha")
     
     armado <- as.data.frame(matrix(NA, length(las_filas), length(las_columnas)))
@@ -4629,6 +4693,8 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
     
     armado$"Frase01"  <- c(frase01, frase01)
     armado$"Frase02"  <- c(frase02, frase02)
+    armado$"Frase03"  <- c(frase03, frase03)
+    armado$"Frase04"  <- c(frase04, frase04)
     
     tabla_interna02 <- armado
   }
@@ -4672,7 +4738,7 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
           # return(tabla)
         }
     
-    tabla <- tabla[,-c(ncol(tabla), ncol(tabla)-1)] # Quitamos las frases01 y frases02
+    tabla <- tabla[,-c(ncol(tabla):(ncol(tabla)-3))] # Quitamos las frases01 y frases02
    # tabla <- round2(tabla, decimals)
     
     tabla_externa02 <- tabla
@@ -4684,6 +4750,8 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
   {
     frase01 <- tabla_interna02$Frase01[1]
     frase02 <- tabla_interna02$Frase02[1]
+    frase03 <- tabla_interna02$Frase03[1]
+    frase04 <- tabla_interna02$Frase04[1]
   }
   
   
@@ -4814,7 +4882,7 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
   
   if(ejecucion == "all" | ejecucion == "tablas") {
     out <- Hmisc::llist(tabla_interna01, tabla_interna02, tabla_externa01, tabla_externa02,
-                        frase01, frase02)
+                        frase01, frase02, frase03, frase04)
     
     return(out)
   }
@@ -4824,7 +4892,7 @@ Distribucion.Normal <- function(mu_variable, sigma_cuadrado_variable, sigma_vari
 
 
 
-CharaterALL <- function(the_data_frame){
+CharacterALL <- function(the_data_frame){
   
   out <- apply(the_data_frame, 2, as.character, simplify = F)
   out <- do.call(cbind.data.frame, out)
