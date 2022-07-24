@@ -11,6 +11,10 @@ div(
                           "Tablas de Probabilidades" = "opc02",
                           "Otras Herramientas" = "opc03")
   ), br(), br(),
+  conditionalPanel("input.selector_general == 'opc01'",
+                   Menu_DistribucionGeneral01_UI("distribucion01.general")
+                   ),
+                   br(), br(),
   sidebarLayout(
     div(id = "MySidebar2",
         
@@ -18,8 +22,8 @@ div(
         sidebarPanel(id = "Sidebar2", 
 
        conditionalPanel("input.selector_general == 'opc01'",
-                     SideBarDistribucionGeneral_UI("aver2"),
-                     br(), br(),
+                     #SideBarDistribucionGeneral_UI("aver2"),
+                     #br(), br(),
                      SideBarDistribucionElegida_UI("aver2")
                      ),
        conditionalPanel("input.selector_general == 'opc02'",

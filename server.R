@@ -197,8 +197,8 @@ function(input, output, session) {
   
   
  
-  juntos <-   callModule(module = SideBarDistribucionGeneral_SERVER, 
-                id =  "aver2",
+  juntos <-   callModule(module = Menu_DistribucionGeneral_SERVER, 
+                id =  "distribucion01.general",
                 carpeta_distribuciones = "009App/002_Distribucion_de_Probabilidades")
   
   
@@ -209,13 +209,36 @@ function(input, output, session) {
             # la_distribucion = "001_Normal")
              la_distribucion = juntos)
   
+  callModule(module = MainPanelDistribucionElegida_SERVER, 
+             id =  "aver2",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos)
+  
   callModule(module = ServerDistribucionElegida_SERVER, 
              id =  "aver2",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos)
   
-  
+  # Distribucion Normal
   callModule(module = Server01_Normal_Server, 
+             id =  "aver2",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos)
+  
+  # Distribucion t
+  callModule(module = Server02_t_Server, 
+             id =  "aver2",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos)
+  
+  # Distribucion Chi
+  callModule(module = Server03_chi_Server, 
+             id =  "aver2",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos)
+  
+  # Distribucion F
+  callModule(module = Server04_f_Server, 
              id =  "aver2",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos)
