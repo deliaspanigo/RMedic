@@ -4,7 +4,7 @@ Menu_DistribucionGeneral01_UI <- function(id) {
   
   
  
-  uiOutput(ns("outMe_distribucion01_genenral"))
+  uiOutput(ns("outMe_distribucion01_general"))
   
   
 }
@@ -12,13 +12,13 @@ Menu_DistribucionGeneral01_UI <- function(id) {
 
 
  ## Segmento del server
-Menu_DistribucionGeneral_SERVER <- function(input, output, session,
+Menu_DistribucionGeneral01_SERVER <- function(input, output, session,
                                               carpeta_distribuciones) {
    
   # NameSpaceasing for the session
   ns <- session$ns
   
-   output$outMe_distribucion01_genenral <- renderUI({
+   output$outMe_distribucion01_general <- renderUI({
      
      las_distribuciones <- list.files(carpeta_distribuciones)
      
@@ -53,7 +53,7 @@ Menu_DistribucionGeneral_SERVER <- function(input, output, session,
 
 
 ## Segmento del UI
-SideBarDistribucionElegida_UI <- function(id) {
+SideBarDistribucionElegida01_UI <- function(id) {
   ns <- NS(id)
   
   
@@ -64,18 +64,17 @@ SideBarDistribucionElegida_UI <- function(id) {
 }
 
 ## Segmento del UI
-MainPanelDistribucionElegida_UI <- function(id) {
+MainPanelDistribucionElegida01_UI <- function(id) {
   ns <- NS(id)
   
   uiOutput(ns("outMe_mainmenu_elegida"))
-  # renderUI(ns("MainPanelNormal"))
- # uiOutput(ns("outMe_elegida02"))
+
   
  
 }
 
 ## Segmento del server
-SideBarDistribucionElegida_SERVER <- function(input, output, session,
+SideBarDistribucionElegida01_SERVER <- function(input, output, session,
                                               la_distribucion) {
   
   # NameSpaceasing for the session
@@ -99,7 +98,7 @@ SideBarDistribucionElegida_SERVER <- function(input, output, session,
 
 
 ## Segmento del server
-MainPanelDistribucionElegida_SERVER <- function(input, output, session,
+MainPanelDistribucionElegida01_SERVER <- function(input, output, session,
                                               la_distribucion) {
   
   # NameSpaceasing for the session
@@ -121,7 +120,7 @@ MainPanelDistribucionElegida_SERVER <- function(input, output, session,
 
 }
 
-ServerDistribucionElegida_SERVER <- function(input, output, session,
+ServerDistribucionElegida01_SERVER <- function(input, output, session,
                                               la_distribucion) {
   
   # NameSpaceasing for the session

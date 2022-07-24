@@ -14,6 +14,9 @@ div(
   conditionalPanel("input.selector_general == 'opc01'",
                    Menu_DistribucionGeneral01_UI("distribucion01.general")
                    ),
+  conditionalPanel("input.selector_general == 'opc02'",
+                   Menu_DistribucionGeneral02_UI("distribucion02.general")
+                   ),
                    br(), br(),
   sidebarLayout(
     div(id = "MySidebar2",
@@ -24,11 +27,11 @@ div(
        conditionalPanel("input.selector_general == 'opc01'",
                      #SideBarDistribucionGeneral_UI("aver2"),
                      #br(), br(),
-                     SideBarDistribucionElegida_UI("aver2")
+                     SideBarDistribucionElegida01_UI("aver2")
                      ),
        conditionalPanel("input.selector_general == 'opc02'",
-                        SideBarDistribucionGeneral2_UI("aver3"),
-                        br(), br(),
+                        # SideBarDistribucionGeneral2_UI("aver3"),
+                        # br(), br(),
                         SideBarDistribucionElegida2_UI("aver3")
        )
        
@@ -38,7 +41,7 @@ div(
     mainPanel(id = "Main2",
               # uiOutput("RMedicSoft"),
               conditionalPanel("input.selector_general == 'opc01'",
-              MainPanelDistribucionElegida_UI("aver2")
+              MainPanelDistribucionElegida01_UI("aver2")
               ),
               conditionalPanel("input.selector_general == 'opc02'",
                                MainPanelDistribucionElegida2_UI("aver3")

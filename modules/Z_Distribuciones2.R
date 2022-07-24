@@ -1,10 +1,10 @@
 ## Segmento del UI
-SideBarDistribucionGeneral2_UI <- function(id) {
+Menu_DistribucionGeneral02_UI <- function(id) {
   ns <- NS(id)
   
   
   
-  uiOutput(ns("outMe_general"))
+  uiOutput(ns("outMe_distribucion02_general"))
   
   
 }
@@ -12,13 +12,13 @@ SideBarDistribucionGeneral2_UI <- function(id) {
 
 
 ## Segmento del server
-SideBarDistribucionGeneral2_SERVER <- function(input, output, session,
+Menu_DistribucionGeneral02_SERVER <- function(input, output, session,
                                               carpeta_distribuciones) {
   
   # NameSpaceasing for the session
   ns <- session$ns
   
-  output$outMe_general <- renderUI({
+  output$outMe_distribucion02_general <- renderUI({
     
     las_distribuciones <- list.files(carpeta_distribuciones)
     
