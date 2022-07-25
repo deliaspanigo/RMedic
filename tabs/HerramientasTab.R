@@ -32,7 +32,7 @@ div(
        conditionalPanel("input.selector_general == 'opc02'",
                         # SideBarDistribucionGeneral2_UI("aver3"),
                         # br(), br(),
-                        SideBarDistribucionElegida2_UI("aver3")
+                        SideBarDistribucionElegida02_UI("aver3")
        )
        
 
@@ -44,7 +44,7 @@ div(
               MainPanelDistribucionElegida01_UI("aver2")
               ),
               conditionalPanel("input.selector_general == 'opc02'",
-                               MainPanelDistribucionElegida2_UI("aver3")
+                               MainPanelDistribucionElegida02_UI("aver3")
               ),
               br(), br(), br(),br(),br(),br(),br()
               

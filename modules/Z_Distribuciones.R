@@ -258,7 +258,7 @@ MainPanel01_Normal <- function(id){
   ns <- NS(id)
   
   
-  uiOutput(ns("armado01"))
+  uiOutput(ns("armado01_z"))
  
   
 }
@@ -456,7 +456,7 @@ Server01_Normal_Server <- function(input, output, session,
   })
   
   
-  output$armado01 <- renderUI({
+  output$armado01_z <- renderUI({
     
     if(is.null(la_distribucion())) return(NULL)
     if (la_distribucion() != "001_Normal") return(NULL)

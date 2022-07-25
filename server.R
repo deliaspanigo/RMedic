@@ -251,21 +251,46 @@ function(input, output, session) {
   
   
   
-  callModule(module = SideBarDistribucionElegida2_SERVER, 
+  callModule(module = SideBarDistribucionElegida02_SERVER, 
              id =  "aver3",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos2)
   
-  callModule(module = ServerDistribucionElegida2_SERVER, 
+  callModule(module = MainPanelDistribucionElegida02_SERVER, 
              id =  "aver3",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos2)
   
-  
-  callModule(module = Server01_Normal_Server2, 
+  callModule(module = ServerDistribucionElegida02_SERVER, 
              id =  "aver3",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos2)
+  
+  # Distribucion Normal
+  callModule(module = Server01_Normal_Server02, 
+             id =  "aver3",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos2)
+  
+
+  # Distribucion t
+  callModule(module = Server02_t_Server02,
+             id =  "aver3",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos2)
+  
+  # Distribucion Chi
+  callModule(module = Server03_chi_Server02,
+             id =  "aver3",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos2)
+
+  # Distribucion F
+  callModule(module = Server04_f_Server02,
+             id =  "aver3",
+             # la_distribucion = "001_Normal")
+             la_distribucion = juntos2)
+  
 }
 
 
