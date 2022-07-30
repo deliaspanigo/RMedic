@@ -27,12 +27,12 @@ div(
        conditionalPanel("input.selector_general == 'opc01'",
                      #SideBarDistribucionGeneral_UI("aver2"),
                      #br(), br(),
-                     SideBarDistribucionElegida01_UI("aver2")
+                     SideBarDistribucionElegida01_UI("espacio_elegido01")
                      ),
        conditionalPanel("input.selector_general == 'opc02'",
                         # SideBarDistribucionGeneral2_UI("aver3"),
                         # br(), br(),
-                        SideBarDistribucionElegida02_UI("aver3")
+                        SideBarDistribucionElegida02_UI("espacio_elegido02")
        )
        
 
@@ -41,10 +41,10 @@ div(
     mainPanel(id = "Main2",
               # uiOutput("RMedicSoft"),
               conditionalPanel("input.selector_general == 'opc01'",
-              MainPanelDistribucionElegida01_UI("aver2")
+              MainPanelDistribucionElegida01_UI("espacio_elegido01")
               ),
               conditionalPanel("input.selector_general == 'opc02'",
-                               MainPanelDistribucionElegida02_UI("aver3")
+                               MainPanelDistribucionElegida02_UI("espacio_elegido02")
               ),
               br(), br(), br(),br(),br(),br(),br()
               

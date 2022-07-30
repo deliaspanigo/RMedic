@@ -1,3 +1,6 @@
+
+# rm(list = ls())
+
 function(input, output, session) {
   
   
@@ -205,41 +208,41 @@ function(input, output, session) {
  
   
   callModule(module = SideBarDistribucionElegida01_SERVER, 
-             id =  "aver2",
+             id =  "espacio_elegido01",
             # la_distribucion = "001_Normal")
              la_distribucion = juntos)
   
   callModule(module = MainPanelDistribucionElegida01_SERVER, 
-             id =  "aver2",
+             id =  "espacio_elegido01",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos)
   
   callModule(module = ServerDistribucionElegida01_SERVER, 
-             id =  "aver2",
+             id =  "espacio_elegido01",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos)
   
   # Distribucion Normal
   callModule(module = Server01_Normal_Server, 
-             id =  "aver2",
+             id =  "aver01A",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos)
   
   # Distribucion t
   callModule(module = Server02_t_Server, 
-             id =  "aver2",
+             id =  "aver01B",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos)
   
   # Distribucion Chi
   callModule(module = Server03_chi_Server, 
-             id =  "aver2",
+             id =  "aver01C",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos)
   
   # Distribucion F
   callModule(module = Server04_f_Server, 
-             id =  "aver2",
+             id =  "aver01D",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos)
   
@@ -252,42 +255,42 @@ function(input, output, session) {
   
   
   callModule(module = SideBarDistribucionElegida02_SERVER, 
-             id =  "aver3",
+             id =  "espacio_elegido02",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos2)
   
   callModule(module = MainPanelDistribucionElegida02_SERVER, 
-             id =  "aver3",
+             id =  "espacio_elegido02",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos2)
   
   callModule(module = ServerDistribucionElegida02_SERVER, 
-             id =  "aver3",
+             id =  "espacio_elegido02",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos2)
   
   # Distribucion Normal
   callModule(module = Server01_Normal_Server02, 
-             id =  "aver3",
+             id =  "aver02A",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos2)
   
 
   # Distribucion t
   callModule(module = Server02_t_Server02,
-             id =  "aver3",
+             id =  "aver02B",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos2)
   
   # Distribucion Chi
   callModule(module = Server03_chi_Server02,
-             id =  "aver3",
+             id =  "aver02C",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos2)
 
   # Distribucion F
   callModule(module = Server04_f_Server02,
-             id =  "aver3",
+             id =  "aver02D",
              # la_distribucion = "001_Normal")
              la_distribucion = juntos2)
   
